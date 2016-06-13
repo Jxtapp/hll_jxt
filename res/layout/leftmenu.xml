@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" 
+    android:background="@color/white">
+
+    <LinearLayout 
+        android:id="@+id/id_accountInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/gray"
+        android:padding="10dip">
+        <TextView 
+            android:id="@+id/id_tx_accountInfo"
+        	android:layout_width="wrap_content"
+        	android:layout_height="wrap_content"
+        	android:textColor="@color/white"
+        	android:layout_gravity="center"
+        	android:textSize="10sp"
+        	android:text="@string/accountInfo"    
+        />  
+    </LinearLayout>
+     <LinearLayout 
+                   android:id="@+id/id_login"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="vertical"
+                   android:gravity="center"
+                   android:background="@color/yellow"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_login"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/login"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_login"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textSize="10dp"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/login"    
+                   />
+               </LinearLayout>
+                <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />
+    <ScrollView 
+           android:layout_width="fill_parent"
+           android:layout_height="fill_parent"
+           android:fadingEdge="none"
+           android:scrollbars="none">
+           
+           <LinearLayout 
+               android:layout_width="fill_parent"
+               android:layout_height="fill_parent"
+               android:orientation="vertical">
+               
+               <!-- personInfo -->
+               <LinearLayout 
+                   android:id="@+id/id_personInfo"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:background="@color/yellow"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_personInfo"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/person_info"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_personInfo"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/personInfo"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />
+               
+               <!-- questionBank -->
+               <LinearLayout 
+                   android:id="@+id/id_questionBank"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_questionBank"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/question_bank"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_questionBank"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/questionBank"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />
+               
+                <!-- myOrder -->
+               <LinearLayout 
+                   android:id="@+id/id_myOrder"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_myOrder"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/my_order"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_myOrder"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/myOrder"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />
+               
+                     <!-- myStore -->
+               <LinearLayout 
+                   android:id="@+id/id_myStore"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_myStore"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/my_store"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_myStore"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/myStore"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />    
+               
+               <!-- message -->
+               <LinearLayout 
+                   android:id="@+id/id_message"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_message"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/message"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_message"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/message"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />     
+               
+               <!-- setting -->
+               <LinearLayout 
+                   android:id="@+id/id_setting"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_setting"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/setting"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_setting"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/setting"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />     
+               
+               <!-- appraiseUs -->
+               <LinearLayout 
+                   android:id="@+id/id_appraiseUs"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_appraiseUs"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/appraise_us"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_appraiseUs"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/appraiseUs"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />    
+               
+               <!-- contactUs -->
+               <LinearLayout 
+                   android:id="@+id/id_contactUs"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_contactUs"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/contact_us"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_contactUs"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/contactUs"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />
+               
+                <!-- aboutUs -->
+               <LinearLayout 
+                   android:id="@+id/id_aboutUs"
+                   android:layout_width="fill_parent"
+                   android:layout_height="wrap_content"
+                   android:orientation="horizontal"
+                   android:gravity="center_vertical"
+                   android:padding="10dip">
+                   
+                   <ImageView 
+                       android:id="@+id/id_img_aboutUs"
+                   		android:layout_width="wrap_content"
+                   		android:layout_height="wrap_content"
+                   		android:background="@drawable/about_us"    
+                   />
+                   
+                   <TextView 
+                       android:id="@+id/id_tx_aboutUs"
+                   	  android:layout_width="wrap_content"
+                   	  android:layout_height="wrap_content"
+                   	  android:textColor="@color/black"
+                   	  android:text="@string/aboutUs"    
+                   />
+                   
+               </LinearLayout>
+               
+               <!-- 分隔线 -->
+               <ImageView 
+                   android:layout_width="fill_parent"
+                   android:layout_height="1dip"
+                   android:background="@color/gray" 
+               />
+          </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

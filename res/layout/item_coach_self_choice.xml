@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/id_img_coach_self"
+        android:layout_width="30dip"
+        android:layout_height="40dip"
+        android:src="@drawable/coach" />
+
+    <LinearLayout 
+        android:id="@+id/id_coach_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/id_img_coach_self"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="价格:"
+        android:textSize="12sp" />
+    <EditText 
+       android:id="@+id/id_tx_coach_price" 
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+       android:textSize="12sp"
+       />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/id_coach_teach_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_coach_price"
+        android:layout_toRightOf="@+id/id_img_coach_self"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+        android:layout_alignParentTop="true"
+        android:gravity="center"
+        android:text="教学类型"
+        android:textSize="12sp" />
+    <EditText 
+       android:id="@+id/id_tx_coach_teach_type" 
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+       android:textSize="12sp"
+       />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/id_coach_order_times"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_coach_teach_type"
+        android:layout_toRightOf="@+id/id_img_coach_self"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+        android:gravity="center"
+        android:text="预约次数"
+        android:textSize="12sp" />
+    <EditText 
+       android:id="@+id/id_tx_coach_order_times" 
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+       android:textSize="12sp"
+       />
+    </LinearLayout>
+    
+    <LinearLayout 
+        android:id="@+id/id_coach_more_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/id_coach_order_times"
+        android:layout_toRightOf="@+id/id_img_coach_self"
+        android:orientation="horizontal">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="10dip"
+        android:gravity="center"
+        android:text="查看更多"
+        android:textSize="16sp"
+        android:background="@drawable/blue_coach_queue"
+         />
+    </LinearLayout>
+
+</RelativeLayout>

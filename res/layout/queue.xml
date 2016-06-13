@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    <!-- 位置定位-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20dip"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/id_location_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/location_queue" 
+            android:contentDescription="@string/this_is_picture"/>
+
+        <TextView
+            android:id="@+id/id_tx_location_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/location_example"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/id_down_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/down_location" 
+            android:contentDescription="@string/this_is_picture"/>
+    </LinearLayout>
+  <ScrollView 
+           android:layout_width="fill_parent"
+           android:layout_height="fill_parent"
+           android:fadingEdge="none"
+           android:scrollbars="none">
+         <LinearLayout 
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:orientation="vertical">
+    <!-- 约车 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dip"
+        android:orientation="horizontal" 
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:id="@+id/id_order_learn"
+            android:layout_height="match_parent"
+            android:layout_width="0dip"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/id_img_order_learn"
+                android:layout_width="wrap_content"
+                android:layout_height="30dip"
+                android:src="@drawable/order_learn"
+                android:contentDescription="@string/this_is_picture" />
+
+            <TextView
+                android:id="@+id/id_tx_order_learn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_learn"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/id_queue_wait"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_width="0dip"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/id_img_queue_wait"
+                android:layout_width="wrap_content"
+                android:layout_height="30dip" 
+                android:background="@drawable/queue_wait"/>
+
+            <TextView
+                android:id="@+id/id_tx_queue_wait"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/queue_wait"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 功能行 -->
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="30dip"
+        android:orientation="horizontal">
+        <LinearLayout 
+            android:id="@+id/id_app_indroduce"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
+            <ImageView 
+                android:id="@+id/id_img_app_indroduce"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:src="@drawable/app_introduce"/>
+            <TextView 
+                android:id="@+id/id_tx_app_indroduce"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:text="@string/app_introduce"
+                android:textColor="@color/black"
+                android:textSize="10sp"/>
+        </LinearLayout>
+        
+         <LinearLayout 
+             android:id="@+id/id_function_info"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
+            <ImageView 
+                android:id="@+id/id_img_function_info"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:src="@drawable/function_info"/>
+            <TextView 
+                android:id="@+id/id_tx_function_info"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:text="@string/function_info"
+                android:textColor="@color/black"
+                android:textSize="10sp"/>
+        </LinearLayout>
+        
+          <LinearLayout 
+             android:id="@+id/id_guarantee_service"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
+            <ImageView 
+                android:id="@+id/id_img_guarantee_service"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:src="@drawable/guarantee_service"/>
+            <TextView 
+                android:id="@+id/id_tx_guarantee_service"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:text="@string/guarantee_service"
+                android:textColor="@color/black"
+                android:textSize="10sp"/>
+        </LinearLayout>
+        
+           <LinearLayout 
+               android:id="@+id/id_feedback_pass"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
+            <ImageView 
+                android:id="@+id/id_img_feedback_pass"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:src="@drawable/feedback_pass"/>
+            <TextView 
+                android:id="@+id/id_tx_feedback_pass"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:text="@string/feedback_pass"
+                android:textColor="@color/black"
+                android:textSize="10sp"/>
+        </LinearLayout>
+        
+            <LinearLayout 
+                android:id="@+id/id_about_us_call"
+            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:orientation="vertical">
+            <ImageView 
+                android:id="@+id/id_img_about_us_call"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:src="@drawable/about_us_call"/>
+            <TextView 
+                android:id="@+id/id_tx_about_us_call"
+                android:layout_height="15dip"
+                android:layout_width="wrap_content"
+                android:text="@string/about_us_call"
+                android:textColor="@color/black"
+                android:textSize="10sp"/>
+        </LinearLayout>
+    </LinearLayout>
+    
+    <!-- 自选教练列表-->
+   
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView 
+            android:layout_width="wrap_content"
+            android:layout_height="15dip"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/students_can_choice_coach_by_yourself"
+            android:textColor="@color/black"
+            />
+        <LinearLayout 
+            android:layout_height="20dip"
+            android:layout_width="match_parent"
+            android:orientation="horizontal">
+            <LinearLayout 
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal">
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/place_choice"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"/>
+                <ImageView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/drop_down"
+                    android:id="@+id/id_place_choice"/>
+            </LinearLayout>
+              <LinearLayout 
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal">
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/teach_type"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"/>
+                <ImageView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/drop_down"
+                    android:id="@+id/id_teach_type"/>
+            </LinearLayout>
+              <LinearLayout 
+                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:orientation="horizontal">
+                <TextView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/near_place"
+                    android:textColor="@color/black"
+                    android:textSize="12sp"/>
+                <ImageView 
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/drop_down"
+                    android:id="@+id/id_near_place"/>
+            </LinearLayout>
+            
+        </LinearLayout>
+    
+        <LinearLayout 
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            
+            <ListView 
+               android:id="@+id/id_coach_self_choice"
+               android:layout_width="match_parent"
+               android:layout_height="match_parent" >
+                
+            </ListView>
+            
+        </LinearLayout>
+    </LinearLayout>
+     </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="55dp"
+    android:layout_gravity="bottom"
+    android:background="@drawable/bottom_blc"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:id="@+id/id_tab_recommend"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/id_tab_recommend_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@drawable/recommend_bar" />
+
+        <TextView
+            android:id="@+id/id_tv_recommend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="推荐报名"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_queue"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/id_tab_queue_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@drawable/queue_bar" />
+
+        <TextView
+            android:id="@+id/id_tv_queue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="预约排队"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_simulate"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/id_tab_simulate_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@drawable/simulated_training_bar" />
+
+        <TextView
+            android:id="@+id/id_tv_simulate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="模拟考试"
+            android:textColor="#000000" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/id_tab_friend"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/id_tab_friend_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@drawable/friend_bar" />
+
+        <TextView
+            android:id="@+id/id_tv_friend"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="车友社交"
+            android:textColor="#000000" />
+    </LinearLayout>
+<LinearLayout
+        android:id="@+id/id_tab_moreinfo"
+        android:layout_width="0dp"
+        android:layout_height="fill_parent"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical" >
+
+        <ImageButton
+            android:id="@+id/id_tab_moreinfo_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00000000"
+            android:clickable="false"
+            android:src="@drawable/more_info_bar" />
+
+        <TextView
+            android:id="@+id/id_tv_moreinfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="更多分类"
+            android:textColor="#000000" />
+    </LinearLayout>
+</LinearLayout>
