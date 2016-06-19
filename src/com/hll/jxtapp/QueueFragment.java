@@ -1,8 +1,21 @@
 package com.hll.jxtapp;
+/**
+ * 驾校通预约排队页面activity
+ * @author heyi
+ * 2016/6/1
+ */
+import java.util.ArrayList;
+import java.util.List;
 
+/**
+ * app第二个页面，主要实现排队的功能
+ * @author  heyi
+ * 2016/5/27
+ */
 import com.hll.adapter.SecPageAdapter;
 import com.hll.entity.SecPageItemBean;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -20,7 +33,6 @@ public class QueueFragment extends Fragment implements OnClickListener {
 	private ImageView placeChoice;
 	private ImageView teachType;
 	private ImageView nearPlace;
-
 	private LinearLayout orderLearn;
 	private LinearLayout queueWait;
 	private LinearLayout appItroduce;
@@ -30,38 +42,52 @@ public class QueueFragment extends Fragment implements OnClickListener {
 	private LinearLayout aboutUsCall;
 	private ListView listView;
 	private Context context;
+	private List<SecPageItemBean> list;
 	private SecPageAdapter adapter;
+	private Activity mainActivity;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.queue, container, false);
 	}
 
-	public void onActivityCreated(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		View view = inflater.inflate(R.layout.queue, container, false);
-		dropDownLocation = (ImageView) view.findViewById(R.id.id_down_queue);
-		placeChoice = (ImageView) view.findViewById(R.id.id_place_choice);
-		teachType = (ImageView) view.findViewById(R.id.id_teach_type);
-		nearPlace = (ImageView) view.findViewById(R.id.id_near_place);
-		orderLearn = (LinearLayout) view.findViewById(R.id.id_order_learn);
-		queueWait = (LinearLayout) view.findViewById(R.id.id_queue_wait);
-		appItroduce = (LinearLayout) view.findViewById(R.id.id_app_indroduce);
-		functionInfo = (LinearLayout) view.findViewById(R.id.id_function_info);
-		guaranteeService = (LinearLayout) view.findViewById(R.id.id_guarantee_service);
-		feedbackPass = (LinearLayout) view.findViewById(R.id.id_feedback_pass);
-		aboutUsCall = (LinearLayout) view.findViewById(R.id.id_about_us_call);
-		listView = (ListView) view.findViewById(R.id.id_coach_self_choice);
+		mainActivity=getActivity();
+		//View view = inflater.inflate(R.layout.queue, container, false);
+		dropDownLocation = (ImageView) mainActivity.findViewById(R.id.id_down_queue);
+		placeChoice = (ImageView) mainActivity.findViewById(R.id.id_place_choice);
+		teachType = (ImageView) mainActivity.findViewById(R.id.id_teach_type);
+		nearPlace = (ImageView) mainActivity.findViewById(R.id.id_near_place);
+		orderLearn = (LinearLayout) mainActivity.findViewById(R.id.id_order_learn);
+		queueWait = (LinearLayout) mainActivity.findViewById(R.id.id_queue_wait);
+		appItroduce = (LinearLayout) mainActivity.findViewById(R.id.id_app_indroduce);
+		functionInfo = (LinearLayout) mainActivity.findViewById(R.id.id_function_info);
+		guaranteeService = (LinearLayout) mainActivity.findViewById(R.id.id_guarantee_service);
+		feedbackPass = (LinearLayout) mainActivity.findViewById(R.id.id_feedback_pass);
+		aboutUsCall = (LinearLayout) mainActivity.findViewById(R.id.id_about_us_call);
+		listView = (ListView) mainActivity.findViewById(R.id.id_coach_self_choice);
+	}
+	
+	@Override
+	public void onStart() {
+		super.onStart();
+		
 		initEvent();
 
+		list=new ArrayList<SecPageItemBean>();
+		
 		// List<SecPageItemBean> dataList = new ArrayList<>();
-		adapter = new SecPageAdapter(context);
-		for (int i = 0; i < 6; i++) {
-			adapter.add(new SecPageItemBean(R.drawable.coach, 3000 + i * 100, "小车", 1 + i, "查看更多" + i));
+		
+		for (int i = 0; i < 20; i++) {
+			list.add(new SecPageItemBean(R.drawable.coach, 3000+(i+1)*10, "小车",i+1, "查看更多" ));
 		}
-		listView.setAdapter(adapter);
+//		if(adapter==null){
+//			adapter = new SecPageAdapter(mainActivity,list);
+//		}
+		
+		listView.setAdapter(new SecPageAdapter(mainActivity,list));
 		// return view;
-
 	}
 
 	private void initEvent() {
@@ -85,37 +111,47 @@ public class QueueFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.id_down_queue:
 
-			// Toast.makeText(this, "我的消息", Toast.LENGTH_SHORT).show();
+			Toast.makeText(mainActivity, "排队", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_place_choice:
 
+			Toast.makeText(mainActivity, "选择场地", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_teach_type:
 
+			Toast.makeText(mainActivity, "教学类型", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_near_place:
 
+			Toast.makeText(mainActivity, "附近场地", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_order_learn:
 
+			Toast.makeText(mainActivity, "学习次数", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_queue_wait:
 
+			Toast.makeText(mainActivity, "排队等待", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_app_indroduce:
 
+			Toast.makeText(mainActivity, "软件介绍", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_function_info:
 
+			Toast.makeText(mainActivity, "功能介绍", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_guarantee_service:
 
+			Toast.makeText(mainActivity, "保障服务", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_feedback_pass:
 
+			Toast.makeText(mainActivity, "反馈通道", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_about_us_call:
 
+			Toast.makeText(mainActivity, "联系我们", Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}

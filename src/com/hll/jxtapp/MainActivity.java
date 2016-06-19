@@ -192,6 +192,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.id_tab_recommend:
+			Intent intent = new Intent(this, RecommendFragment.class);
+			startActivity(intent);
 			setSelect(0);
 			break;
 		case R.id.id_tab_queue:

@@ -119,7 +119,7 @@ public class RecommendFragment extends Fragment {
 		}
 		
 	}
-	//从服务器加载数据
+//	//从服务器加载数据
 	private class loadDataThread extends Thread{
 		private int loadSize; //每次加载数据条数
 		private int startIndex; //加载数据起始位置

@@ -32,6 +32,8 @@
 
             <category android:name="android.intent.category.DEFAULT" />
         </activity>
+        <activity android:name="com.hll.jxtapp.RecommendFragment" >
+        </activity>
         
     </application>
 

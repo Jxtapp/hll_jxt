@@ -1,10 +1,12 @@
 package com.hll.adapter;
 
-import java.util.ArrayList;
+/**
+ * @author heyi
+ * 2016/6/1
+ */
 import java.util.List;
 
 import com.hll.entity.SecPageItemBean;
-import com.hll.jxtapp.QueueFragment;
 import com.hll.jxtapp.R;
 
 import android.content.Context;
@@ -23,10 +25,10 @@ public class SecPageAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	
 	
-	public SecPageAdapter(Context context) {
+	public SecPageAdapter(Context context,List<SecPageItemBean> listBean) {
 		this.context=context;
-		this.list = new ArrayList<SecPageItemBean>();
-		this.inflater = LayoutInflater.from(context);
+		list = listBean;
+		inflater = LayoutInflater.from(context);
 	}
 
 
@@ -57,9 +59,9 @@ public class SecPageAdapter extends BaseAdapter {
           holder = new ViewHolder();
           convertView = inflater.inflate(R.layout.item_coach_self_choice, null);
           holder.coachSelfImg = (ImageView) convertView.findViewById(R.id.id_img_coach_self);
-          holder.coachPrice = (EditText) convertView.findViewById(R.id.id_coach_price);
-          holder.teachType = (EditText) convertView.findViewById(R.id.id_coach_teach_type);
-          holder.orderTimes = (EditText) convertView.findViewById(R.id.id_coach_order_times);
+          holder.coachPrice = (TextView) convertView.findViewById(R.id.id_tv_coach_price);
+          holder.teachType = (TextView) convertView.findViewById(R.id.id_tv_coach_teach_type);
+          holder.orderTimes = (TextView) convertView.findViewById(R.id.id_tv_coach_order_times);
           holder.moreInfo = (TextView) convertView.findViewById(R.id.id_coach_more_info);
           convertView.setTag(holder);
       } else {
@@ -67,17 +69,17 @@ public class SecPageAdapter extends BaseAdapter {
       }
       SecPageItemBean bean =list.get(position);
       holder.coachSelfImg.setImageResource(bean.coachSelfImg);
-      holder.coachPrice.setText(bean.coachPrice); 
-      holder.teachType.setText(bean.teachType);
-      holder.orderTimes.setText(bean.orderTimes);
+      holder.coachPrice.setText("预约价格：       "+String.valueOf(bean.coachPrice)); 
+      holder.teachType.setText("学车类型：        "+bean.teachType);
+      holder.orderTimes.setText("预约次数：            "+String.valueOf(bean.orderTimes));
       holder.moreInfo.setText(bean.moreInfo);
       return convertView;
 	}
 	 class ViewHolder{
 		 public ImageView coachSelfImg;
-		 public EditText  coachPrice;
-		 public EditText  teachType;
-		 public EditText  orderTimes;
+		 public TextView  coachPrice;
+		 public TextView  teachType;
+		 public TextView  orderTimes;
 		 public TextView  moreInfo;
 	    }
 

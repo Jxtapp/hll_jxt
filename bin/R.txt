@@ -412,6 +412,9 @@ int id id_tab_simulate_img 0x7f050044
 int id id_teach_type 0x7f050095
 int id id_title 0x7f0500c6
 int id id_titleOfRight 0x7f05009e
+int id id_tv_coach_order_times 0x7f05005a
+int id id_tv_coach_price 0x7f050056
+int id id_tv_coach_teach_type 0x7f050058
 int id id_tv_friend 0x7f050048
 int id id_tv_moreinfo 0x7f05004b
 int id id_tv_queue 0x7f050042
@@ -422,9 +425,6 @@ int id id_tx_about_us_call 0x7f050093
 int id id_tx_accountInfo 0x7f05005d
 int id id_tx_app_indroduce 0x7f050087
 int id id_tx_appraiseUs 0x7f050075
-int id id_tx_coach_order_times 0x7f05005a
-int id id_tx_coach_price 0x7f050056
-int id id_tx_coach_teach_type 0x7f050058
 int id id_tx_contactUs 0x7f050078
 int id id_tx_errorExercise 0x7f0500b0
 int id id_tx_examPlan 0x7f0500ad
