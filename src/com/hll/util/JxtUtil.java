@@ -3,9 +3,25 @@ package com.hll.util;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.CookieStore;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.cookie.Cookie;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+
+import android.util.Log;
 /**
  * 常用方法的工具类
  * @author liaoyun
@@ -28,6 +44,17 @@ public class JxtUtil {
 			con.setRequestMethod("GET");
 			con.setDoInput(true);
 			con.setDoOutput(true);
+			con.setRequestProperty("Content-Type", "application/json");
+			if(NetworkInfoUtil.sessionId!=null){
+				//如果已经建立了联接
+				con.setRequestProperty("cookie", NetworkInfoUtil.sessionId);
+			}else{
+				//第一次建立联接，获取 sessionId
+				String cookieval = con.getHeaderField("set-cookie"); 
+				if(cookieval != null) { 
+					NetworkInfoUtil.sessionId = cookieval.substring(0, cookieval.indexOf(";")); 
+				}
+			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -35,6 +62,101 @@ public class JxtUtil {
 		}
 		return con;
 	}
+	
+	/**
+	 * 向服务器传递 json对象的参数，以post请求的方式
+	 * liaoyun 2016-6-20
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 */
+	public static HttpURLConnection postHttpConn(String url,String jsonStr){
+		HttpURLConnection con=null;
+		try {
+			URL myUrl = new URL(url);
+			con = (HttpURLConnection) myUrl.openConnection();
+			con.setConnectTimeout(4000);
+			con.setDoInput(true);
+			con.setDoOutput(true);
+			con.setRequestMethod("POST");
+			con.setUseCaches(false);
+			con.setInstanceFollowRedirects(false);//???????????????????????
+			con.setRequestProperty("Content-Type", "application/json");
+			con.setRequestProperty("ser-Agent", "Fiddler");
+			//con.setRequestProperty("Charset", "utf-8");
+			if(NetworkInfoUtil.sessionId!=null){
+				//如果已经建立了联接
+				con.setRequestProperty("cookie", NetworkInfoUtil.sessionId);
+			}
+			OutputStream os = con.getOutputStream();
+			os.write(jsonStr.getBytes());
+			os.close();
+			//int code = con.getResponseCode();
+			
+			if(NetworkInfoUtil.sessionId==null){
+				//第一次建立联接，获取 sessionId
+				List<String> sid = con.getHeaderFields().get("Set-Cookie");
+				Map hfs=con.getHeaderFields();
+				Set<String> keys=hfs.keySet();
+				for (String string : keys) {
+					String s=string;
+					s="";
+				}
+			}
+			//Log.i("sessionId",NetworkInfoUtil.sessionId);
+		} catch (MalformedURLException e) {
+			Log.i("liaoyun","====================================");
+			String s = e.getMessage();
+			Log.i("liaoyun",s);
+		} catch (IOException e) {
+			Log.i("liaoyun","====================================");
+			String s = e.getMessage();
+			Log.i("liaoyun",s);
+		}
+		return con;
+	}
+	
+	/**
+	 * 返回 json 字符串
+	 * @param url
+	 * @param jsonString
+	 * @return
+	 */
+	public static String doPost(String url,String jsonString){
+		HttpPost post = new HttpPost(url);
+		String str = null;
+		StringEntity se;
+		try {
+			se = new StringEntity(jsonString);
+			post.setEntity(se);
+			if(NetworkInfoUtil.sessionId!=null){
+				post.setHeader("Cookie", "JSESSIONID="+NetworkInfoUtil.sessionId);
+			}
+			DefaultHttpClient httpClient = new DefaultHttpClient();
+			HttpResponse response = httpClient.execute(post);
+			HttpEntity entity = response.getEntity();
+			str = entity.toString();
+			// get sessionId
+			if(NetworkInfoUtil.sessionId==null){
+				CookieStore mCookieStore = httpClient.getCookieStore();  
+				List<Cookie> cookies = mCookieStore.getCookies();  
+				for (int i = 0; i < cookies.size(); i++) {   
+		            if ("SESSIONID".equals(cookies.get(i).getName())) {   
+		            	NetworkInfoUtil.sessionId = cookies.get(i).getValue();  
+		               break;  
+		            }  
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return str;
+	}
+	
 	/**
 	 * liaoyun 2016-5-28
 	 * byte 数组 转 json 字符串
