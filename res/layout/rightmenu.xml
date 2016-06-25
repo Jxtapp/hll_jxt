@@ -339,7 +339,7 @@
                        android:id="@+id/id_img_news"
                    		android:layout_width="wrap_content"
                    		android:layout_height="wrap_content"
-                   		android:background="@drawable/news"    
+                   		android:background="@drawable/my_news"    
                    />
                    
                    <TextView 
