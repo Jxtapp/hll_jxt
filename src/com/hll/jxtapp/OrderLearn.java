@@ -10,23 +10,24 @@ import java.util.List;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.app.AlertDialog.Builder;
-public class OrderLearn extends Activity implements OnClickListener{
+public class OrderLearn extends FragmentActivity implements OnClickListener{
 
 	private TextView orderLearnMsgTv;
-	//private TextView titleTv;
 	private Spinner exerciceItemChoiceSp;
 	private Spinner exerciceContentChoiceSp;
 	private Spinner exercicePlaceChoiceSp;
-	
 	private ImageButton todayMorningIB;
 	private ImageButton tomorrowMorningIB;
 	private ImageButton theDayAfterTomorrowMorningIB;
@@ -45,6 +46,9 @@ public class OrderLearn extends Activity implements OnClickListener{
 	private ArrayAdapter<String> orderPlaceAdapter;
 	private String userName;
 	private String schoolName;
+	private ImageView returnPre;
+	private TextView  titleSce;
+	private TextView  menuSce;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +70,9 @@ public class OrderLearn extends Activity implements OnClickListener{
 		tomorrowEveningIB=(ImageButton) findViewById(R.id.id_tomorrow_evening);
 		theDayAfterTomorrowEveningIB=(ImageButton) findViewById(R.id.id_theDayAfterTomorrow_evening);
 		orderSureButton=(ImageButton) findViewById(R.id.id_order_sure_but);
-		//titleTv=(TextView) findViewById(R.id.id_title);
+		returnPre=(ImageView) findViewById(R.id.id_return);
+		titleSce=(TextView) findViewById(R.id.id_sec_title);
+		menuSce=(TextView) findViewById(R.id.id_sec_menu);
 	}
 	
 	@Override
@@ -132,11 +138,18 @@ public class OrderLearn extends Activity implements OnClickListener{
 		tomorrowEveningIB.setOnClickListener(this);
 		theDayAfterTomorrowEveningIB.setOnClickListener(this);
 		orderSureButton.setOnClickListener(this);
+		returnPre.setOnClickListener(this);
+		titleSce.setOnClickListener(this);
+		menuSce.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {
 
 		switch (v.getId()) {
+		case R.id.id_return:
+			Intent intentReturn =new Intent(this,MainActivity.class);
+			startActivity(intentReturn);
+			break;
 		case R.id.id_today_morning:
 			ImageButton ib0=(ImageButton)todayMorningIB;
 			assert(R.id.id_today_morning==todayMorningIB.getId());

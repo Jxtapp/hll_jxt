@@ -53,7 +53,6 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	private LinearLayout feedbackPass;
 	private LinearLayout aboutUsCall;
 	private ListView listView;
-	private Context context;
 	private Vector<SecPageItemBean> list;
 	private SecPageAdapter adapter;
 	private Activity mainActivity;
@@ -112,6 +111,20 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		choiceCochSelf();
 	}
 
+	// 初始化监听事件
+		private void initEvent() {
+
+			dropDownLocation.setOnClickListener(this);
+			orderLearn.setOnClickListener(this);
+			queueWait.setOnClickListener(this);
+			appItroduce.setOnClickListener(this);
+			functionInfo.setOnClickListener(this);
+			guaranteeService.setOnClickListener(this);
+			feedbackPass.setOnClickListener(this);
+			aboutUsCall.setOnClickListener(this);
+			listView.setOnScrollListener(this);
+		}
+
 	// 教练列表
 	private void coachList() {
 
@@ -132,14 +145,14 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	 void initData() {
 		 
 		for (int i = 0; i < 10; i++) {
-			SecPageItemBean secItemBean = new SecPageItemBean();
-			secItemBean.coachPrice=3000 + (index) * 10;
-			secItemBean.coachSelfImg=R.drawable.coach;
-			secItemBean.teachType="小车";
-			secItemBean.orderTimes=index;
-			secItemBean.moreInfo="查看更多";
-			//list.add(new SecPageItemBean(R.drawable.coach, 3000 + (index) * 10, "小车", index, "查看更多"));
-			list.add(secItemBean);
+//			SecPageItemBean secItemBean = new SecPageItemBean();
+//			secItemBean.coachPrice=3000 + (index) * 10;
+//			secItemBean.coachSelfImg=R.drawable.coach;
+//			secItemBean.teachType="小车";
+//			secItemBean.orderTimes=index;
+//			secItemBean.moreInfo="查看更多";
+			list.add(new SecPageItemBean(R.drawable.coach, 3000 + (index) * 10, "小车", index, "查看更多"));
+			//list.add(secItemBean);
 			index++;
 		}
 
@@ -206,20 +219,7 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 
 	}
 
-	// 初始化监听事件
-	private void initEvent() {
-
-		dropDownLocation.setOnClickListener(this);
-		orderLearn.setOnClickListener(this);
-		queueWait.setOnClickListener(this);
-		appItroduce.setOnClickListener(this);
-		functionInfo.setOnClickListener(this);
-		guaranteeService.setOnClickListener(this);
-		feedbackPass.setOnClickListener(this);
-		aboutUsCall.setOnClickListener(this);
-		listView.setOnScrollListener(this);
-	}
-
+	
 	@Override
 	public void onClick(View v) {
 
@@ -228,18 +228,7 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 
 			Toast.makeText(mainActivity, "排队", Toast.LENGTH_SHORT).show();
 			break;
-		// case R.id.id_place_choice:
-		//
-		// Toast.makeText(mainActivity, "选择场地", Toast.LENGTH_SHORT).show();
-		// break;
-		// case R.id.id_teach_type:
-		//
-		// Toast.makeText(mainActivity, "教学类型", Toast.LENGTH_SHORT).show();
-		// break;
-		// case R.id.id_near_place:
-		//
-		// Toast.makeText(mainActivity, "附近场地", Toast.LENGTH_SHORT).show();
-		// break;
+		
 		case R.id.id_order_learn:
 
 			Intent intent1 = new Intent(mainActivity, OrderLearn.class);
@@ -248,7 +237,9 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 			break;
 		case R.id.id_queue_wait:
 
-			Toast.makeText(mainActivity, "排队等待", Toast.LENGTH_SHORT).show();
+			Intent intent2 = new Intent(mainActivity, QueueWait.class);
+			startActivity(intent2);
+			//Toast.makeText(mainActivity, "排队等待", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_app_indroduce:
 
@@ -293,7 +284,6 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		
 		//System.out.println("totalItemCount:"+totalItemCount);
 		visibleLastIndex=firstVisibleItem+visibleItemCount-1;
-		
 	}
 
 	@Override
@@ -317,6 +307,7 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 			}
 		};
 	};
+	
 
 	//模拟加载数据
 	class LoadDataThread extends Thread{

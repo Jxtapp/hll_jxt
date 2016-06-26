@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" 
+    android:gravity="center">
+    
+    <TextView 
+        android:id="@+id/id_queue_list_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+    <TextView 
+        android:id="@+id/id_queue_list_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+
+     <ImageButton
+            android:id="@+id/id_queue_list_sure_one"
+            android:layout_width="35dip"
+            android:layout_height="35dip"
+            android:src="@drawable/queue_list_sure"
+           
+             />
+     <ImageButton
+            android:id="@+id/id_queue_list_sure_tow"
+            android:layout_width="35dip"
+            android:layout_height="35dip"
+            android:paddingLeft="10dip"
+             android:src="@drawable/queue_list_sure"
+             />
+</LinearLayout>

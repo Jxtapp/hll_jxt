@@ -9,6 +9,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hll.entity.RecommendSchoolInfoO;
+import com.hll.entity.SchoolSelectBy;
 import com.hll.adapter.RecommondSchoolListAdapter;
 import com.hll.basic.ImageCallBack;
 import com.hll.basic.NetworkDownImage;
@@ -48,6 +49,8 @@ public class RecommendFragment extends Fragment {
 	private LoadAdHandler loadAdHandler = new LoadAdHandler(); //加载特别推荐的图片
 	private ImageView recommendAdImg;//特别推荐栏图片
 	private TextView recommendAdPrice;//特别推荐栏价格
+	private SchoolSelectBy schoolSelect = new SchoolSelectBy();
+	private Gson gson = new Gson();
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,6 +66,7 @@ public class RecommendFragment extends Fragment {
 		if(recomdendAd == null){
 			recomdendAd = (LinearLayout) mainActivity.findViewById(R.id.recommend_ad);
 		}
+		//驾校详细信息栏
 		lview = (ListView) mainActivity.findViewById(R.id.driverschoollist);
 		if(loadDataHandler==null){
 			loadDataHandler = new LoadDataHandler();
@@ -105,7 +109,7 @@ public class RecommendFragment extends Fragment {
 			Log.i("key",lastItem+"   "+recommondSchoolListAdapter.getCount());
 			if(lastItem==recommondSchoolListAdapter.getCount() && scrollState==OnScrollListener.SCROLL_STATE_IDLE){
 				driverSchoolInfoList = recommondSchoolListAdapter.getDriverSchoolInfoList();
-				new loadDataThread(0,3).start();
+				new loadDataThread().start();
 			}
 			
 		}
@@ -119,24 +123,21 @@ public class RecommendFragment extends Fragment {
 		}
 		
 	}
-//	//从服务器加载数据
+	//从服务器加载数据
 	private class loadDataThread extends Thread{
-		private int loadSize; //每次加载数据条数
-		private int startIndex; //加载数据起始位置
-		
-		public loadDataThread(int size,int index){
-			this.loadSize=size;
-			this.startIndex=index;
+		public loadDataThread(){
+			//改变查询的页数
 		}
-		
 		@Override
 		public void run() {
-			HttpURLConnection conn = JxtUtil.getHttpConn(NetworkInfoUtil.baseUtl+"/recommond/getSchoolList/"+startIndex+"/"+loadSize+".action");
+			//查询对象序列化
+			String selectJson = gson.toJson(schoolSelect);
+			//String sss = JxtUtil.doPost(NetworkInfoUtil.baseUtl+"/recommond/getSchoolList.action", selectJson);
+			HttpURLConnection conn = JxtUtil.postHttpConn(NetworkInfoUtil.baseUtl+"/recommond/getSchoolList.action",selectJson);
 			try {
 				InputStream is = conn.getInputStream();
 				if(is!=null){
 					String str = JxtUtil.streamToJsonString(is);
-					Gson gson = new Gson();
 					List<RecommendSchoolInfoO> list = gson.fromJson(str, new TypeToken<List<RecommendSchoolInfoO>>(){}.getType());
 					driverSchoolInfoList.addAll(list);
 					loadDataHandler.sendEmptyMessage(0);

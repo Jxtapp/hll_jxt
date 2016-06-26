@@ -10,11 +10,13 @@ import android.net.NetworkInfo;
  */
 public class NetworkInfoUtil {
 	//服务器 地址
-	public static String baseUtl="http://10.0.2.2:8080/hll";
+	public static String baseUtl="http://192.168.0.109:8080/hll";
 	//图片接口
 	public static String picUtl=baseUtl+"/file/pic/";
 	//网络状态
 	public static ConnectivityManager connectManager;
+	//sessionId
+	public static String sessionId=null;
 	
 	/**
 	 * 当前的网络接入的类型  WIFI or MOBILE or NULL
