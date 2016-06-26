@@ -15,6 +15,12 @@ public class SecPageItemBean {
 	public int  orderTimes;
 	public String  moreInfo;
 	
+	
+	public SecPageItemBean() {
+		super();
+	}
+
+
 	public SecPageItemBean(int coachSelfImg,int coachPrice,String teachType
 			,int orderTimes,String moreInfo){
 		this.coachSelfImg=coachSelfImg;
