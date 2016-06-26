@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <!-- 欢迎查看详情 -->
+
+    <TextView
+        android:id="@+id/id_order_learn_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingLeft="30dip"
+        android:paddingRight="30dip"
+        android:paddingTop="8dip"
+        android:textSize="16sp"
+        android:lineSpacingExtra="10dip"
+        android:textColor="@color/red"
+        android:text="" />
+    <!-- 训练项目的选择 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dip"
+        android:paddingRight="20dip"
+        android:paddingTop="20dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="训练项目选择："
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/id_exercice_item_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Spinner
+            android:id="@+id/id_exercice_content_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <!-- 训练场地的选择 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="20dip"
+        android:paddingTop="20dip" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="训练场地选择："
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/id_exercice_place_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </LinearLayout>
+
+    <!-- 最近三天的时间安排表 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="30dip" >
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:text="训练计划表"
+            android:textSize="16sp"
+            android:background="@color/yellow"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:gravity="center"
+            android:background="@color/yellow"
+            android:textStyle="bold"
+            android:text="今天" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:background="@color/yellow"
+             android:gravity="center"
+              android:textStyle="bold"
+            android:text="明天" />
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textSize="20sp"
+            android:background="@color/yellow"
+             android:gravity="center"
+             android:textStyle="bold"
+            android:text="后天" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip" 
+        android:paddingTop="20dip">
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+             android:gravity="center"
+              android:background="@color/green"
+               android:textSize="20sp"
+               android:textStyle="bold"
+            android:text="上午" />
+
+        <ImageButton
+            android:id="@+id/id_today_morning"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/id_tomorrow_morning"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/id_theDayAfterTomorrow_morning"
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip" 
+        android:paddingTop="30dip">
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+             android:gravity="center"
+              android:textStyle="bold"
+               android:textSize="20sp"
+              android:background="@color/green"
+            android:text="下午" />
+
+        <ImageButton
+            android:id="@+id/id_today_afternoon"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/id_tomorrow_afternoon"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/id_theDayAfterTomorrow_afternoon"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:paddingTop="30dip" >
+
+        <TextView
+            android:layout_width="0dip"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@color/green"
+             android:textStyle="bold"
+             android:textSize="20sp"
+            android:text="晚上" />
+
+        <ImageButton
+            android:id="@+id/id_today_evening"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/id_tomorrow_evening"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/id_theDayAfterTomorrow_evening"
+            android:layout_width="0dip"
+            android:layout_height="wrap_content"
+            android:src="@drawable/choice_false"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="40dip" 
+        android:layout_gravity="center"
+        >
+        
+        <ImageButton
+            android:id="@+id/id_order_sure_but"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/order_sure_but" 
+            />
+    </LinearLayout>
+
+</LinearLayout>
