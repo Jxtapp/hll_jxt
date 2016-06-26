@@ -77,14 +77,21 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 		RecommendSchoolInfoO vo=driverSchoolInfoList.get(position);
 		viewHolder.price.setText(String.valueOf(vo.getItemPrice()));
 		viewHolder.address.setText(vo.getItemAddress());
+		viewHolder.imageView.setImageResource(R.drawable.abc_ab_bottom_solid_dark_holo);
+		//添加标记，防止图片错位
+		viewHolder.imageView.setTag(vo.getItemImg());
 		//从网上下载图片
 		if(vo.getItemImg()!=null){
+			final String imgName = vo.getItemImg();
 			NetworkDownImage downImage = new NetworkDownImage(NetworkInfoUtil.picUtl+"/"+vo.getItemImg());
 			//接口回调，加载图片
 			downImage.loadImage(new ImageCallBack(){
 				@Override
 				public void getDrawable(Drawable drawable) {
-					viewHolder.imageView.setImageDrawable(drawable);
+					String imgTag = (String) viewHolder.imageView.getTag();
+					if(imgTag != null && imgTag.equals(imgName)){
+						viewHolder.imageView.setImageDrawable(drawable);
+					}
 				}
 			});
 		}

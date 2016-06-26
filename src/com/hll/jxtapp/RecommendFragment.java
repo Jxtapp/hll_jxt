@@ -18,6 +18,7 @@ import com.hll.util.NetworkInfoUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +27,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
@@ -51,6 +53,8 @@ public class RecommendFragment extends Fragment {
 	private TextView recommendAdPrice;//特别推荐栏价格
 	private SchoolSelectBy schoolSelect = new SchoolSelectBy();
 	private Gson gson = new Gson();
+	//点击进入百度地图
+	private ImageView baiduMap;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,6 +80,11 @@ public class RecommendFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+		if(baiduMap == null){
+			baiduMap = (ImageView) mainActivity.findViewById(R.id.to_map);
+		}
+		//添加 监听器，进入地图
+		baiduMap.setOnClickListener(new BaiduMapClickListener());
 		//加载 特别推荐栏的数据
 		recomdendAdLoadData(recomdendAd);
 		if(driverSchoolInfoList==null){
@@ -205,6 +214,15 @@ public class RecommendFragment extends Fragment {
 					}
 				});
 			}
+		}
+	}
+	
+	//百度地图按钮监听器
+	private class BaiduMapClickListener implements OnClickListener{
+		@Override
+		public void onClick(View view) {
+			Intent intent = new Intent(mainActivity,RecommendMapActivity.class);
+			startActivity(intent);
 		}
 	}
 }
