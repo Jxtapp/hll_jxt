@@ -10,7 +10,7 @@ import android.net.NetworkInfo;
  */
 public class NetworkInfoUtil {
 	//服务器 地址
-	public static String baseUtl="http://192.168.0.109:8080/hll";
+	public static String baseUtl="http://192.168.0.112:8080/hll";
 	//图片接口
 	public static String picUtl=baseUtl+"/file/pic/";
 	//网络状态
