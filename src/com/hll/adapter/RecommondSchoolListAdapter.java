@@ -97,6 +97,7 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 		}
 		return converView;
 	}
+	
 	private class ViewHolder{
 		public ImageView imageView;
 		public TextView price;
