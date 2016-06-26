@@ -29,7 +29,7 @@
             android:layout_height="match_parent"
             android:paddingTop="1dip"
             android:gravity="right"
-            android:text="主页"
+            android:text=""
             android:textSize="18sp" />
 
 </LinearLayout>
