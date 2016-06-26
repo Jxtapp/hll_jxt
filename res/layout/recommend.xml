@@ -10,6 +10,7 @@
 	    android:orientation="horizontal"
 	    android:background="#E7E6E6">
 	    	<ImageView 
+	    	    android:id="@+id/to_map"
 	    	    android:layout_width="40sp"
 	    	    android:layout_height="30sp"
 	    	    android:contentDescription="地址"
