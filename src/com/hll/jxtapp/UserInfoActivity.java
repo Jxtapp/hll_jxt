@@ -48,15 +48,15 @@ public class UserInfoActivity extends Activity implements  Serializable{
 		
 		this.context = this;
 		
-		//´´½¨ÒÆ¶¯ÊÓÍ¼
+		//ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½Í¼
 		leftMoveView = new LeftMoveView(context);
-		//´´½¨×ó±ß²Ëµ¥ÊÓÍ¼
+		//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß²Ëµï¿½ï¿½ï¿½Í¼
 		leftMenuView = new LeftMenuView(this, leftMoveView);
 		
 		/****************************************************/
-		//½çÃæ01
+		//ï¿½ï¿½ï¿½ï¿½01
 		login = new LoginView(context);
-		login.setMoveView(leftMoveView);//¸³ÖµÒÆ¶¯ÊÓÍ¼
+		login.setMoveView(leftMoveView);//ï¿½ï¿½Öµï¿½Æ¶ï¿½ï¿½ï¿½Í¼
 		login.init();
 		/***************************************************/
 		
@@ -71,7 +71,7 @@ public class UserInfoActivity extends Activity implements  Serializable{
 		//questionBank = new QuestionBankView(context);
 		setting = new SettingView(context);
 		
-		//ÒÆ¶¯ÊÓÍ¼Ä¬ÈÏ½çÃæ£º½çÃæ01£¬
+		//ï¿½Æ¶ï¿½ï¿½ï¿½Í¼Ä¬ï¿½Ï½ï¿½ï¿½æ£ºï¿½ï¿½ï¿½ï¿½01ï¿½ï¿½
 		leftMoveView.setMainView(login, leftMenuView,LeftTabView.TAB_ITEM01);
 		leftMoveView.getLeft_show_view().setCurrentTab(LeftTabView.TAB_ITEM01);
 

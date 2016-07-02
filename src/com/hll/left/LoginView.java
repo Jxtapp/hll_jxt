@@ -7,6 +7,7 @@ import com.hll.basic.LeftMoveView;
 import com.hll.entity.ImgTxtBean;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -49,14 +50,10 @@ public class LoginView extends BaseView {
 				return false;
 			}
 		});
-		
-		for(int i=0;i<20;i++){
-			ImgTxtBean b = new ImgTxtBean();
-			b.setResid(R.drawable.ic_launcher);
-			b.setText("item01 - "+(i+1));
-			adapter.addObject(b);
-		}
-		
-		
+		//显示用户信息，如果没有用户的信息，则显示未登陆
+		ImgTxtBean b = new ImgTxtBean();
+		b.setResid(R.drawable.ic_launcher);
+		b.setText("未登陆");
+		adapter.addObject(b);
 	}
 }

@@ -1,10 +1,12 @@
 package com.hll.jxtapp;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.LinearLayout;
+
 import com.hll.jxtapp.R;
 import com.hll.basic.LeftMoveView;
 import com.hll.basic.LeftTabView;
@@ -32,7 +34,7 @@ public class LeftMenuView{
 	
 	
 	/**
-	 * ¹¹Ôì³õÊ¼»¯
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 	 * @param userInfo2
 	 * @param leftMoveView
 	 */
@@ -45,7 +47,7 @@ public class LeftMenuView{
 	}
 
 	public void createView() {
-		accountInfo  = (LinearLayout)view.findViewById(R.id.id_accountInfo);//ÕËºÅÐÅÏ¢£¬±êÌâÍ·
+		accountInfo  = (LinearLayout)view.findViewById(R.id.id_accountInfo);//ï¿½Ëºï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í·
 		login  = (LinearLayout)view.findViewById(R.id.id_login);
 		personInfo  = (LinearLayout)view.findViewById(R.id.id_personInfo);
 		questionBank = (LinearLayout)view.findViewById(R.id.id_questionBank);
@@ -60,7 +62,6 @@ public class LeftMenuView{
 
 	public void setViewProperty() {
 		login.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				startLogin();
@@ -135,13 +136,12 @@ public class LeftMenuView{
 
 	
 	/**
-	 * ½øÈëLogin
+	 * user login
 	 */
 	public void startLogin(){
 		if(!startInit(LeftTabView.TAB_ITEM01)){
 			login.setBackgroundResource(R.color.yellow);
 
-			//´ò¿ªÊÓÍ¼
 			setCurrentTab(LeftTabView.TAB_ITEM01);
 			if(userInfo.login.view==null){
 				userInfo.login.init();
@@ -152,13 +152,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªquestionBank
+	 * ï¿½ï¿½questionBank
 	 */
 	public void startQuestinBank(){
 		if(!startInit(LeftTabView.TAB_ITEM02)){
 			questionBank.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM02);
 			
 			if(userInfo.questionBank.view==null){
@@ -171,13 +171,13 @@ public class LeftMenuView{
 	}
 	
 	/**
-	 * ´ò¿ªmyOrder
+	 * ï¿½ï¿½myOrder
 	 */
 	public void startMyOrder(){
 		if(!startInit(LeftTabView.TAB_ITEM03)){
 			myOrder.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM03);
 			
 			if(userInfo.myOrder.view==null){
@@ -190,13 +190,13 @@ public class LeftMenuView{
 	}
 
 	/**
-	 * ´ò¿ªaboutUs
+	 * ï¿½ï¿½aboutUs
 	 */
 	public void startAboutUs(){
 		if(!startInit(LeftTabView.TAB_ITEM04)){
 			aboutUs.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM04);
 			
 			if(userInfo.aboutUs.view==null){
@@ -208,13 +208,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªappraiseUs
+	 * ï¿½ï¿½appraiseUs
 	 */
 	public void startAppraiseUs(){
 		if(!startInit(LeftTabView.TAB_ITEM05)){
 			appraiseUs.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM05);
 			
 			if(userInfo.appraiseUs.view==null){
@@ -226,13 +226,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªcontactUs
+	 * ï¿½ï¿½contactUs
 	 */
 	public void startContactUs(){
 		if(!startInit(LeftTabView.TAB_ITEM06)){
 			contactUs.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM06);
 			
 			if(userInfo.contactUs.view==null){
@@ -244,13 +244,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªmessage
+	 * ï¿½ï¿½message
 	 */
 	public void startMessage(){
 		if(!startInit(LeftTabView.TAB_ITEM07)){
 			message.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM07);
 			
 			if(userInfo.message.view==null){
@@ -262,13 +262,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªmyStore
+	 * ï¿½ï¿½myStore
 	 */
 	public void startMyStore(){
 		if(!startInit(LeftTabView.TAB_ITEM08)){
 			myStore.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM08);
 			
 			if(userInfo.myStore.view==null){
@@ -280,13 +280,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªpersonInfo
+	 * ï¿½ï¿½personInfo
 	 */
 	public void startPersonInfo(){
 		if(!startInit(LeftTabView.TAB_ITEM09)){
 			personInfo.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM09);
 			
 			if(userInfo.personInfo.view==null){
@@ -298,13 +298,13 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ´ò¿ªsetting
+	 * ï¿½ï¿½setting
 	 */
 	public void startSetting(){
 		if(!startInit(LeftTabView.TAB_ITEM010)){
 			setting.setBackgroundResource(R.color.yellow);
 			
-			//´ò¿ªÊÓÍ¼
+			//ï¿½ï¿½ï¿½ï¿½Í¼
 			setCurrentTab(LeftTabView.TAB_ITEM010);
 			
 			if(userInfo.setting.view==null){
@@ -336,7 +336,7 @@ public class LeftMenuView{
 		}
 	}
 	/**
-	 * ³õÊ¼»¯×ó±ß²Ëµ¥±³¾°
+	 * ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ß²Ëµï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private void initLeftMenuBackGround(){
 		this.questionBank.setBackgroundResource(R.color.white);
@@ -351,7 +351,7 @@ public class LeftMenuView{
 	}
 
 	public void setWidth(int w) { 
-		// ÎªÁËÊ¹²à±ßÀ¸²¼¾ÖºÏÀí ËùÒÔÒªÎªÄ³Ïî²¼¾ÖÖÐ¿í¶Èfill_parentµÄ¿Ø¼þÉèÖÃ¾ø¶Ô¿í¶È¼´²à±ßÀ¸µÄ¿í¶È 
+		// Îªï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öºï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ÒªÎªÄ³ï¿½î²¼ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½fill_parentï¿½Ä¿Ø¼ï¿½ï¿½ï¿½ï¿½Ã¾ï¿½Ô¿ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ 
 		LayoutParams p = view.getLayoutParams();
 		p.width = w;
 		view.setLayoutParams(p);

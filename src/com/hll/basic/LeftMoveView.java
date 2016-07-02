@@ -2,27 +2,21 @@ package com.hll.basic;
 
 
 import com.hll.jxtapp.LeftMenuView;
-import com.hll.jxtapp.RightMenuView;
 import com.hll.util.GetWHUtil;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Display;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
+@SuppressLint("HandlerLeak")
 public class LeftMoveView extends ViewGroup {
 
 	private final static int TOUCH_STATE_REST = 0;
@@ -52,20 +46,20 @@ public class LeftMoveView extends ViewGroup {
 	private ImageView image_01;
 	private ImageView image_02;
 	private Context context;
-	private int currentTab;//当前的activity
+	private int currentTab;
 
 	private int min_distance = 200;
-	private final int MOVE_TIME=10;//移动时间
-	private int move_main= 90;//移动距离
-	private int move_left = 40;//移动的最后距离
+	private final int MOVE_TIME=10;
+	private int move_main= 90;
+	private int move_left = 40;
 
 	private int screen_w;
 	private int screen_h;
 
 	private int move_x_v;
 	
-	private boolean isFaceRuturn = true;//是否界面返回
-	private boolean isStarted = false;//是否刚启动,false:一进来显示左边,true,显示中间
+	private boolean isFaceRuturn = true;
+	private boolean isStarted = false;
 
 	private boolean isAimationMoving = false;
 	private boolean isMoveEnable = true;
@@ -122,7 +116,7 @@ public class LeftMoveView extends ViewGroup {
 	}
 	
 	/**
-	 * 初始化移动布局
+	 *
 	 * @param main_show_view
 	 * @param currentTab
 	 */
@@ -134,6 +128,7 @@ public class LeftMoveView extends ViewGroup {
 		this.screen_h = Height;
 		this.move_main =GetWHUtil.getWindowWidth(context)/5;
 		this.move_left = GetWHUtil.getWindowWidth(context)/10;
+		//淇濇寔灞忓箷甯镐寒
 		this.setKeepScreenOn(true);
 		this.min_distance = (int) (screen_w / 5.0);
 	}
@@ -249,7 +244,7 @@ public class LeftMoveView extends ViewGroup {
 			float x = ev.getX();
 			float y = ev.getY();
 			switch (action) {
-			case MotionEvent.ACTION_DOWN:// 按下去
+			case MotionEvent.ACTION_DOWN:// 锟斤拷锟斤拷去
 				
 				
 				super.dispatchTouchEvent(ev);
@@ -263,7 +258,7 @@ public class LeftMoveView extends ViewGroup {
 					move_state = MOVE_TO_REST;
 				}
 				break;
-			case MotionEvent.ACTION_MOVE:// 拖动时
+			case MotionEvent.ACTION_MOVE:// 锟较讹拷时
 
 				int last_y = (int) y;
 				int last_x = (int) x;
@@ -309,7 +304,7 @@ public class LeftMoveView extends ViewGroup {
 				}
 				
 				break;
-			case MotionEvent.ACTION_UP:// 放开时
+			case MotionEvent.ACTION_UP:// 锟脚匡拷时
 				main_show_view.setScroll(true);
 				if (this.touch_state == TOUCH_STATE_MOVING) {
 					if (isMoved) {
@@ -337,49 +332,11 @@ public class LeftMoveView extends ViewGroup {
 								this.moveToLeft(true);
 							}
 						}
-						/*if(now_state == LEFT){
-							if (Math.abs(last_x - start_x) >= 10) {
-								if (now_state == MAIN) {
-									if (move_state == MOVE_TO_LEFT) {
-										this.moveToLeft(true);
-									}
-								
-								} else {
-									this.moveToMain(true,screen_w-Math.abs(main_show_view.getLeft()));
-								}
-							} else {
-								if (now_state == MAIN) {
-									this.moveToMain(true,screen_w-Math.abs(main_show_view.getLeft()));
-								}
-								if (now_state == LEFT) {
-									this.moveToLeft(true);
-								}
-							}
-						}else{
-							if (Math.abs(last_x - start_x) >= min_distance) {
-								if (now_state == MAIN) {
-									if (move_state == MOVE_TO_LEFT) {
-										this.moveToLeft(true);
-									}
-								
-								} else {
-									this.moveToMain(true,Math.abs(main_show_view.getLeft()));
-								}
-							} else {
-								if (now_state == MAIN) {
-									this.moveToMain(true,Math.abs(main_show_view.getLeft()));
-								}
-								if (now_state == LEFT) {
-									this.moveToLeft(true);
-								}
-							}
-						}*/
-						
 						move_state = MOVE_TO_REST;
 					} else {
 						super.dispatchTouchEvent(ev);
 						this.touch_state = TOUCH_STATE_REST;
-						return false;// 为了响应listView的点击事件
+						return false;
 					}
 				}
 				super.onTouchEvent(ev);
@@ -477,16 +434,11 @@ public class LeftMoveView extends ViewGroup {
 	public LeftMenuView getLeft_show_view() {
 		return left_show_view;
 	}
-//	public RightMenuView getRight_show_view() {
-//		return right_show_view;
-//	}
+
 	public BaseView getMain_show_view() {
 		return main_show_view;
 	}
 
-	/**
-	 * 显示隐藏左边菜单
-	 */
 	public void showHideLeftMenu(){
 		if (now_state == LeftMoveView.MAIN) {
 			moveToLeft(true);
