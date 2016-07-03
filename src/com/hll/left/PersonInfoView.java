@@ -1,6 +1,7 @@
 package com.hll.left;
 
 import com.hll.jxtapp.R;
+import com.hll.util.NetworkInfoUtil;
 import com.hll.adapter.ImgTxtAdapter;
 import com.hll.basic.BaseView;
 import com.hll.basic.LeftMoveView;
@@ -50,13 +51,36 @@ public class PersonInfoView extends BaseView {
 			}
 		});
 		
-		for(int i=0;i<20;i++){
+//		for(int i=0;i<20;i++){
+//			ImgTxtBean b = new ImgTxtBean();
+//			b.setResid(R.drawable.ic_launcher);
+//			b.setText("item01 - "+(i+1));
+//			adapter.addObject(b);
+//		}
+		if(NetworkInfoUtil.userinfo == null){
 			ImgTxtBean b = new ImgTxtBean();
 			b.setResid(R.drawable.ic_launcher);
-			b.setText("item01 - "+(i+1));
+			b.setText("赶快登陆吧！");
 			adapter.addObject(b);
+		}else{
+			ImgTxtBean bType = new ImgTxtBean();
+			bType.setResid(R.drawable.ic_launcher);
+			bType.setText("类型："+NetworkInfoUtil.userinfo.getType());
+			adapter.addObject(bType);
+			
+			ImgTxtBean bNickName = new ImgTxtBean();
+			bType.setResid(R.drawable.ic_launcher);
+			bType.setText("昵称："+NetworkInfoUtil.userinfo.getNickName());
+			adapter.addObject(bNickName);
+			
+			ImgTxtBean bEmail = new ImgTxtBean();
+			bEmail.setResid(R.drawable.ic_launcher);
+			bEmail.setText("邮箱： "+NetworkInfoUtil.userinfo.getEmail());
+			adapter.addObject(bEmail);
+			
+			ImgTxtBean bTel = new ImgTxtBean();
+			bTel.setResid(R.drawable.ic_launcher);
+			bTel.setText("电话： "+NetworkInfoUtil.userinfo.getTel());
 		}
-		
-		
 	}
 }

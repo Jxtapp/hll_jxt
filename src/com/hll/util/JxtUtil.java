@@ -10,6 +10,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
 
 import org.apache.http.HttpEntity;
@@ -20,6 +21,9 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import android.util.Log;
 /**
@@ -83,7 +87,7 @@ public class JxtUtil {
 			con.setInstanceFollowRedirects(false);//???????????????????????
 			con.setRequestProperty("Content-Type", "application/json");
 			con.setRequestProperty("ser-Agent", "Fiddler");
-			//con.setRequestProperty("Charset", "utf-8");
+			con.setRequestProperty("Charset", "utf-8");
 			if(NetworkInfoUtil.sessionId!=null){
 				//如果已经建立了联接
 				con.setRequestProperty("cookie", NetworkInfoUtil.sessionId);
@@ -96,20 +100,16 @@ public class JxtUtil {
 			if(NetworkInfoUtil.sessionId==null){
 				//第一次建立联接，获取 sessionId
 				List<String> sid = con.getHeaderFields().get("Set-Cookie");
-				Map hfs=con.getHeaderFields();
-				Set<String> keys=hfs.keySet();
-				for (String string : keys) {
-					String s=string;
-					s="";
+				if(sid !=null && sid.size()>0){
+					String ss = sid.get(0);
+					NetworkInfoUtil.sessionId = ss.substring(0, ss.indexOf(";"));
+					int a=0;
 				}
 			}
-			//Log.i("sessionId",NetworkInfoUtil.sessionId);
 		} catch (MalformedURLException e) {
-			Log.i("liaoyun","====================================");
 			String s = e.getMessage();
 			Log.i("liaoyun",s);
 		} catch (IOException e) {
-			Log.i("liaoyun","====================================");
 			String s = e.getMessage();
 			Log.i("liaoyun",s);
 		}
@@ -180,5 +180,33 @@ public class JxtUtil {
 			s = new String(baos.toByteArray());
 		}
 		return s;
+	}
+	
+	/**
+	 * liaoyun 2016-7-2
+	 * convert json string to map
+	 * @param jsonString
+	 * @return
+	 */
+	public static Map<String,String> jsonStringToMap(String jsonString){
+		if(jsonString != null){
+			Gson gson = new Gson();
+			Map<String,String> map = gson.fromJson(jsonString, new TypeToken<Map<String,String>>(){}.getType());
+			return map;
+		}else{
+			return null;
+		}
+	}
+	
+	/**
+	 * liaoyun 2016-7-2
+	 * convert inputstream to string
+	 * @return
+	 */
+	public static String inputStreamToString(InputStream is){
+		@SuppressWarnings("resource")
+		Scanner scanner = new Scanner(is, "UTF-8");
+	    String s = scanner.useDelimiter("\\A").next();
+	    return s;
 	}
 }
