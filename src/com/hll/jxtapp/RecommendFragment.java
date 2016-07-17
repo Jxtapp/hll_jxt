@@ -28,6 +28,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AbsListView;
@@ -35,7 +36,9 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 public class RecommendFragment extends Fragment {
@@ -58,6 +61,7 @@ public class RecommendFragment extends Fragment {
 	private int totalCount = 0;
 	//点击进入百度地图
 	private ImageView baiduMap;
+	private ScrollView firScrollView;
 	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -88,6 +92,8 @@ public class RecommendFragment extends Fragment {
 	@Override
 	public void onStart() {
 		super.onStart();
+		firScrollView=(ScrollView) mainActivity.findViewById(R.id.id_first_page_scrollview);
+		firScrollView.smoothScrollBy(0, 0);
 		if(baiduMap == null){
 			baiduMap = (ImageView) mainActivity.findViewById(R.id.to_map);
 		}
@@ -111,8 +117,34 @@ public class RecommendFragment extends Fragment {
 		//如果滑动到最下方，加载更多数据 监听
 		lview.setOnScrollListener(new driverScollScrollListener());
 		//listVidw 元素 的 单击事件监听器
+<<<<<<< HEAD
 		//lview.setOnItemClickListener(new driverListClickListener());
+=======
+		lview.setOnItemClickListener(new driverListClickListener());
+		
+		setListViewHeightBasedOnChildren(lview);
+>>>>>>> branch 'master' of https://github.com/Jxtapp/hll_jxt.git
 	}
+	
+	// 获取并设置ListView高度的方法
+			public void setListViewHeightBasedOnChildren(ListView listView) {
+				ListAdapter listAdapter = listView.getAdapter();
+				if (listAdapter == null) {
+					return;
+				}
+
+				int totalHeight = 0;
+				for (int i = 0; i < listAdapter.getCount(); i++) {
+					View listItem = listAdapter.getView(i, null, listView);
+					listItem.measure(0, 0);
+					totalHeight += listItem.getMeasuredHeight();
+				}
+
+				ViewGroup.LayoutParams params = listView.getLayoutParams();
+				params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+				//((MarginLayoutParams) params).setMargins(0,0,0,0);
+				listView.setLayoutParams(params);
+			}
 
 	@Override
 	public void onResume() {
@@ -284,4 +316,6 @@ public class RecommendFragment extends Fragment {
 			startActivity(intent);
 		}
 	}
+	
+	
 }
