@@ -3,233 +3,290 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-	<!-- 地址栏 -->
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="30sp"
-	    android:orientation="horizontal"
-	    android:background="#E7E6E6">
-	    	<ImageView 
-	    	    android:id="@+id/to_map"
-	    	    android:layout_width="40sp"
-	    	    android:layout_height="30sp"
-	    	    android:contentDescription="地址"
-	    	    android:src="@drawable/location_icon"/>
-		    <TextView
-	        android:layout_width="fill_parent"
-	        android:layout_height="30sp"
-	        android:text="武汉市 洪山区 光谷数码广场"
-	        android:gravity="center"
-	        android:textSize="12sp"
-	         />
-	</LinearLayout>
-	
-	<!-- 特别推荐栏 -->
-	<LinearLayout 
-	    android:id="@+id/recommend_ad"
-	    android:layout_marginTop="5sp"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="vertical"
-	    android:background="#E7E6E6">
-	    <TextView 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:text="特别推荐"
-	        android:textStyle="bold"/>
-	    <LinearLayout 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal">
-	        <ImageView 
-	            android:id="@+id/next_left"
-	            android:layout_weight="1"
-	            android:layout_width="0sp"
-	            android:layout_height="90sp"
-	            android:src="@drawable/next_left"/>
-	        
-	        <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	         android:layout_weight="6"
-	        android:orientation="horizontal">
-	        <ImageView 
-	            android:id="@+id/recommend_ad_img"
-	            android:layout_width="90sp"
-	            android:layout_height="90sp"
-	            android:contentDescription="驾校照片"/>
-	        <LinearLayout 
-	            android:layout_width="match_parent"
-	            android:layout_height="wrap_content"
-	            android:orientation="vertical">
-	            <TextView 
-	                android:id="@+id/recommend_ad_price"
-	                android:layout_width="match_parent"
-	                android:layout_height="0sp"
-	                android:layout_weight="2"
-	                android:text="￥3000 原价 4500"/>
-	            <TextView 
-	                android:layout_width="match_parent"
-	                android:layout_height="0sp"
-	                android:layout_weight="2"
-	                android:text="推荐指数："/>
-	            <Button 
-	                android:layout_width="wrap_content"
-	                android:layout_height="0sp"
-	                android:text="查看更多"
-	                android:layout_weight="1"
-	                android:textStyle="bold"
-	                android:background="#0070C0"/>
-	        </LinearLayout>
-	    </LinearLayout>
-	        
-	        
-	        <ImageView 
-	            android:id="@+id/next_right"
-	             android:layout_weight="1"
-	            android:layout_width="0sp"
-	            android:layout_height="90sp"
-	            android:src="@drawable/next_right"/>
-	    </LinearLayout>
 
-	</LinearLayout>
-	
-	<!-- 相关信息  -->
-	<LinearLayout 
-	    android:layout_margin="5sp"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:background="#F2F2F2">
-	    
-	    <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:orientation="vertical">
-	        <ImageView 
-	            android:layout_width="25sp"
-	            android:layout_height="25sp"
-	            android:src="@drawable/policy"/>
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="政策解读"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:orientation="vertical">
-	        <ImageView 
-	            android:layout_width="25sp"
-	            android:layout_height="25sp"
-	            android:src="@drawable/flow_path"/>
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="学车流程"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:orientation="vertical">
-	        <ImageView 
-	            android:layout_width="25sp"
-	            android:layout_height="25sp"
-	            android:src="@drawable/news"/>
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="驾校新闻"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:gravity="center"
-	        android:orientation="vertical">
-	        <ImageView 
-	            android:layout_width="25sp"
-	            android:layout_height="25sp"
-	            android:src="@drawable/faq"/>
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="常见问题"/>
-	    </LinearLayout>
-	</LinearLayout>
-	<!-- 推荐单 -->
-	<LinearLayout 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:orientation="horizontal"
-	    android:gravity="center"
-	    >
-	    <LinearLayout 
-	        android:layout_width="0sp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:orientation="horizontal"
-	        >
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textStyle="bold"
-	            android:textSize="18sp"
-	            android:text="区域"/>
-	        <Spinner 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:spinnerMode="dialog"
-	        android:entries="@array/training_area_list"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:layout_width="0sp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:orientation="horizontal"
-	        >
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textStyle="bold"
-	            android:textSize="18sp"
-	            android:text="类型"/>
-	        <Spinner 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:spinnerMode="dialog"
-	        android:entries="@array/drive_kind_list"/>
-	    </LinearLayout>
-	    <LinearLayout 
-	        android:layout_width="0sp"
-	        android:layout_height="wrap_content"
-	        android:layout_weight="1"
-	        android:orientation="horizontal"
-	        >
-	        <TextView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textStyle="bold"
-	            android:textSize="18sp"
-	            android:text="距离"/>
-	        <Spinner 
-	        android:layout_width="match_parent"
-	        android:layout_height="wrap_content"
-	        android:spinnerMode="dialog"
-	        android:entries="@array/drive_distance_list"/>
-	    </LinearLayout>
-	</LinearLayout>
-	<!-- 驾校列表 -->
-	<ListView 
-	    android:id="@+id/driverschoollist"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content">
-	    
-	</ListView>
+    <!-- 地址栏 -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dip"
+        android:orientation="horizontal"
+        android:paddingTop="5dip" >
+
+        <ImageView
+            android:id="@+id/to_map"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:contentDescription="地址"
+            android:paddingLeft="40dip"
+            android:src="@drawable/location_queue" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:paddingLeft="20dip"
+            android:text="武汉市 洪山区 光谷数码广场"
+            android:textSize="15dip" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/id_first_page_scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical" >
+
+            <!-- 特别推荐栏 -->
+
+            <LinearLayout
+                android:id="@+id/recommend_ad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dip"
+                android:paddingRight="10dip"
+                android:paddingTop="15dip" >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="25dip"
+                    android:text="特别推荐"
+                    android:textSize="18dip"
+                    android:textStyle="bold" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        android:id="@+id/next_left"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/next_left" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingLeft="5dip"
+                        android:paddingRight="5dip" >
+
+                        <ImageView
+                            android:id="@+id/recommend_ad_img"
+                            android:layout_width="140dip"
+                            android:layout_height="120dip"
+                            android:contentDescription="驾校照片"
+                            android:src="@drawable/driver_school_pic0" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="vertical"
+                            android:paddingLeft="10dip" >
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+
+                                <TextView
+                                    android:id="@+id/recommend_ad_price"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="30dip"
+                                    android:text="￥3000"
+                                    android:textColor="@color/red"
+                                    android:textSize="18dip"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="30dip"
+                                    android:paddingLeft="5dip"
+                                    android:text="原价:4500"
+                                    android:textSize="15dip" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="30dip"
+                                    android:text="推荐指数："
+                                    android:textSize="15dip" />
+
+                                <ImageView
+                                    android:id="@+id/recommend_star_img"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/recomment_star" />
+                            </LinearLayout>
+
+                            <Button
+                                android:layout_width="wrap_content"
+                                android:layout_height="50dip"
+                                android:background="@drawable/more_info_pic"
+                                android:text="查看更多"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/next_right"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:src="@drawable/next_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 相关信息 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="20dip"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="25sp"
+                        android:layout_height="25sp"
+                        android:src="@drawable/policy" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="政策解读" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="25sp"
+                        android:layout_height="25sp"
+                        android:src="@drawable/flow_path" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="学车流程" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="25sp"
+                        android:layout_height="25sp"
+                        android:src="@drawable/news" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="驾校新闻" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <ImageView
+                        android:layout_width="25sp"
+                        android:layout_height="25sp"
+                        android:src="@drawable/faq" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="常见问题" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- 推荐单 -->
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingTop="15dip"
+                android:paddingLeft="15dip"
+                android:paddingRight="15dip"
+                android:orientation="horizontal" >
+
+                <LinearLayout
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/training_area_list"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/drive_kind_list"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal" >
+                    <Spinner
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/drive_distance_list"
+                        android:spinnerMode="dialog" />
+                </LinearLayout>
+            </LinearLayout>
+            <!-- 驾校列表 -->
+
+            <ListView
+                android:id="@+id/driverschoollist"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </ListView>
+            
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>
