@@ -78,7 +78,7 @@ public class RecommendFragment extends Fragment {
 		//add footer
 		LayoutInflater inflater = LayoutInflater.from(mainActivity);
 		footer = inflater.inflate(R.layout.load_more, null);
-		footer.setVisibility(View.GONE);
+		//footer.setVisibility(View.GONE);
 		lview.addFooterView(footer);
 		if(loadDataHandler==null){
 			loadDataHandler = new LoadDataHandler();
@@ -142,14 +142,23 @@ public class RecommendFragment extends Fragment {
 			}
 			// when scroll event stoped,start to onload bitmap resource
 			if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-				loadListImg(start_index,end_index-1);
+				//reminded: at the bottom of the listView,the last item is footer 
+				try {
+					if(end_index==totalCount){
+						loadListImg(start_index,end_index-1);
+					}else{
+						loadListImg(start_index,end_index);
+					}
+				} catch (Exception e) {
+					Log.i("indexdd",e.getMessage());
+				}
 			}
 		}
 	}
 
-	private void loadListImg(int start_index, int end_index) {
+	private void loadListImg(int start_index, int end_index) throws Exception{
 		for(; start_index < end_index; start_index++){
-			Log.i("indexdd",start_index+"  "+end_index);
+			Log.i("indexdd",start_index+"  "+end_index+"  "+driverSchoolInfoList.size());
 			final String imgName = driverSchoolInfoList.get(start_index).getItemImg();
 			final ImageView imgView = (ImageView) lview.findViewWithTag(imgName);
 			//从网上下载图片

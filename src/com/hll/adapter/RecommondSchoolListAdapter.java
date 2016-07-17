@@ -24,9 +24,6 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 	//可以将文件转化为 view
 	private LayoutInflater inflater;
 	private ViewHolder viewHolder;
-	private int lastItem;
-	
-	
 	public List<RecommendSchoolInfoO> getDriverSchoolInfoList() {
 		return driverSchoolInfoList;
 	}
@@ -65,7 +62,6 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 			viewHolder.price = (TextView) converView.findViewById(R.id.item_price);
 			viewHolder.address = (TextView) converView.findViewById(R.id.item_address);
 			viewHolder.schoolName = (TextView) converView.findViewById(R.id.item_name);
-			//viewHolder.num = (TextView) converView.findViewById(R.id.item_num);
 			converView.setTag(viewHolder);
 		}else{
 			viewHolder = (ViewHolder) converView.getTag();
@@ -85,6 +81,5 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 		public ImageView imageView;
 		public TextView price;
 		public TextView address;
-		public TextView num;
 	}
 }
