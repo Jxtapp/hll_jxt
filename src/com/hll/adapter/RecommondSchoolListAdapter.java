@@ -3,13 +3,8 @@ package com.hll.adapter;
 import java.util.List;
 
 import com.hll.entity.RecommendSchoolInfoO;
-import com.hll.basic.ImageCallBack;
-import com.hll.basic.NetworkDownImage;
 import com.hll.jxtapp.R;
-import com.hll.util.NetworkInfoUtil;
-
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,7 +55,7 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 	public long getItemId(int index) {
 		return index;
 	}
-
+	
 	@Override
 	public View getView(int position, View converView, ViewGroup parent) {
 		if(converView==null){//view 没有被实例化过,利用 converView 的缓存作用
@@ -69,40 +64,27 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 			viewHolder.imageView = (ImageView) converView.findViewById(R.id.item_img);
 			viewHolder.price = (TextView) converView.findViewById(R.id.item_price);
 			viewHolder.address = (TextView) converView.findViewById(R.id.item_address);
+			viewHolder.schoolName = (TextView) converView.findViewById(R.id.item_name);
 			//viewHolder.num = (TextView) converView.findViewById(R.id.item_num);
 			converView.setTag(viewHolder);
 		}else{
 			viewHolder = (ViewHolder) converView.getTag();
 		}
 		RecommendSchoolInfoO vo=driverSchoolInfoList.get(position);
-		viewHolder.price.setText(String.valueOf(vo.getItemPrice()));
-		viewHolder.address.setText(vo.getItemAddress());
-		viewHolder.imageView.setImageResource(R.drawable.abc_ab_bottom_solid_dark_holo);
+		viewHolder.price.setText("价格： "+String.valueOf(vo.getItemPrice()));
+		viewHolder.address.setText("地点： "+vo.getItemAddress());
+		viewHolder.schoolName.setText(vo.getSchoolname());
+		viewHolder.imageView.setImageResource(R.drawable.on_loading1);
 		//添加标记，防止图片错位
 		viewHolder.imageView.setTag(vo.getItemImg());
-		//从网上下载图片
-		if(vo.getItemImg()!=null){
-			final String imgName = vo.getItemImg();
-			NetworkDownImage downImage = new NetworkDownImage(NetworkInfoUtil.picUtl+"/"+vo.getItemImg());
-			//接口回调，加载图片
-			downImage.loadImage(new ImageCallBack(){
-				@Override
-				public void getDrawable(Drawable drawable) {
-					String imgTag = (String) viewHolder.imageView.getTag();
-					if(imgTag != null && imgTag.equals(imgName)){
-						viewHolder.imageView.setImageDrawable(drawable);
-					}
-				}
-			});
-		}
 		return converView;
 	}
 	
 	private class ViewHolder{
+		public TextView schoolName;
 		public ImageView imageView;
 		public TextView price;
 		public TextView address;
 		public TextView num;
 	}
-	
 }

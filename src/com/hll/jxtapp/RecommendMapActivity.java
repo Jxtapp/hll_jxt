@@ -75,7 +75,7 @@ public class RecommendMapActivity extends Activity {
 	private void initLocation(){
 		//设置一些必要的属性
 		LocationClientOption locationOption = new LocationClientOption();
-		locationOption.setCoorType("bd0911");
+		locationOption.setCoorType("bd09ll");
 		locationOption.setIsNeedAddress(true);
 		locationOption.setOpenGps(true);//????????????
 		locationOption.setScanSpan(1000);

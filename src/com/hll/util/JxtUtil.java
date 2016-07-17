@@ -11,8 +11,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.Set;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -107,11 +105,9 @@ public class JxtUtil {
 				}
 			}
 		} catch (MalformedURLException e) {
-			String s = e.getMessage();
-			Log.i("liaoyun",s);
+			Log.w("JxtUtil",e);
 		} catch (IOException e) {
-			String s = e.getMessage();
-			Log.i("liaoyun",s);
+			Log.w("JxtUtil",e);
 		}
 		return con;
 	}
