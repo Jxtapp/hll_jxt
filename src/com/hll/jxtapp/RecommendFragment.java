@@ -26,8 +26,10 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewGroup;
 import android.widget.AbsListView.OnScrollListener;
@@ -59,6 +61,7 @@ public class RecommendFragment extends Fragment {
 	private int start_index = 0;
 	private int end_index = 0;
 	private int totalCount = 0;
+	private ScrollView scrollView;
 	//点击进入百度地图
 	private ImageView baiduMap;
 	private ScrollView firScrollView;
@@ -79,6 +82,12 @@ public class RecommendFragment extends Fragment {
 		}
 		//驾校详细信息栏
 		lview = (ListView) mainActivity.findViewById(R.id.driverschoollist);
+		
+		//设置listView 的高度，（当 scrollList 与 listView 混用时，高度只会显示 一行）
+//		ViewGroup.LayoutParams params = lview.getLayoutParams();
+//		params.height=300;
+//		lview.setLayoutParams(params);
+		
 		//add footer
 		LayoutInflater inflater = LayoutInflater.from(mainActivity);
 		footer = inflater.inflate(R.layout.load_more, null);
@@ -87,8 +96,55 @@ public class RecommendFragment extends Fragment {
 		if(loadDataHandler==null){
 			loadDataHandler = new LoadDataHandler();
 		}
+		scrollView = (ScrollView) mainActivity.findViewById(R.id.id_first_page_scrollview);
+		/**
+		 * 当手指触到 listView时让外面的scrollView交出滚动的权限，手指松开后恢复滚动的权限
+		 */
+		lview.setOnTouchListener(new OnTouchListener() {
+			@Override
+			public boolean onTouch(View iew, MotionEvent me) {
+				switch (me.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					Log.i("indexdd",""+start_index);
+					//if(start_index == 1){
+						scrollView.requestDisallowInterceptTouchEvent(true);
+					//}else{
+					//	scrollView.requestDisallowInterceptTouchEvent(false);
+					//}
+					break;
+				case MotionEvent.ACTION_UP:
+					scrollView.requestDisallowInterceptTouchEvent(true);
+					break;
+				case MotionEvent.ACTION_CANCEL:
+					scrollView.requestDisallowInterceptTouchEvent(false);
+					break;
+				default:
+					break;
+				}
+				return false;
+			}
+		});
 	}
 
+	// 获取并设置ListView高度的方法
+	public void setListViewHeightBasedOnChildren(ListView listView) {
+		ListAdapter listAdapter = listView.getAdapter();
+		if (listAdapter == null) {
+			return;
+		}
+
+		int totalHeight = 0;
+		for (int i = 0; i < listAdapter.getCount()-1; i++) {
+			View listItem = listAdapter.getView(i, null, listView);
+			listItem.measure(0, 0);
+			totalHeight += listItem.getMeasuredHeight();
+		}
+
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+		((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
+		listView.setLayoutParams(params);
+	}
 	@Override
 	public void onStart() {
 		super.onStart();
@@ -104,11 +160,10 @@ public class RecommendFragment extends Fragment {
 		if(driverSchoolInfoList==null){
 			driverSchoolInfoList = new ArrayList<RecommendSchoolInfoO>();
 		}
-		for(int i=0; i<5; i++){
+		for(int i=0; i<4; i++){
 			driverSchoolInfoList.add(new RecommendSchoolInfoO(null,1000,"address"+i,"count"+i,"天天驾校"+i));
 		}
 		
-		//lview = (ListView) mainActivity.findViewById(R.id.driverschoollist);
 		//绑定数据源 和 listView
 		if(recommondSchoolListAdapter==null){
 			recommondSchoolListAdapter = new RecommondSchoolListAdapter(mainActivity, driverSchoolInfoList);
@@ -117,34 +172,9 @@ public class RecommendFragment extends Fragment {
 		//如果滑动到最下方，加载更多数据 监听
 		lview.setOnScrollListener(new driverScollScrollListener());
 		//listVidw 元素 的 单击事件监听器
-<<<<<<< HEAD
-		//lview.setOnItemClickListener(new driverListClickListener());
-=======
 		lview.setOnItemClickListener(new driverListClickListener());
-		
 		setListViewHeightBasedOnChildren(lview);
->>>>>>> branch 'master' of https://github.com/Jxtapp/hll_jxt.git
 	}
-	
-	// 获取并设置ListView高度的方法
-			public void setListViewHeightBasedOnChildren(ListView listView) {
-				ListAdapter listAdapter = listView.getAdapter();
-				if (listAdapter == null) {
-					return;
-				}
-
-				int totalHeight = 0;
-				for (int i = 0; i < listAdapter.getCount(); i++) {
-					View listItem = listAdapter.getView(i, null, listView);
-					listItem.measure(0, 0);
-					totalHeight += listItem.getMeasuredHeight();
-				}
-
-				ViewGroup.LayoutParams params = listView.getLayoutParams();
-				params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-				//((MarginLayoutParams) params).setMargins(0,0,0,0);
-				listView.setLayoutParams(params);
-			}
 
 	@Override
 	public void onResume() {
@@ -169,7 +199,6 @@ public class RecommendFragment extends Fragment {
 			Log.i("key",end_index+"   "+recommondSchoolListAdapter.getCount());
 			if(end_index==totalCount && scrollState==OnScrollListener.SCROLL_STATE_IDLE){
 				driverSchoolInfoList = recommondSchoolListAdapter.getDriverSchoolInfoList();
-				//footer.setVisibility(View.VISIBLE);
 				new loadDataThread().start();
 			}
 			// when scroll event stoped,start to onload bitmap resource
@@ -209,7 +238,7 @@ public class RecommendFragment extends Fragment {
 			}
 		}
 	}
-	// driver list item on click event, show the detail information of the driver school
+//------ driver list item on click event, show the detail information of the driver school------
 	private class driverListClickListener implements OnItemClickListener{
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
@@ -316,6 +345,7 @@ public class RecommendFragment extends Fragment {
 			startActivity(intent);
 		}
 	}
+	
 	
 	
 }
