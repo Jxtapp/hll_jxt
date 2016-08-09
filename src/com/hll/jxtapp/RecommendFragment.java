@@ -106,11 +106,11 @@ public class RecommendFragment extends Fragment {
 				switch (me.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					Log.i("indexdd",""+start_index);
-					//if(start_index == 1){
+					if(start_index == 1){
 						scrollView.requestDisallowInterceptTouchEvent(true);
-					//}else{
-					//	scrollView.requestDisallowInterceptTouchEvent(false);
-					//}
+					}else{
+						scrollView.requestDisallowInterceptTouchEvent(false);
+					}
 					break;
 				case MotionEvent.ACTION_UP:
 					scrollView.requestDisallowInterceptTouchEvent(true);
