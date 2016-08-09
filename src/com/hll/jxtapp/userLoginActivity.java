@@ -144,7 +144,7 @@ public class userLoginActivity extends Activity{
 								tostHandle.sendMessage(message);
 							}
 						}
-					} catch (IOException e) {
+					} catch (Exception e) {
 						e.printStackTrace();
 					}
 				};

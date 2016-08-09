@@ -23,8 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:id="@+id/my_address"
             android:paddingLeft="20dip"
-            android:text="武汉市 洪山区 光谷数码广场"
             android:textSize="15dip" />
     </LinearLayout>
 
@@ -166,8 +166,8 @@
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="25sp"
-                        android:layout_height="25sp"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:src="@drawable/policy" />
 
                     <TextView
@@ -184,8 +184,8 @@
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="25sp"
-                        android:layout_height="25sp"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:src="@drawable/flow_path" />
 
                     <TextView
@@ -202,8 +202,8 @@
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="25sp"
-                        android:layout_height="25sp"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:src="@drawable/news" />
 
                     <TextView
@@ -220,8 +220,8 @@
                     android:orientation="vertical" >
 
                     <ImageView
-                        android:layout_width="25sp"
-                        android:layout_height="25sp"
+                        android:layout_width="25dip"
+                        android:layout_height="25dip"
                         android:src="@drawable/faq" />
 
                     <TextView
@@ -242,11 +242,12 @@
                 android:orientation="horizontal" >
 
                 <LinearLayout
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dip"
+                    android:layout_height="37dip"
                     android:layout_weight="1"
                     android:orientation="horizontal" >
                     <Spinner
+                        android:id="@+id/area_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:entries="@array/training_area_list"
@@ -254,11 +255,12 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dip"
+                    android:layout_height="37dip"
                     android:layout_weight="1"
                     android:orientation="horizontal" >
                     <Spinner
+                        android:id="@+id/kind_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:entries="@array/drive_kind_list"
@@ -266,11 +268,12 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0sp"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dip"
+                    android:layout_height="37dip"
                     android:layout_weight="1"
                     android:orientation="horizontal" >
                     <Spinner
+                        android:id="@+id/distance_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:entries="@array/drive_distance_list"
