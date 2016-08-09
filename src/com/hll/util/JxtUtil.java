@@ -160,6 +160,9 @@ public class JxtUtil {
 	 * @return
 	 */
 	public static String streamToJsonString(InputStream is){
+		if(is == null){
+			return null;
+		}
 		ByteArrayOutputStream baos=null;
 		try {
 			int len=0;
@@ -184,7 +187,7 @@ public class JxtUtil {
 	 * @param jsonString
 	 * @return
 	 */
-	public static Map<String,String> jsonStringToMap(String jsonString){
+	public static Map<String,String> jsonStringToMap(String jsonString) throws Exception{
 		if(jsonString != null){
 			Gson gson = new Gson();
 			Map<String,String> map = gson.fromJson(jsonString, new TypeToken<Map<String,String>>(){}.getType());

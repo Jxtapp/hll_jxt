@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <resources>
     <string-array name="training_area_list">
-        <item>武汉</item>
-        <item>北京</item>
+        <item >所有区域</item>
+        <item >江岸区</item>
+        <item >江汉区</item>
+        <item >硚口区 </item>
+        <item >汉阳区</item>
+        <item >洪山区</item>
+        <item >武昌区</item>
+        <item >青山区 </item>
+        <item >汉南区</item>
+        <item >蔡甸区</item>
+        <item >东西湖区</item>
+        <item >江夏区</item>
+        <item >黄陂区</item>
+        <item >新洲区</item>
     </string-array>
     <string-array name="drive_kind_list">
-        <item>类型1</item>
-        <item>类型2</item>
-        <item>类型3</item>
+        <item >所有类型</item>
+        <item >C</item>
+        <item >B</item>
+        <item >A</item>
     </string-array>
     <string-array name="drive_distance_list">
         <item>0km-10km</item>

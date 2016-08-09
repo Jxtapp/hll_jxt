@@ -9,14 +9,11 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.MyLocationConfiguration;
-import com.baidu.mapapi.map.MyLocationConfiguration.LocationMode;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
-
+import com.hll.common.MyLocationInfo;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 
 public class RecommendMapActivity extends Activity {
 	//地图控件
@@ -81,9 +78,7 @@ public class RecommendMapActivity extends Activity {
 		locationOption.setScanSpan(1000);
 		//定位精度
 		locationOption.setLocationMode(LocationClientOption.LocationMode.Hight_Accuracy);
-		
 		locationClient.setLocOption(locationOption);
-		
 		//注册位置监听器
 		locationClient.registerLocationListener(myLocationListener);
 	}
@@ -95,7 +90,6 @@ public class RecommendMapActivity extends Activity {
 			if(location==null){
 				return;
 			}
-			Log.i("location",location.getLatitude()+"   "+location.getLongitude());
 			MyLocationData data = new MyLocationData.Builder()//
 				.accuracy(location.getRadius())//
 				.latitude(location.getLatitude())//
@@ -110,10 +104,11 @@ public class RecommendMapActivity extends Activity {
 				//第一次进入地图，用于定位到用户当前的位置
 				LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 				MapStatusUpdate msu = MapStatusUpdateFactory.newLatLng(latLng);
+				final double latitude = location.getLatitude();
+				final double longitude = location.getLongitude();
 				baiduMap.animateMapStatus(msu);
 				isFirst=false;
 			}
-			
 			baiduMap.setMyLocationData(data);
 		}
 	}

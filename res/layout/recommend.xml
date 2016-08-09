@@ -23,8 +23,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:id="@+id/my_address"
             android:paddingLeft="20dip"
-            android:text="武汉市 洪山区 光谷数码广场"
             android:textSize="15dip" />
     </LinearLayout>
 
@@ -247,6 +247,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal" >
                     <Spinner
+                        android:id="@+id/area_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:entries="@array/training_area_list"
@@ -259,6 +260,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal" >
                     <Spinner
+                        android:id="@+id/kind_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:entries="@array/drive_kind_list"
@@ -271,6 +273,7 @@
                     android:layout_weight="1"
                     android:orientation="horizontal" >
                     <Spinner
+                        android:id="@+id/distance_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:entries="@array/drive_distance_list"

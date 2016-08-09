@@ -7,7 +7,7 @@ package com.hll.entity;
 public class SchoolSelectBy {
 	private String tranAreaSp;//练车区域
 	private String tranTypeSp;//练车类型
-	private String orderTypeSp;//排序方式
+	private String tranDistance;//距离(km)
 	private int startPage;     //第几列
 	private int pageSize;      //每页的记录条数
 	public SchoolSelectBy() {
@@ -27,12 +27,6 @@ public class SchoolSelectBy {
 	public void setTranTypeSp(String tranTypeSp) {
 		this.tranTypeSp = tranTypeSp;
 	}
-	public String getOrderTypeSp() {
-		return orderTypeSp;
-	}
-	public void setOrderTypeSp(String orderTypeSp) {
-		this.orderTypeSp = orderTypeSp;
-	}
 	public int getStartPage() {
 		return startPage;
 	}
@@ -44,5 +38,11 @@ public class SchoolSelectBy {
 	}
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
+	}
+	public String getTranDistance() {
+		return tranDistance;
+	}
+	public void setTranDistance(String tranDistance) {
+		this.tranDistance = tranDistance;
 	}
 }
