@@ -11,7 +11,9 @@ import com.hll.jxtapp.R;
 import com.hll.basic.LeftMoveView;
 import com.hll.basic.LeftTabView;
 
-
+/**
+ * 自定义 用户信息 界面  的 view
+ */
 public class LeftMenuView{
 	
 	private LinearLayout accountInfo;
@@ -46,17 +48,17 @@ public class LeftMenuView{
 	}
 
 	public void createView() {
-		accountInfo  = (LinearLayout)view.findViewById(R.id.id_accountInfo);//�˺���Ϣ������ͷ
-		login  = (LinearLayout)view.findViewById(R.id.id_login);
-		personInfo  = (LinearLayout)view.findViewById(R.id.id_personInfo);
-		questionBank = (LinearLayout)view.findViewById(R.id.id_questionBank);
-		myOrder = (LinearLayout)view.findViewById(R.id.id_myOrder);
-		myStore = (LinearLayout)view.findViewById(R.id.id_myStore);
-		message = (LinearLayout)view.findViewById(R.id.id_message);
-		setting = (LinearLayout)view.findViewById(R.id.id_setting);
-		appraiseUs = (LinearLayout)view.findViewById(R.id.id_appraiseUs);
-		contactUs = (LinearLayout)view.findViewById(R.id.id_contactUs);
-		aboutUs = (LinearLayout)view.findViewById(R.id.id_aboutUs);
+		accountInfo  = (LinearLayout)view.findViewById(R.id.id_accountInfo);  //账号信息
+		login  = (LinearLayout)view.findViewById(R.id.id_login);              //登陆图标
+		personInfo  = (LinearLayout)view.findViewById(R.id.id_personInfo);    //个人信息
+		questionBank = (LinearLayout)view.findViewById(R.id.id_questionBank); //题库设计
+		myOrder = (LinearLayout)view.findViewById(R.id.id_myOrder);			  //我的订单
+		myStore = (LinearLayout)view.findViewById(R.id.id_myStore);           //我的收藏
+		message = (LinearLayout)view.findViewById(R.id.id_message);           //消息
+		setting = (LinearLayout)view.findViewById(R.id.id_setting);           //设置
+		appraiseUs = (LinearLayout)view.findViewById(R.id.id_appraiseUs);	  //评价
+		contactUs = (LinearLayout)view.findViewById(R.id.id_contactUs);		  //联系我们
+		aboutUs = (LinearLayout)view.findViewById(R.id.id_aboutUs);           //关于我们
 	}
 
 	public void setViewProperty() {
@@ -138,19 +140,6 @@ public class LeftMenuView{
 	 * user login
 	 */
 	public void startLogin(){
-//		if(!startInit(LeftTabView.TAB_ITEM01)){
-//			login.setBackgroundResource(R.color.yellow);
-//
-//			setCurrentTab(LeftTabView.TAB_ITEM01);
-//			if(userInfo.login.view==null){
-//				userInfo.login.init();
-//				userInfo.login.setMoveView(leftMoveView);
-//			}
-//			
-//			leftMoveView.setMainView(userInfo.login, null,LeftTabView.TAB_ITEM01);
-//		}
-		//go to the user login page(userLoginActivity)
-		
 		Intent intent = new Intent(leftMoveView.getContext(),userLoginActivity.class);
 		leftMoveView.getContext().startActivity(intent);
 	}

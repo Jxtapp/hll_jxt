@@ -1,23 +1,17 @@
 package com.hll.jxtapp;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
-import com.hll.util.MyApplication;
 import com.hll.util.NetworkInfoUtil;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,7 +33,6 @@ public class userLoginActivity extends Activity{
 	private TextView password;
 	private TextView veryfiyCode;
 	private Button loginButton;
-	private Gson gson;
 	private Context context;
 	private TostHandle tostHandle;
 	
@@ -48,101 +41,59 @@ public class userLoginActivity extends Activity{
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_login);
-		account = (TextView) findViewById(R.id.user_account);
-		password = (TextView) findViewById(R.id.user_password);
-		veryfiyCode = (TextView) findViewById(R.id.user_veriryCode);
-		loginButton = (Button) findViewById(R.id.login_button);
+		account = (TextView) findViewById(R.id.user_account);       //账号
+		password = (TextView) findViewById(R.id.user_password);     //密码
+		veryfiyCode = (TextView) findViewById(R.id.user_veriryCode);//校验码
+		loginButton = (Button) findViewById(R.id.login_button);     //登陆按钮
 		tostHandle = new TostHandle();
 		context = this;
 		
-		//get lasted username and password
-		SharedPreferences preferences = MyApplication.getContext().getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
-		if(preferences != null){
-			String lastAccount  = preferences.getString("loginAccount"  , "ly285714@sina.co");
-			String lastPassword = preferences.getString("login_password", "123456");
-			
-			Map<String,String> map = new HashMap<>();
-			map.put("lastAccount", lastAccount);
-			map.put("lastPassword", lastPassword);
-			Message message = Message.obtain();
-			message.obj=map;
-			
-			Handler handle = new Handler(){
-				@Override
-				public void handleMessage(Message msg) {
-					super.handleMessage(msg);
-					@SuppressWarnings("unchecked")
-					Map<String,String> map = (Map<String, String>) msg.obj;
-					account.setText(map.get("lastAccount"));
-					password.setText(map.get("lastPassword"));
-				}
-			};
-			handle.sendMessage(message);
-		}
-		//when click login button
-		loginButton.setOnClickListener(new loginOnclickListener());
+		//获取最近一次登陆的信息，并自动添加到登陆界面上
+		UserO lastUserInfo =  JxtUtil.getLastUserInfo();
+		String lastAccount  = lastUserInfo.getAccount()==null ? "" : lastUserInfo.getAccount();
+		String lastPassword = lastUserInfo.getPassword()==null ? "" : lastUserInfo.getPassword();
+		Map<String,String> map = new HashMap<String,String>();
+		map.put("lastAccount", lastAccount);
+		map.put("lastPassword", lastPassword);
+		Message message = Message.obtain();
+		message.obj=map;
+		loginHandler handle = new loginHandler();
+		handle.sendMessage(message);
+		
+		loginButton.setOnClickListener(new loginOnclickListener());//登陆按钮监听器
 	}
 	
-	@Override
-	protected void onStart() {
-		super.onStart();
-	}
-	
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-	
+	//监听用户登陆
 	private class loginOnclickListener implements OnClickListener{
 		@Override
 		public void onClick(View view) {
-			if(gson == null){
-				gson = new Gson();
-			}
 			final String accountStr  = account.getText()!=null ?  (String) account.getText().toString().trim() : "";
 			final String passwordStr = password.getText()!=null ? (String) password.getText().toString().trim() : "";
-			
-			//save user account and password
-			SharedPreferences preferences = MyApplication.getContext().getSharedPreferences("loginMessage", Context.MODE_PRIVATE);
-			Editor editor = preferences.edit();
-			editor.putString("lastAccount", accountStr);
-			editor.putString("lastPassword", passwordStr);
-			editor.commit();
-			
 			new Thread(){
 				public void run() {
 					String url = NetworkInfoUtil.baseUtl+"/user/login/"+accountStr+"/"+passwordStr+"/email.action";
 					HttpURLConnection conn = JxtUtil.postHttpConn(url, "");
 					try {
 						InputStream is =  conn.getInputStream();
-						String s = JxtUtil.streamToJsonString(is);
-						Map<String,String> map = JxtUtil.jsonStringToMap(s);
-						if(map != null){
-							if(!map.get("type").equals("0")){//if login successed, return to the main page
-								if(NetworkInfoUtil.userinfo == null){
-									NetworkInfoUtil.userinfo = new UserO();
-								}
-								String type = map.get("type");
-								if(type != null){
-									NetworkInfoUtil.userinfo.setType(Integer.valueOf(type));
-								}
-								NetworkInfoUtil.userinfo.setNickName(map.get("nickName"));
-								NetworkInfoUtil.userinfo.setEmail(map.get("email"));
-								NetworkInfoUtil.userinfo.setTel(map.get("tel"));
-								
-								//come back to the main page
-								Intent intent = new Intent(context,MainActivity.class);
-								context.startActivity(intent);
-							}else{//if login failed
-								Message message = Message.obtain();
-								message.obj="用户名或者密码错误";
-								tostHandle.sendMessage(message);
-							}
+						if(is != null){                                          //登陆成功
+							String s = JxtUtil.streamToJsonString(is);
+							Map<String,String> map = JxtUtil.jsonStringToMap(s);
+							UserO user = new UserO();
+							user.setType(Integer.valueOf(map.get("type")));
+							user.setNickName(map.get("nickName"));
+							user.setAccount(accountStr);
+							user.setPassword(passwordStr);
+							user.setEmail(map.get("email"));
+							user.setTel(map.get("tel"));
+							user.setLastLoadTime(map.get("lastLoadTime"));
+							user.setLastLoadIp(map.get("lastLoadIp"));
+							user.setLastLoadPort(map.get("lastLoadPort"));
+							JxtUtil.saveLastUserInfo(user);                       //保存用户信息
+							finish();                                             //返回上一个页面
+						}else{                                                    //登陆失败
+							Message message = Message.obtain();
+							message.obj="用户名或者密码错误";
+							tostHandle.sendMessage(message);
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -161,6 +112,18 @@ public class userLoginActivity extends Activity{
 			Toast toast=Toast.makeText(context, s, Toast.LENGTH_LONG); 
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
+		}
+	}
+	
+	@SuppressLint("HandlerLeak")
+	private class loginHandler extends Handler{
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			@SuppressWarnings("unchecked")
+			Map<String,String> map = (Map<String, String>) msg.obj;
+			account.setText(map.get("lastAccount"));
+			password.setText(map.get("lastPassword"));
 		}
 	}
 }

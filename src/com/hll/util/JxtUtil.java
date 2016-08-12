@@ -8,9 +8,12 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
@@ -21,16 +24,25 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.hll.entity.UserO;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 /**
  * 常用方法的工具类
  * @author liaoyun
  * 2016-5-25
  */
 public class JxtUtil {
-
+	
 	/**
 	 * liaoyun 2016-5-28
 	 * 返回 一个 http 联接
@@ -88,6 +100,7 @@ public class JxtUtil {
 			con.setRequestProperty("Charset", "utf-8");
 			if(NetworkInfoUtil.sessionId!=null){
 				//如果已经建立了联接
+				//Log.i("jxtUtil","session1= "+NetworkInfoUtil.sessionId);
 				con.setRequestProperty("cookie", NetworkInfoUtil.sessionId);
 			}
 			OutputStream os = con.getOutputStream();
@@ -101,7 +114,7 @@ public class JxtUtil {
 				if(sid !=null && sid.size()>0){
 					String ss = sid.get(0);
 					NetworkInfoUtil.sessionId = ss.substring(0, ss.indexOf(";"));
-					int a=0;
+					//Log.i("jxtUtil","session2= "+NetworkInfoUtil.sessionId);
 				}
 			}
 		} catch (MalformedURLException e) {
@@ -207,5 +220,180 @@ public class JxtUtil {
 		Scanner scanner = new Scanner(is, "UTF-8");
 	    String s = scanner.useDelimiter("\\A").next();
 	    return s;
+	}
+	
+	/**
+	 * 得到用户最近一次登陆成功的信息
+	 * liaoyun 2016-8-9
+	 * return UserO
+	 */
+	public static UserO getLastUserInfo(){
+		SharedPreferences sp = MyApplication.getContext().getSharedPreferences("lastUserInfo", Context.MODE_PRIVATE);
+		if(sp==null){
+			return null;
+		}
+		String account = sp.getString("account", null);
+		String password = sp.getString("password", null);
+		UserO user = new UserO();
+		user.setAccount(account);
+		user.setPassword(password);
+		user.setType(sp.getInt("type", 0));
+		user.setNickName(sp.getString("nickName", null));
+		user.setEmail(sp.getString("email", null));
+		user.setTel(sp.getString("tel", null));
+		user.setLastLoadTime(sp.getString("lastLoadTime", null));
+		user.setLastLoadIp(sp.getString("lastLoadIp", null));
+		user.setLastLoadPort(sp.getString("lastLoadPort", null));
+		return user;
+	}
+	
+	/**
+	 * 保存最近一次用户登陆成功的信息
+	 * liaoyun 2016-8-9
+	 * @param user
+	 */
+	public static void saveLastUserInfo(UserO user){
+		SharedPreferences sp = MyApplication.getContext().getSharedPreferences("lastUserInfo", Context.MODE_PRIVATE);
+		Editor ed = sp.edit();
+		ed.clear();
+		ed.putString("account", user.getAccount());
+		ed.putString("password", user.getPassword());
+		ed.putInt("type", user.getType());
+		ed.putString("nickName", user.getNickName());
+		ed.putString("email", user.getEmail());
+		ed.putString("tel", user.getTel());
+		ed.putString("lastLoadTime", user.getLastLoadTime());
+		ed.putString("lastLoadIp", user.getLastLoadIp());
+		ed.putString("lastLoadPort", user.getLastLoadPort());
+		ed.commit();
+	}
+	/**
+	 * 修改 最近一次登陆的 用户的信息
+	 * liaoyun 2016-8-9
+	 * @param key
+	 * @param value
+	 */
+	public static void updateLastUserInfo(String key, String value){
+		if(key == null){
+			return;
+		}
+		SharedPreferences sp = MyApplication.getContext().getSharedPreferences("lastUserInfo", Context.MODE_PRIVATE);
+		Editor ed = sp.edit();
+		ed.putString(key.trim(), value.trim());
+		ed.commit();
+	}
+	/**
+	 * 以get请求方式 从服务器端取回一个对象
+	 * liaoyun 2016-8-11
+	 * @param clazz
+	 * @param url
+	 * @return 
+	 * @return
+	 */
+	public static <T> T getObjectFromServer(Class<T> type,String url){
+		try{
+			HttpURLConnection con = getHttpConn(url);
+			String str = streamToJsonString(con.getInputStream());
+			JsonElement je = new JsonParser().parse(str);
+			T t =  new Gson().fromJson(je, type);
+			return t;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	/**
+	 * 以get请求方式 从服务器端取回一个对象的list集合
+	 * liaoyun 2016-8-11
+	 * @param type
+	 * @param url
+	 * @return 
+	 * @return
+	 */
+	public static <T> List<T> getListObjectFromServer(Class<T> type,String url){
+		try{
+			List<T> list = new ArrayList<T>();
+			HttpURLConnection con = getHttpConn(url);
+			String str = streamToJsonString(con.getInputStream());
+			JsonArray array = new JsonParser().parse(str).getAsJsonArray();
+			for (JsonElement e : array) {
+				list.add(new Gson().fromJson(e, type));
+			}
+			return list;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 以post请求方式 从服务器端取回一个对象
+	 * liaoyun 2016-8-11
+	 * @param clazz
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 */
+	public static <T> T postObjectFromServer(Class<T> type,String url,String jsonStr){
+		try{
+			HttpURLConnection con = postHttpConn(url, jsonStr);
+			String str = streamToJsonString(con.getInputStream());
+			JsonElement je = new JsonParser().parse(str);
+			T t =  new Gson().fromJson(je, type);
+			return t;
+		}catch(Exception e){
+			return null;
+		}
+	}
+	/**
+	 * 以post请求方式 从服务器端取回一个对象的list集合
+	 * liaoyun 2016-8-11
+	 * @param type
+	 * @param url
+	 * @param data
+	 * @return 
+	 * @return
+	 */
+	public static <T> List<T> postListObjectFromServer(Class<T> type,String url,String data){
+		try{
+			List<T> list = new ArrayList<T>();
+			HttpURLConnection con = postHttpConn(url, data);
+			String str = streamToJsonString(con.getInputStream());
+			JsonArray array = new JsonParser().parse(str).getAsJsonArray();
+			for (JsonElement e : array) {
+				list.add(new Gson().fromJson(e, type));
+			}
+			return list;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	/**
+	 * 水平正中央的 toast
+	 * liaoyun 2016-8-12
+	 * @param context
+	 * @param text
+	 * @param duration
+	 */
+	public static void toastCenter(Context context,String text, int duration){
+		Toast tt = Toast.makeText(context, text, duration);
+		tt.setGravity(Gravity.CENTER, 0, 0);
+		tt.show();
+	}
+	
+	/**
+	 * 由服务器时间字符串转换为date类型  liaoyun 2016-8-12
+	 * @param serverTime
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public static Date getServerTime(String serverTime){
+		if(serverTime==null || serverTime.equals("")){
+			return null;
+		}
+		String[] ss = serverTime.split(",");
+		Date date = new Date(Integer.valueOf(ss[0]), Integer.valueOf(ss[1]), Integer.valueOf(ss[2]), Integer.valueOf(ss[3]), Integer.valueOf(ss[4]), Integer.valueOf(ss[5]));
+		return date;
 	}
 }

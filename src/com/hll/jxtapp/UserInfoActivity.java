@@ -1,7 +1,5 @@
 package com.hll.jxtapp;
 
-import java.io.Serializable;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -19,13 +17,7 @@ import com.hll.left.PersonInfoView;
 import com.hll.left.QuestionBankView;
 import com.hll.left.SettingView;
 
-public class UserInfoActivity extends Activity implements  Serializable{
-	
-
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
+public class UserInfoActivity extends Activity{
 	private Context context;
 	private LeftMoveView leftMoveView;
 	private LeftMenuView leftMenuView;
@@ -48,15 +40,12 @@ public class UserInfoActivity extends Activity implements  Serializable{
 		
 		this.context = this;
 		
-		//�����ƶ���ͼ
 		leftMoveView = new LeftMoveView(context);
-		//������߲˵���ͼ
 		leftMenuView = new LeftMenuView(this, leftMoveView);
 		
 		/****************************************************/
-		//����01
 		login = new LoginView(context);
-		login.setMoveView(leftMoveView);//��ֵ�ƶ���ͼ
+		login.setMoveView(leftMoveView);
 		login.init();
 		/***************************************************/
 		
@@ -71,7 +60,6 @@ public class UserInfoActivity extends Activity implements  Serializable{
 		//questionBank = new QuestionBankView(context);
 		setting = new SettingView(context);
 		
-		//�ƶ���ͼĬ�Ͻ��棺����01��
 		leftMoveView.setMainView(login, leftMenuView,LeftTabView.TAB_ITEM01);
 		leftMoveView.getLeft_show_view().setCurrentTab(LeftTabView.TAB_ITEM01);
 
@@ -95,6 +83,4 @@ public class UserInfoActivity extends Activity implements  Serializable{
 		super.onResume();
 
 	}
-
-	
 }

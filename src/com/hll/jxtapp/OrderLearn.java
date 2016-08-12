@@ -1,16 +1,20 @@
 package com.hll.jxtapp;
 
-/**
- * 预约学车控制Activity
- * @author heyi
- * 2016/6/21
- */
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
-import android.app.Activity;
+
+import com.hll.entity.OrderLeanO;
+import com.hll.entity.ScheduleO;
+import com.hll.entity.SchoolPlaceO;
+import com.hll.entity.UserO;
+import com.hll.util.JxtUtil;
+import com.hll.util.NetworkInfoUtil;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.app.AlertDialog.Builder;
 public class OrderLearn extends FragmentActivity implements OnClickListener{
 
@@ -49,12 +54,14 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 	private ImageView returnPre;
 	private TextView  titleSce;
 	private TextView  menuSce;
+	private OrderLeanO orderLean;      //保存用户的预约信息
+	private UserO userInfo;            //用户最近一次的登陆信息
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-		setContentView(R.layout.order_learn);  
+		setContentView(R.layout.order_learn);
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
 		orderLearnMsgTv=(TextView) findViewById(R.id.id_order_learn_msg);
 		exerciceItemChoiceSp=(Spinner) findViewById(R.id.id_exercice_item_choice);
@@ -78,15 +85,139 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 	@Override
 	protected void onStart() {
 		super.onStart();
-		//titleTv.setText("预约学车");
-		userName="李先生(15071285589)";
-		schoolName="交安驾校";
+		userInfo = JxtUtil.getLastUserInfo();
+		findMyOrderInfo();
+		boolean bl = orderPrepare();
+		if(bl==true){
+			showMyOrder();
+		}
+		initEvent();
+	}
+	
+	/**
+	 * 显示我的预约信息
+	 * liaoyun 2016-8-12
+	 */
+	private void showMyOrder() {
+		userName = userInfo.getNickName();
+		if(userInfo.getTel() != null && !userInfo.getTel().trim().equals("")){
+			userName = userName + "  (" + userInfo.getTel() + ")";
+		}
+		schoolName = orderLean.getSchoolPlace().get(0).getSchoolName();
 		orderLearnMsgTv.setText("     尊敬的"+userName+",下面给您带来"+schoolName+"未来三天预约驾校车详情。");
 		//选择训练条件和内容
 		orderItemChoice();
-		initEvent();
+		//显示三天预约的具体信息
+		showThreeDaysOrder(orderLean.getSchedule());
 	}
 
+	/**
+	 * 显示三天预约的具体信息 liaoyun 2016-8-12
+	 */
+	private void showThreeDaysOrder(List<ScheduleO>  list) {
+		Date today = JxtUtil.getServerTime(orderLean.getServerTime());//服务器时间,即今天
+		Date tomrrow = getDateAfter(today);                           //明天
+		Date daftert = getDateAfter(tomrrow);                         //后天
+		ScheduleO todaySchedule = null;                               //今天的计划
+		ScheduleO tomrrowSchedule = null;                             //明天的计划
+		ScheduleO daftertSchedule = null;                             //后天的计划
+		for (ScheduleO li : list) {
+			if(isEqualDate(today, li.getOrderDate())){
+				todaySchedule = li;
+			}else if(isEqualDate(tomrrow, li.getOrderDate())){
+				tomrrowSchedule = li;
+			}else if(isEqualDate(daftert, li.getOrderDate())){
+				daftertSchedule = li;
+			}
+		}
+		fillSchedule(todayMorningIB,todaySchedule.getAm());
+		fillSchedule(todayAfternoonIB,todaySchedule.getPm());
+		fillSchedule(todayEveningIB,todaySchedule.getEv());
+		fillSchedule(tomorrowMorningIB,tomrrowSchedule.getAm());
+		fillSchedule(tomorrowAfternoonIB,tomrrowSchedule.getPm());
+		fillSchedule(tomorrowEveningIB,tomrrowSchedule.getEv());
+		fillSchedule(theDayAfterTomorrowMorningIB,daftertSchedule.getAm());
+		fillSchedule(theDayAfterTomorrowAfternoonIB,daftertSchedule.getPm());
+		fillSchedule(theDayAfterTomorrowEveningIB,daftertSchedule.getEv());
+	}
+
+	private void fillSchedule(ImageButton button, int isScheduled) {
+		if(isScheduled == 0){
+			button.setImageResource(R.drawable.choice_false);
+			button.setTag(R.drawable.choice_false);
+		}else if(isScheduled == 1){
+			button.setImageResource(R.drawable.choice_true);
+			button.setTag(R.drawable.choice_true);
+		}
+	}
+
+	/**
+	 * 是否是同一天 liaoyun 2016-8-12
+	 * @param date1
+	 * @param date2
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public boolean isEqualDate(Date date1,Date date2){
+		int year1 = date1.getYear();
+		int mont1 = date1.getMonth();
+		int day1  = date1.getDate();
+		int year2 = date2.getYear();
+		int mont2 = date2.getMonth();
+		int day2  = date2.getDate();
+		if(year1 == year2 && mont1==mont2 && day1==day2){
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 日期向后推一天
+	 * @return
+	 */
+	private Date getDateAfter(Date date){
+		Calendar ca = new GregorianCalendar();
+		ca.setTime(date);
+		ca.add(Calendar.DATE, 1);
+		return ca.getTime();
+		
+	}
+	/**
+	 * 预约前的初始化工作，判断用户是否登陆，是否报名了驾校
+	 * liaoyun 2016-8-12
+	 */
+	private boolean orderPrepare() {
+		if(orderLean==null){
+			JxtUtil.toastCenter(this, "没有连上网络，网络质量差 ",Toast.LENGTH_LONG);
+			return false;
+		}else if(orderLean.getLoginState() == 0){//没有登陆服务器
+			JxtUtil.toastCenter(this, "您还没有登陆 ",Toast.LENGTH_LONG);
+			return false;
+		}else if(orderLean.getSchoolPlace()==null || orderLean.getSchoolPlace().size()<1){//没有报名驾校
+			JxtUtil.toastCenter(this, "您还没有在驾校报名 ",Toast.LENGTH_LONG);
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * 用户的预约信息
+	 * liaoyun 2016-8-11
+	 */
+	private void findMyOrderInfo() {
+		Thread thread1 = new Thread(){
+			public void run() {
+				String url = NetworkInfoUtil.baseUtl + "/queue/getOrderLeanInfo.action";
+				OrderLeanO myOrder = JxtUtil.getObjectFromServer(OrderLeanO.class, url);
+				orderLean = myOrder;
+			};
+		};
+		thread1.start();
+		try {
+			thread1.join();                  //阻塞主线程，使子线程与主线程同步
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 	/*
 	 * 选择训练条件和内容
 	 */
@@ -107,10 +238,10 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		orderContentList.add("上坡起步");
 		orderContentList.add("倒车入库");
 		
-		orderPlaceList.add("天马湖");
-		orderPlaceList.add("东九楼");
-		orderPlaceList.add("赛马场");
-		orderPlaceList.add("杨家湾");
+		List<SchoolPlaceO> pList = orderLean.getSchoolPlace();
+		for (SchoolPlaceO sp : pList) {
+			orderPlaceList.add(sp.getPlaceName());
+		}
 		
 		orderItemAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,orderItemList);
 		orderContentAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,orderContentList);
@@ -147,8 +278,7 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 
 		switch (v.getId()) {
 		case R.id.id_return:
-			Intent intentReturn =new Intent(this,MainActivity.class);
-			startActivity(intentReturn);
+			finish();
 			break;
 		case R.id.id_today_morning:
 			ImageButton ib0=(ImageButton)todayMorningIB;

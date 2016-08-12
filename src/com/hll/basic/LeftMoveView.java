@@ -116,7 +116,7 @@ public class LeftMoveView extends ViewGroup {
 	}
 	
 	/**
-	 *
+	 * 得到显示器宽、高等基本信息
 	 * @param main_show_view
 	 * @param currentTab
 	 */
@@ -128,6 +128,7 @@ public class LeftMoveView extends ViewGroup {
 		this.screen_h = Height;
 		this.move_main =GetWHUtil.getWindowWidth(context)/5;
 		this.move_left = GetWHUtil.getWindowWidth(context)/10;
+		//Log.i("Left","width= "+width+"  Height= "+Height+" move_main= "+GetWHUtil.getWindowWidth(context));
 		//保持屏幕常亮
 		this.setKeepScreenOn(true);
 		this.min_distance = (int) (screen_w / 5.0);
@@ -141,7 +142,7 @@ public class LeftMoveView extends ViewGroup {
 		this.currentTab = curTab;
 		if(this.left_show_view == null){
 			this.left_show_view = leftView;
-			this.addView(left_show_view.getView());
+			this.addView(left_show_view.getView());//动太添加 view 组件
 		}
 		
 //		if(this.left_show_view == null){

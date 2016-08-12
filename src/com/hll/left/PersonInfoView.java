@@ -1,11 +1,12 @@
 package com.hll.left;
 
 import com.hll.jxtapp.R;
-import com.hll.util.NetworkInfoUtil;
+import com.hll.util.JxtUtil;
 import com.hll.adapter.ImgTxtAdapter;
 import com.hll.basic.BaseView;
 import com.hll.basic.LeftMoveView;
 import com.hll.entity.ImgTxtBean;
+import com.hll.entity.UserO;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -40,7 +41,7 @@ public class PersonInfoView extends BaseView {
 			}
 		});
 		
-		this.listview.setOnTouchListener(new View.OnTouchListener() {
+		listview.setOnTouchListener(new View.OnTouchListener() {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
@@ -50,14 +51,8 @@ public class PersonInfoView extends BaseView {
 				return false;
 			}
 		});
-		
-//		for(int i=0;i<20;i++){
-//			ImgTxtBean b = new ImgTxtBean();
-//			b.setResid(R.drawable.ic_launcher);
-//			b.setText("item01 - "+(i+1));
-//			adapter.addObject(b);
-//		}
-		if(NetworkInfoUtil.userinfo == null){
+		UserO userInfo = JxtUtil.getLastUserInfo();
+		if(userInfo==null || userInfo.getAccount()==null){
 			ImgTxtBean b = new ImgTxtBean();
 			b.setResid(R.drawable.ic_launcher);
 			b.setText("赶快登陆吧！");
@@ -65,22 +60,38 @@ public class PersonInfoView extends BaseView {
 		}else{
 			ImgTxtBean bType = new ImgTxtBean();
 			bType.setResid(R.drawable.ic_launcher);
-			bType.setText("类型："+NetworkInfoUtil.userinfo.getType());
+			bType.setText("类型："+userInfo.getType());
 			adapter.addObject(bType);
 			
 			ImgTxtBean bNickName = new ImgTxtBean();
-			bType.setResid(R.drawable.ic_launcher);
-			bType.setText("昵称："+NetworkInfoUtil.userinfo.getNickName());
+			bNickName.setResid(R.drawable.ic_launcher);
+			bNickName.setText("昵称："+userInfo.getNickName());
 			adapter.addObject(bNickName);
 			
 			ImgTxtBean bEmail = new ImgTxtBean();
 			bEmail.setResid(R.drawable.ic_launcher);
-			bEmail.setText("邮箱： "+NetworkInfoUtil.userinfo.getEmail());
+			bEmail.setText("邮箱： "+userInfo.getEmail());
 			adapter.addObject(bEmail);
 			
 			ImgTxtBean bTel = new ImgTxtBean();
 			bTel.setResid(R.drawable.ic_launcher);
-			bTel.setText("电话： "+NetworkInfoUtil.userinfo.getTel());
+			bTel.setText("电话： "+userInfo.getTel());
+			adapter.addObject(bTel);
+			
+			ImgTxtBean lastLoadTime = new ImgTxtBean();
+			lastLoadTime.setResid(R.drawable.ic_launcher);
+			lastLoadTime.setText("最近登陆时间： "+userInfo.getLastLoadTime());
+			adapter.addObject(lastLoadTime);
+			
+			ImgTxtBean lastLoadIp = new ImgTxtBean();
+			lastLoadIp.setResid(R.drawable.ic_launcher);
+			lastLoadIp.setText("最近登陆Ip地址： "+userInfo.getLastLoadIp());
+			adapter.addObject(lastLoadIp);
+			
+			ImgTxtBean lastLoadPort = new ImgTxtBean();
+			lastLoadPort.setResid(R.drawable.ic_launcher);
+			lastLoadPort.setText("最近登陆端口号： "+userInfo.getLastLoadPort());
+			adapter.addObject(lastLoadPort);
 		}
 	}
 }

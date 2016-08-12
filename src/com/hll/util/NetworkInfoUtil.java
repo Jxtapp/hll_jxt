@@ -1,7 +1,5 @@
 package com.hll.util;
 
-import com.hll.entity.UserO;
-
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -12,15 +10,13 @@ import android.net.NetworkInfo;
  */
 public class NetworkInfoUtil {
 	//服务器 地址
-	public static String baseUtl="http://192.168.191.3:8080/hll";
+	public static String baseUtl="http://192.168.1.3:8080/hll";
 	//图片接口
 	public static String picUtl=baseUtl+"/file/pic/";
 	//网络状态
 	public static ConnectivityManager connectManager;
 	//sessionId
 	public static String sessionId=null;
-	//用户详细信息
-	public static UserO userinfo;
 	
 	/**
 	 * 当前的网络接入的类型  WIFI or MOBILE or NULL
