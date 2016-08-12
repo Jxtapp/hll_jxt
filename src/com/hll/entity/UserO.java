@@ -1,7 +1,5 @@
 package com.hll.entity;
 
-import java.util.Date;
-
 import com.hll.entity.BaseEntity;
 /**
  * 登陆用户信息
@@ -24,6 +22,9 @@ public class UserO extends BaseEntity{
 	private String leader;        //上级账号
 	private int type;             //用户类型:1、systemAdmin;2、systememployee;3driverscholladmin;4、driverschollemploye;5、coustomuser
 	private String nickName;      //昵称
+	private String lastLoadTime;  //最近登陆时的服务器时间
+	private String lastLoadIp;    //最近登陆的ip
+	private String lastLoadPort;  //最近登陆的端口号
 	public UserO() {
 		super();
 	}
@@ -86,5 +87,23 @@ public class UserO extends BaseEntity{
 	}
 	public void setNickName(String nickName) {
 		this.nickName = nickName;
-	}	
+	}
+	public String getLastLoadTime() {
+		return lastLoadTime;
+	}
+	public void setLastLoadTime(String lastLoadTime) {
+		this.lastLoadTime = lastLoadTime;
+	}
+	public String getLastLoadIp() {
+		return lastLoadIp;
+	}
+	public void setLastLoadIp(String lastLoadIp) {
+		this.lastLoadIp = lastLoadIp;
+	}
+	public String getLastLoadPort() {
+		return lastLoadPort;
+	}
+	public void setLastLoadPort(String lastLoadPort) {
+		this.lastLoadPort = lastLoadPort;
+	}
 }

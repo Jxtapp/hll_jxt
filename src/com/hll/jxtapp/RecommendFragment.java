@@ -1,13 +1,9 @@
 package com.hll.jxtapp;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.hll.entity.RecommendSchoolInfoO;
 import com.hll.entity.SchoolSelectBy;
 import com.hll.adapter.RecommondSchoolListAdapter;
@@ -69,7 +65,6 @@ public class RecommendFragment extends Fragment {
 	private int[] touchPosition = new int[2];  
 	private Spinner areaSpinner,kindSpinner,distanceSpinner;//条件选择框
 	MyAddressHandler myAddressHandler = new MyAddressHandler();
-	private SchoolSelectBy oldSchoolSelect = new SchoolSelectBy();//保存上一次查询的条件
 	private SchoolSelectBy schoolSelect = new SchoolSelectBy();//当前查询条件
 	private int isSpinnerClicked = 0;
 	@Override
@@ -101,7 +96,7 @@ public class RecommendFragment extends Fragment {
 		LayoutInflater inflater = LayoutInflater.from(mainActivity);//add footer
 		footer = inflater.inflate(R.layout.load_more, null);
 		lview.addFooterView(footer);
-		lview.setOnTouchListener(new listViewOntouchListener());
+		lview.setOnTouchListener(new ListViewOntouchListener());
 		nextLeft.setOnClickListener(new nextLeftOnclickListener());
 		nextRight.setOnClickListener(new nextRightOnclickListener());
 		//scrollView.smoothScrollBy(0, 0);
@@ -184,17 +179,11 @@ public class RecommendFragment extends Fragment {
 		public void run() {
 			//查询对象序列化
 			String selectJson = gson.toJson(schoolSelect);
-			HttpURLConnection conn = JxtUtil.postHttpConn(NetworkInfoUtil.baseUtl+"/recommond/getSchoolList.action",selectJson);
-			try {
-				InputStream is = conn.getInputStream();
-				if(is!=null){
-					String str = JxtUtil.streamToJsonString(is);
-					List<RecommendSchoolInfoO> list = gson.fromJson(str, new TypeToken<List<RecommendSchoolInfoO>>(){}.getType());
-					driverSchoolInfoList.addAll(list);
-					loadDataHandler.sendEmptyMessage(0);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			String url = NetworkInfoUtil.baseUtl+"/recommond/getSchoolList.action";
+			List<RecommendSchoolInfoO> list =  JxtUtil.postListObjectFromServer(RecommendSchoolInfoO.class,url, selectJson);
+			if(list!=null && list.size()>0){
+				driverSchoolInfoList.addAll(list);
+				loadDataHandler.sendEmptyMessage(0);
 			}
 		}
 	}
@@ -214,18 +203,12 @@ public class RecommendFragment extends Fragment {
 		@Override
 		public void run() {
 			super.run();
-			try {
-				HttpURLConnection con = JxtUtil.getHttpConn(NetworkInfoUtil.baseUtl+"/recommond/getRecommondAdInfo/"+ currentAd +".action");
-				InputStream ris = con.getInputStream();
-				String jsonStr = JxtUtil.streamToJsonString(ris);
-				if(jsonStr != null){
-					List<RecommendSchoolInfoO> list = gson.fromJson(jsonStr, new TypeToken<List<RecommendSchoolInfoO>>(){}.getType());
-					Message msg = new Message();
-					msg.obj=list.get(0);
-					loadAdHandler.sendMessage(msg);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
+			String url = NetworkInfoUtil.baseUtl+"/recommond/getRecommondAdInfo/"+ currentAd +".action";
+			List<RecommendSchoolInfoO> list = JxtUtil.getListObjectFromServer(RecommendSchoolInfoO.class,url);
+			if(list!=null && list.size()>0){
+				Message msg = new Message();
+				msg.obj=list.get(0);
+				loadAdHandler.sendMessage(msg);
 			}
 		}
 	}
@@ -243,29 +226,11 @@ public class RecommendFragment extends Fragment {
 		ssb.setTranDistance(distSelect);
 		ssb.setTranTypeSp(kindSelect);
 	}
-	/**
-	 * 判断查询条件是否变化
-	 * liaoyun 2016-8-8
-	 * @param old
-	 * @param now
-	 * @return
-	 */
-	private boolean isEqualSelection(SchoolSelectBy old,SchoolSelectBy now){
-		String oldArea = old.getTranAreaSp().trim();
-		String oldKind = old.getTranTypeSp().trim();
-		String oldDist = old.getTranDistance();
-		String nowArea = now.getTranAreaSp().trim();
-		String nowKind = now.getTranTypeSp().trim();
-		String nowDist = now.getTranDistance();
-		if(oldArea.equals(nowArea) && oldKind.equals(nowKind) && oldDist.equals(nowDist)){
-			return true;
-		}
-		return false;
-	}
-//----------------get address --------------------------
+	//----------------get address --------------------------
 	private void myaddress(){
 		final MyLocationInfo myLocationInfo = new MyLocationInfo();
 		new Thread(){
+			@SuppressWarnings("static-access")
 			public void run() {
 				Looper.prepare();
 				myLocationInfo.getMyaddress(mainActivity);
@@ -283,6 +248,7 @@ public class RecommendFragment extends Fragment {
 	}
 	
 /*****************更新ui的 handler********************************************/
+	@SuppressLint("HandlerLeak")
 	private class MyAddressHandler extends Handler{
 		@Override
 		public void handleMessage(Message msg) {
@@ -290,12 +256,12 @@ public class RecommendFragment extends Fragment {
 			myaddress.setText(msg.obj.toString());
 		}
 	}
+	@SuppressLint("HandlerLeak")
 	private class LoadDataHandler extends Handler{
 		@Override
 		public void handleMessage(Message msg) {
 			recommondSchoolListAdapter.notifyDataSetChanged();
-			//加载图片
-			try {
+			try {//加载图片
 				if(end_index==totalCount){
 					loadListImg(start_index,end_index-1);
 				}else{
@@ -402,7 +368,7 @@ public class RecommendFragment extends Fragment {
 		}
 	}
 	
-	private class listViewOntouchListener implements OnTouchListener{
+	private class ListViewOntouchListener implements OnTouchListener{
 		@Override
 		public boolean onTouch(View arg0, MotionEvent me) {
 			scrollView.requestDisallowInterceptTouchEvent(true);
@@ -447,7 +413,9 @@ public class RecommendFragment extends Fragment {
 			//setSelection(schoolSelect);
 			//清空 listView,重新按条件加载数据
 			driverSchoolInfoList.clear();
+			//setSelection(schoolSelect);
 			recommondSchoolListAdapter.notifyDataSetChanged();
+			setSelection(schoolSelect);
 			new LoadDataThread().start();
 		}
 		@Override

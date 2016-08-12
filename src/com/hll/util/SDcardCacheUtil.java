@@ -27,8 +27,8 @@ public class SDcardCacheUtil {
 	private static final String TAG                  = "Bmp Cache";
 	private static final String BMP_DIR              = Environment.getExternalStorageDirectory()+"/hllCache";
 	private static final int    MB                   = 1024 * 1024;
-	private static final int    FREE_SD_SPACE_NEEDED = 10 * MB;     // 10MB
-	private static final int    CACHE_SIZE           = 10 * MB;     // 10MB
+	private static final int    FREE_SD_SPACE_NEEDED = 10;          // 10MB
+	private static final int    CACHE_SIZE           = 10;          // 10MB
 	private static long         DIR_SIZE             = 0;
 	//private static final String SUBFFIX              = "jpg";
 
@@ -41,6 +41,7 @@ public class SDcardCacheUtil {
 					DIR_SIZE += files[i].length();
 				}
 			}
+			DIR_SIZE = DIR_SIZE / MB;
 		}
 	}
 	/**
@@ -90,12 +91,14 @@ public class SDcardCacheUtil {
 	 */
 	public static void saveBmpToSD(Bitmap bm, String bmpName){
 		Log.i(TAG,"===============start to save bmp=====================");
+		Log.i(TAG,"bmpName    "+bmpName);
 		if(bm==null){
 			Log.w(TAG,"tring to save null bitmap");
 			return;
 		}
 		//判断 sd card 上的 空间
 		if(FREE_SD_SPACE_NEEDED > freeSpaceOnsd()){
+			Log.i(TAG,"need = "+FREE_SD_SPACE_NEEDED +"   sdfree "+freeSpaceOnsd());
 			removeChace();
 			Log.w(TAG,"low free space on sd card,do not cache");
 			return;
@@ -113,7 +116,7 @@ public class SDcardCacheUtil {
 			bm.compress(Bitmap.CompressFormat.JPEG, 100, outStream);
 			outStream.flush();
 			outStream.close();
-			DIR_SIZE += file.length();
+			DIR_SIZE += file.length() / MB;
 			removeChace();
 		} catch (IOException e) {
 			Log.w(TAG,e);
@@ -128,7 +131,7 @@ public class SDcardCacheUtil {
 	@SuppressWarnings("deprecation")
 	public static int freeSpaceOnsd() {
 		StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
-		double sdFree = (stat.getAvailableBlocks() * stat.getBlockSize());
+		double sdFree = stat.getAvailableBlocks() / MB * stat.getBlockSize();
 		return (int) sdFree;
 	}
 	
@@ -150,7 +153,7 @@ public class SDcardCacheUtil {
 	 */
 	public static void removeChace(){
 		if(DIR_SIZE > CACHE_SIZE || FREE_SD_SPACE_NEEDED > freeSpaceOnsd()){
-			Log.i(TAG,"DIR_SIZE="+DIR_SIZE+"   "+"CACHE_SIZE="+CACHE_SIZE+"  "+"FREE_SD_SPACE_NEEDED="+FREE_SD_SPACE_NEEDED);
+			Log.i(TAG,"DIR_SIZE="+DIR_SIZE+"   "+"CACHE_SIZE="+CACHE_SIZE+"  "+"FREE_SD_SPACE_NEEDED="+FREE_SD_SPACE_NEEDED+"  freeSpaceOnsd="+freeSpaceOnsd());
 			File dir = new File(BMP_DIR);
 			File[] files = dir.listFiles();
 			int removeFactor = (int) (0.4 * files.length +1);
