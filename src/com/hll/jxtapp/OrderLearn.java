@@ -147,8 +147,7 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 
 		switch (v.getId()) {
 		case R.id.id_return:
-			Intent intentReturn =new Intent(this,MainActivity.class);
-			startActivity(intentReturn);
+			finish();
 			break;
 		case R.id.id_today_morning:
 			ImageButton ib0=(ImageButton)todayMorningIB;

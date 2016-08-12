@@ -1,46 +1,54 @@
 package com.hll.jxtapp;
-
 /**
  * 驾校通预约排队页面activity
  * @author heyi
  * 2016/6/1
  */
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * app第二个页面，主要实现排队的功能
  * @author  heyi
  * 2016/5/27
  */
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hll.adapter.SecPageAdapter;
+import com.hll.basic.ImageCallBack;
+import com.hll.basic.NetworkDownImage;
+import com.hll.entity.CouchSelectBy;
 import com.hll.entity.SecPageItemBean;
+import com.hll.util.JxtUtil;
+import com.hll.util.NetworkInfoUtil;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.MarginLayoutParams;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class QueueFragment extends Fragment implements OnClickListener,OnItemClickListener,OnScrollListener{
@@ -53,7 +61,7 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	private LinearLayout feedbackPass;
 	private LinearLayout aboutUsCall;
 	private ListView listView;
-	private Vector<SecPageItemBean> list;
+	private List<SecPageItemBean> list;
 	private SecPageAdapter adapter;
 	private Activity mainActivity;
 	private Spinner spinnerPlaceChoice;
@@ -67,6 +75,20 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	private ArrayAdapter<String> adapterNearPlace;
 	private ScrollView secScrollView;
 
+	private int startIndex = 0,endIndex = 0,totalCount = 0;
+	private double ontouchY1;
+	private double ontouchY2;
+	private int[] touchPosition = new int[2];
+	
+	private CouchSelectBy couchSelectBy=new CouchSelectBy();
+	private List<SecPageItemBean>  secPageItemBeanList=new ArrayList<>();
+    private Gson gson=new Gson();
+    
+    private LoadDataHandler loadDataHandler=new LoadDataHandler();
+    
+    private int isSpinnerClicked=0;
+    private int firstVP=0;
+    
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		return inflater.inflate(R.layout.queue, container, false);
@@ -88,10 +110,17 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		spinnerTeachType = (Spinner) mainActivity.findViewById(R.id.id_sp_teach_type);
 		spinnerNearPlace = (Spinner) mainActivity.findViewById(R.id.id_sp_near_place);
 		secScrollView = (ScrollView) mainActivity.findViewById(R.id.id_queue_scrollview);
+		//设置listView 的高度，（当 scrollList 与 listView 混用时，高度只会显示 一行）
+		ViewGroup.LayoutParams params = listView.getLayoutParams();
+		params.height=900;
+		listView.setLayoutParams(params);
 		//添加底部视图
 		View footer =getLayoutInflater(savedInstanceState).inflate(R.layout.load_more,null);
 		listView.addFooterView(footer);
-		
+		new QueueLoadDataThread().start();
+		spinnerPlaceChoice.setOnItemSelectedListener(new SpinnerChangedListener());
+		spinnerTeachType.setOnItemSelectedListener(new SpinnerChangedListener());
+		spinnerNearPlace.setOnItemSelectedListener(new SpinnerChangedListener());
 	}
 
 
@@ -101,11 +130,14 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		super.onStart();
 		// 事件初始化
 		initEvent();
-	
-		//vector是线程安全的
-		list = new Vector<SecPageItemBean>();
+		adapter=new SecPageAdapter(mainActivity, secPageItemBeanList);
+		listView.setAdapter(adapter);
+		if(firstVP != 0){
+			listView.setSelection(firstVP);
+			firstVP = 0;
+		}
+		//list = new ArrayList<SecPageItemBean>();
 		// 教练列表
-		coachList();
 		
 		// 自选教练
 		choiceCochSelf();
@@ -123,60 +155,32 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 			feedbackPass.setOnClickListener(this);
 			aboutUsCall.setOnClickListener(this);
 			listView.setOnScrollListener(this);
+			listView.setOnTouchListener(new listViewOntouchListener());
 		}
 
-	// 教练列表
-	private void coachList() {
-
-		secScrollView.smoothScrollBy(0, 0);
-		initData();
-		//new LoadDataThread().start();//加载数据的工作线程
-		adapter=new SecPageAdapter(mainActivity, list);
-		listView.setAdapter(adapter);
-		// return view;
-		setListViewHeightBasedOnChildren(listView);
-	}
-
-	/**
-	 * 为listView添加数据
-	 */
-	int index=1; //数据的计数器(索引)
-	//初始化数据
-	 void initData() {
-		 
-		for (int i = 0; i < 10; i++) {
-//			SecPageItemBean secItemBean = new SecPageItemBean();
-//			secItemBean.coachPrice=3000 + (index) * 10;
-//			secItemBean.coachSelfImg=R.drawable.coach;
-//			secItemBean.teachType="小车";
-//			secItemBean.orderTimes=index;
-//			secItemBean.moreInfo="查看更多";
-			list.add(new SecPageItemBean(R.drawable.coach, 3000 + (index) * 10, "小车", index, "查看更多"));
-			//list.add(secItemBean);
-			index++;
-		}
-
-	}
 
 	// 获取并设置ListView高度的方法
-	public void setListViewHeightBasedOnChildren(ListView listView) {
-		ListAdapter listAdapter = listView.getAdapter();
-		if (listAdapter == null) {
-			return;
-		}
-
-		int totalHeight = 0;
-		for (int i = 0; i < listAdapter.getCount(); i++) {
-			View listItem = listAdapter.getView(i, null, listView);
-			listItem.measure(0, 0);
-			totalHeight += listItem.getMeasuredHeight();
-		}
-
-		ViewGroup.LayoutParams params = listView.getLayoutParams();
-		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-		((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
-		listView.setLayoutParams(params);
-	}
+//	public void setListViewHeightBasedOnChildren(ListView listView) {
+//		ListAdapter listAdapter = listView.getAdapter();
+//		if (listAdapter == null) {
+//			return;
+//		}
+//
+//		int totalHeight = 0;
+//		for (int i = 0; i < listAdapter.getCount(); i++) {
+//			View listItem = listAdapter.getView(i, null, listView);
+//			listItem.measure(0, 0);
+//			totalHeight += listItem.getMeasuredHeight();
+//		}
+//
+//		ViewGroup.LayoutParams params = listView.getLayoutParams();
+//		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+//		((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
+//		listView.setLayoutParams(params);
+//	}
+	
+	
+	
 
 	// 根据条件自选教练选项
 	private void choiceCochSelf() {
@@ -204,6 +208,7 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		listNearPlace.add("6-8km");
 		listNearPlace.add("8-10km");
 
+		
 		adapterPlaceChoice = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item,
 				listPlaceChoice);
 		adapterTeachType = new ArrayAdapter<String>(mainActivity, android.R.layout.simple_spinner_item, listTeachType);
@@ -264,35 +269,19 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		}
 	}
 
-	/**
-	 * listView内容的点击事件
-	 * 
-	 */
-	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		// TODO Auto-generated method stub
-		
-	}
+	
 
 	/**
 	 * listView里的滚动方法
 	 * 
 	 */
-	int visibleLastIndex=0;
 	@Override
 	public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-		
+		startIndex=firstVisibleItem;
 		//System.out.println("totalItemCount:"+totalItemCount);
-		visibleLastIndex=firstVisibleItem+visibleItemCount-1;
+		endIndex=firstVisibleItem+visibleItemCount-1;
 	}
 
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		//adapter.getCount();
-		if(visibleLastIndex==adapter.getCount()&&scrollState==OnScrollListener.SCROLL_STATE_IDLE){
-			new LoadDataThread().start();
-		}
-	}
 	
 	//线程之间通信的桥梁handler
 	private Handler handler =new Handler(){
@@ -308,20 +297,178 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 		};
 	};
 	
-
-	//模拟加载数据
-	class LoadDataThread extends Thread{
-		@Override
-		public void run() {
-			initData();
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+	//listView和ScrollView之间的冲突问题
+		private class listViewOntouchListener implements OnTouchListener{
+			@Override
+			public boolean onTouch(View arg0, MotionEvent me) {
+				secScrollView.requestDisallowInterceptTouchEvent(true);
+				listView.getLocationInWindow(touchPosition);
+				switch (me.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					me.getX();
+					ontouchY1 = me.getY();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					me.getX();
+					ontouchY2 = me.getY();
+					if(ontouchY2 - ontouchY1 < 0){//scroll up
+						Log.i("222", "up "+touchPosition[1]);
+						//425dip
+						if(touchPosition[1] > 600){
+							secScrollView.requestDisallowInterceptTouchEvent(false);
+						}else{
+							secScrollView.requestDisallowInterceptTouchEvent(true);
+						}
+					}else{//scroll down
+						if(startIndex==0){
+							secScrollView.requestDisallowInterceptTouchEvent(false);
+						}else{
+							secScrollView.requestDisallowInterceptTouchEvent(true);
+						}
+					}
+					break;
+				default:
+					break;
+				}
+				return false;
 			}
-			//通过handler处理器去通知主线程，说数据已加载完毕
-			handler.sendEmptyMessage(1);
+		} 
+	
+		
+	//从服务器加载数据
+			private class QueueLoadDataThread extends Thread{
+				public QueueLoadDataThread(){
+					//改变查询的页数
+				}
+				@Override
+				public void run() {
+					//查询对象序列化
+					String selectJson = gson.toJson(couchSelectBy);
+					HttpURLConnection conn = JxtUtil.postHttpConn(NetworkInfoUtil.baseUtl+"/couchList/getCouchList.action",selectJson);
+					try {
+						InputStream is = conn.getInputStream();
+						if(is!=null){
+							String str = JxtUtil.streamToJsonString(is);
+							List<SecPageItemBean> list = gson.fromJson(str, new TypeToken<List<SecPageItemBean>>(){}.getType());
+							secPageItemBeanList.addAll(list);
+							loadDataHandler.sendEmptyMessage(0);
+						}
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			
+			private class LoadDataHandler extends Handler{
+				@Override
+				public void handleMessage(Message msg) {
+					adapter.notifyDataSetChanged();
+					//加载图片
+					try {
+						if(endIndex==totalCount){
+							loadListImg(startIndex,endIndex-1);
+						}else{
+							loadListImg(startIndex,endIndex);
+						}
+					}catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}	
+			//加載圖片
+			private void loadListImg(int start_index, int end_index) throws Exception{
+				for(; start_index < end_index; start_index++){
+					Log.i("indexdd",start_index+"  "+end_index+"  "+secPageItemBeanList.size());
+					final String imgName = secPageItemBeanList.get(start_index).getCoachSelfImg();
+					final ImageView imgView = (ImageView) listView.findViewWithTag(imgName);
+					//从网上下载图片
+					if(imgName!=null){
+						NetworkDownImage downImage = new NetworkDownImage(NetworkInfoUtil.picUtl+"/"+imgName);
+						//接口回调，加载图片
+						downImage.loadImage(new ImageCallBack(){
+							@Override
+							public void getDrawable(Drawable drawable) {
+								String imgTag = (String) imgView.getTag();
+								if(imgTag != null && imgTag.equals(imgName)){
+									imgView.setImageDrawable(drawable);
+								}
+							}
+						});
+					}
+				}
+			}
+			/**
+			 * spinner监听，实现联级查询
+			 */
+			
+			private class SpinnerChangedListener implements OnItemSelectedListener{
+				@Override
+				public void onItemSelected(AdapterView<?> arg0, View view, int arg2,
+						long arg3) {
+					isSpinnerClicked++;
+					if(isSpinnerClicked < 4){
+						return;
+					}
+					//setSelection(schoolSelect);
+					//清空 listView,重新按条件加载数据
+					secPageItemBeanList.clear();
+					adapter.notifyDataSetChanged();
+					setSelection(couchSelectBy);
+					new QueueLoadDataThread().start();
+				}
+				@Override
+				public void onNothingSelected(AdapterView<?> view) {
+				}
+			}
+			/*
+			 * 
+			 * 获取spinner改变查询条件
+			 */
+			public void setSelection(CouchSelectBy csb) {
+				String placeChoice = spinnerPlaceChoice.getSelectedItem().toString();
+				String teachType = spinnerTeachType.getSelectedItem().toString();
+				String nearPlace = spinnerNearPlace.getSelectedItem().toString();
+				csb.setTranAreaSp(placeChoice);
+				csb.setTranDistance(nearPlace);
+				csb.setCarType(teachType);
+				
+			}
+			/**
+			 * 加载更多listview数据
+			 */
+@Override
+public void onScrollStateChanged(AbsListView view, int scrollState) {
+	
+	//adapter.getCount();
+	if(endIndex==adapter.getCount()&&scrollState==OnScrollListener.SCROLL_STATE_IDLE){
+		secPageItemBeanList=adapter.getList();
+		new QueueLoadDataThread().start();
+	}
+	if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
+		//reminded: at the bottom of the listView,the last item is footer 
+		try {
+			if(endIndex==totalCount){
+				loadListImg(startIndex,endIndex-1);
+			}else{
+				loadListImg(startIndex,endIndex);
+			}
+		} catch (Exception e) {
+			Log.i("indexdd",e.getMessage());
 		}
 	}
+}
+
+/**
+ * listView内容的点击事件
+ * 
+ */
+@Override
+public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+	// TODO Auto-generated method stub
+	
+}
 
 }
+
+

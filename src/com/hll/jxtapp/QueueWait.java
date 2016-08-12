@@ -1,18 +1,20 @@
 package com.hll.jxtapp;
-/**
- * 排队等待实现类
+/*
+ * 排队等待页面
  * @author heyi
- * 2016/6/25
+ * 2016/8/12
  */
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.hll.adapter.QueueGroupListAdapter;
 import com.hll.entity.QueueListItemBean;
-import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.widget.ImageView;
@@ -37,8 +39,10 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	private int youQueueNum;
 	private ScrollView secScrollView;
 	private QueueGroupListAdapter adapter;
-	private Vector<QueueListItemBean> list;
+	private List<QueueListItemBean> list;
 	private ListView listView;
+	private TextView queueGroup;
+	private TextView chatRoom;
 
 	@Override
 	protected void onCreate(Bundle arg0) {
@@ -57,6 +61,8 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		listView = (ListView) findViewById(R.id.id_queue_list_view);
 
 		secScrollView=(ScrollView) findViewById(R.id.id_queue_wait_scrollview);
+		queueGroup=(TextView) findViewById(R.id.id_queue_group);
+		chatRoom=(TextView) findViewById(R.id.id_chat_room);
 	}
 
 	@Override
@@ -64,7 +70,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		super.onStart();
 		initPage();
 		initEvent();
-		list = new Vector<QueueListItemBean>();
+		list = new ArrayList<QueueListItemBean>();
 		initList();
 	}
 
@@ -79,7 +85,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 
 	int index = 1;
 	private void initData() {
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 20; i++) {
 			if(index<10){
 				list.add(new QueueListItemBean(index,".    小李"+index, R.drawable.queue_list_sure,R.drawable.queue_list_sure));
 			}
@@ -92,9 +98,12 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 
 		returnPre.setOnClickListener(this);
 		chatRoonSend.setOnClickListener(this);
+		queueGroup.setOnClickListener(this);
+		chatRoom.setOnClickListener(this);
 
 	}
 
+	//初始化页面
 	private void initPage() {
 		titleSce.setText("排队等候");
 		userName = "李先生（15071285589）";
@@ -132,12 +141,19 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 
 		switch (v.getId()) {
 		case R.id.id_return:
-			Intent intent1 = new Intent(this, MainActivity.class);
-			startActivity(intent1);
+			finish();
 			break;
 
 		case R.id.id_chat_room_send:
 			chatRoomShow.setText(chatRoomIn.getText());
+			break;
+		case R.id.id_queue_group:
+			chatRoomShow.setVisibility(View.GONE);
+			listView.setVisibility(View.VISIBLE);
+			break;
+		case R.id.id_chat_room:
+			chatRoomShow.setVisibility(View.VISIBLE);
+			listView.setVisibility(View.GONE);
 			break;
 		default:
 			break;

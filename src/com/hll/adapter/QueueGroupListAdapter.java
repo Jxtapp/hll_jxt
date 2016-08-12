@@ -1,5 +1,8 @@
 package com.hll.adapter;
-
+/**
+ * 排队等待适配器
+ * 加载在线排队人员
+ */
 import java.util.List;
 
 import com.hll.entity.QueueListItemBean;

@@ -37,11 +37,11 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/id_tv_coach_order_times"
+            android:id="@+id/id_tv_coach_order_level"
             android:layout_width="match_parent"
             android:layout_height="20dip"
             android:layout_gravity="center_vertical"
-            android:text="预约次数:"
+            android:text="教练星级"
             android:textSize="14sp" />
 
         <TextView
