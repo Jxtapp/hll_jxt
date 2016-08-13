@@ -18,6 +18,43 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical" >
 
+            <LinearLayout 
+                android:id="@+id/id_driver_place_choice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_gravity="center">
+                <TextView 
+                    android:id="@+id/id_driver_plave_tag"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="训练场地"
+                    android:textSize="16sp"
+                    android:textColor="@color/blue"
+                    android:textStyle="bold"/>
+                <LinearLayout
+                    android:layout_width="0dip"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_height="wrap_content">"
+                <Spinner 
+                    android:id="@+id/id_driver_place_queue_spinner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    />
+                </LinearLayout>
+            </LinearLayout>
+            <View  
+             android:layout_width="fill_parent"  
+             android:layout_height="3dp" 
+             android:background="?android:attr/listDivider"  
+                  />  
             <TextView
                 android:id="@+id/id_queue_wait_user_msg"
                 android:layout_width="match_parent"
@@ -31,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingTop="20dip" >
+                android:paddingTop="10dip" >
 
                 <TextView
                     android:id="@+id/id_queue_wait_queue_msg"
@@ -51,7 +88,7 @@
                     <LinearLayout
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_weight="2"
+                        android:layout_weight="1"
                         android:gravity="center" >
 
                         <TextView
@@ -64,7 +101,7 @@
                     <LinearLayout
                         android:layout_width="0dip"
                         android:layout_height="wrap_content"
-                        android:layout_weight="3"
+                        android:layout_weight="1"
                         android:gravity="center" >
 
                         <TextView
@@ -86,40 +123,60 @@
                     android:id="@+id/id_queue_list_view"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="visible">
+                    android:visibility="visible"
+                    >
                 </ListView>
-
-                <TextView
+                <!-- 聊天框 -->
+                <ListView 
                     android:id="@+id/id_chat_room_show"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="1dip"
-                    android:background="@drawable/chat_room_background"
+                    android:layout_height="360dip"
                     android:visibility="gone"
-                    android:paddingTop="20dip"/>
+                    android:paddingTop="20dip"
+                    android:layout_margin="1dip"
+                    android:background="#FFFFCC"
+                    android:divider="@color/chatblk"
+                    android:dividerHeight="5dip"
+                    ></ListView>
+
+              
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dip" 
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:id="@+id/id_msg_in_and_send"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/id_chat_room_in"
                     android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="4" />
+                    android:layout_height="60dip"
+                    android:layout_weight="4" 
+                    android:nextFocusRight="@+id/id_chat_room_send"
+                    android:maxLength="200"
+                    android:maxLines="3"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:minHeight="45dip"
+                    android:hint="请输入沟通消息"
+                    android:background="#FFFFCC"
+                    />
 
                 <Button
                     android:id="@+id/id_chat_room_send"
                     android:layout_width="0dip"
-                    android:layout_height="wrap_content"
+                    android:layout_height="60dip"
                     android:layout_weight="1"
                     android:text="发送"
+                    android:textSize="20dip"
+                    android:background="@color/green"
+                    android:nextFocusLeft="@id/id_chat_room_in"
+
                     />
             </LinearLayout>
-
             <!--
                <ImageView android:layout_width="match_parent"
                 android:layout_height="wrap_content"
