@@ -42,7 +42,6 @@ import android.widget.Toast;
  * 2016-5-25
  */
 public class JxtUtil {
-	
 	/**
 	 * liaoyun 2016-5-28
 	 * 返回 一个 http 联接
@@ -369,6 +368,40 @@ public class JxtUtil {
 			return null;
 		}
 	}
+	
+	/**
+	 * 以get的方式从服务器获取信息 liaoyun 2016-8-13
+	 * @param url
+	 * @return map
+	 */
+	public static Map<String,String> getMapFromServer(String url){
+		try{
+			HttpURLConnection con = getHttpConn(url);
+			String str = inputStreamToString(con.getInputStream());
+			Map<String,String> map = jsonStringToMap(str);
+			return map;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	/**
+	 * 以post的方式从服务器获取信息 liaoyun 2016-8-13
+	 * @param url
+	 * @param jsonStr
+	 * @return
+	 */
+	public static Map<String,String> postMapFromServer(String url,String jsonStr){
+		try{
+			HttpURLConnection con = postHttpConn(url, jsonStr);
+			String str = inputStreamToString(con.getInputStream());
+			Map<String,String> map = jsonStringToMap(str);
+			return map;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
 	/**
 	 * 水平正中央的 toast
 	 * liaoyun 2016-8-12
@@ -393,7 +426,23 @@ public class JxtUtil {
 			return null;
 		}
 		String[] ss = serverTime.split(",");
-		Date date = new Date(Integer.valueOf(ss[0]), Integer.valueOf(ss[1]), Integer.valueOf(ss[2]), Integer.valueOf(ss[3]), Integer.valueOf(ss[4]), Integer.valueOf(ss[5]));
+		Date date = new Date(Integer.valueOf(ss[0])-1900, Integer.valueOf(ss[1])-1, Integer.valueOf(ss[2]), Integer.valueOf(ss[3]), Integer.valueOf(ss[4]), Integer.valueOf(ss[5]));
 		return date;
+	}
+	
+	/**
+	 * 将对象转换为json字符串 liaoyun 2016-8-13
+	 * @param object
+	 * @return
+	 */
+	public static String objectToJson(Object object){
+		try{
+			Gson gson = new Gson();
+			String str = gson.toJson(object);
+			return str;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 }

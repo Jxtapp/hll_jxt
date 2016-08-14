@@ -1,25 +1,30 @@
 package com.hll.jxtapp;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
-
+import com.hll.entity.Item;
 import com.hll.entity.OrderLeanO;
 import com.hll.entity.ScheduleO;
 import com.hll.entity.SchoolPlaceO;
 import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
 import com.hll.util.NetworkInfoUtil;
-
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -28,34 +33,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.app.AlertDialog.Builder;
 public class OrderLearn extends FragmentActivity implements OnClickListener{
-
 	private TextView orderLearnMsgTv;
-	private Spinner exerciceItemChoiceSp;
-	private Spinner exerciceContentChoiceSp;
-	private Spinner exercicePlaceChoiceSp;
-	private ImageButton todayMorningIB;
-	private ImageButton tomorrowMorningIB;
-	private ImageButton theDayAfterTomorrowMorningIB;
-	private ImageButton todayAfternoonIB;
-	private ImageButton tomorrowAfternoonIB;
-	private ImageButton theDayAfterTomorrowAfternoonIB;
-	private ImageButton todayEveningIB;
-	private ImageButton tomorrowEveningIB;
-	private ImageButton theDayAfterTomorrowEveningIB;
-	private ImageButton orderSureButton;
-	private List<String> orderItemList;
-	private List<String> orderContentList;
-	private List<String> orderPlaceList;
-	private ArrayAdapter<String> orderItemAdapter;
+	private Spinner exerciceItemChoiceSp, exerciceContentChoiceSp, exercicePlaceChoiceSp;
+	private ImageButton todayMorningIB,tomorrowMorningIB, theDayAfterTomorrowMorningIB, todayAfternoonIB, tomorrowAfternoonIB, theDayAfterTomorrowAfternoonIB,todayEveningIB, tomorrowEveningIB, theDayAfterTomorrowEveningIB, orderSureButton;
+	private List<Item> orderItemList = new ArrayList<>();
+	private List<String> orderContentList = new ArrayList<>();
+	private List<Item> orderPlaceList = new ArrayList<>();
+	private ArrayAdapter<Item> orderItemAdapter;
 	private ArrayAdapter<String> orderContentAdapter;
-	private ArrayAdapter<String> orderPlaceAdapter;
-	private String userName;
-	private String schoolName;
+	private ArrayAdapter<Item> orderPlaceAdapter;
+	private String userName, schoolName;
 	private ImageView returnPre;
-	private TextView  titleSce;
-	private TextView  menuSce;
-	private OrderLeanO orderLean;      //保存用户的预约信息
-	private UserO userInfo;            //用户最近一次的登陆信息
+	private TextView  titleSce, menuSce;
+	private OrderLeanO orderLean;                               //保存用户的预约信息
+	private UserO userInfo;                                     //用户最近一次的登陆信息
+	private Context context;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +72,7 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		returnPre=(ImageView) findViewById(R.id.id_return);
 		titleSce=(TextView) findViewById(R.id.id_sec_title);
 		menuSce=(TextView) findViewById(R.id.id_sec_menu);
+		context = this;
 	}
 	
 	@Override
@@ -91,6 +84,8 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		if(bl==true){
 			showMyOrder();
 		}
+		exerciceItemChoiceSp.setOnItemSelectedListener(new SpinnerChangeListener());
+		exercicePlaceChoiceSp.setOnItemSelectedListener(new SpinnerChangeListener());
 		initEvent();
 	}
 	
@@ -107,6 +102,12 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		orderLearnMsgTv.setText("     尊敬的"+userName+",下面给您带来"+schoolName+"未来三天预约驾校车详情。");
 		//选择训练条件和内容
 		orderItemChoice();
+		
+		String subj = orderLean.getSchedule().get(0).getSubj();       //上次保存的训练项目编号
+		String placeId = orderLean.getSchedule().get(0).getPlaceId(); //上次保存的训练场地编号
+		setSpinner(subj,exerciceItemChoiceSp);
+		setSpinner(placeId,exercicePlaceChoiceSp);
+		
 		//显示三天预约的具体信息
 		showThreeDaysOrder(orderLean.getSchedule());
 	}
@@ -115,12 +116,24 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 	 * 显示三天预约的具体信息 liaoyun 2016-8-12
 	 */
 	private void showThreeDaysOrder(List<ScheduleO>  list) {
+		if(list == null || list.size()<1){
+			fillSchedule(todayMorningIB,0);
+			fillSchedule(todayAfternoonIB,0);
+			fillSchedule(todayEveningIB,0);
+			fillSchedule(tomorrowMorningIB,0);
+			fillSchedule(tomorrowAfternoonIB,0);
+			fillSchedule(tomorrowEveningIB,0);
+			fillSchedule(theDayAfterTomorrowMorningIB,0);
+			fillSchedule(theDayAfterTomorrowAfternoonIB,0);
+			fillSchedule(theDayAfterTomorrowEveningIB,0);
+			return;
+		}
 		Date today = JxtUtil.getServerTime(orderLean.getServerTime());//服务器时间,即今天
 		Date tomrrow = getDateAfter(today);                           //明天
 		Date daftert = getDateAfter(tomrrow);                         //后天
-		ScheduleO todaySchedule = null;                               //今天的计划
-		ScheduleO tomrrowSchedule = null;                             //明天的计划
-		ScheduleO daftertSchedule = null;                             //后天的计划
+		ScheduleO todaySchedule = new ScheduleO();                    //今天的计划
+		ScheduleO tomrrowSchedule = new ScheduleO();                  //明天的计划
+		ScheduleO daftertSchedule = new ScheduleO();                  //后天的计划
 		for (ScheduleO li : list) {
 			if(isEqualDate(today, li.getOrderDate())){
 				todaySchedule = li;
@@ -141,6 +154,18 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		fillSchedule(theDayAfterTomorrowEveningIB,daftertSchedule.getEv());
 	}
 
+	private void setSpinner(String code, Spinner spinner) {
+		int count = spinner.getCount();
+		for (int i=0; i<count; i++) {
+			Item item = (Item) spinner.getItemAtPosition(i);
+			String itemCode = item.getCode();
+			if(code.trim().equals(itemCode.trim())){
+				spinner.setSelection(i);
+				break;
+			}
+		}
+	}
+
 	private void fillSchedule(ImageButton button, int isScheduled) {
 		if(isScheduled == 0){
 			button.setImageResource(R.drawable.choice_false);
@@ -150,22 +175,27 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 			button.setTag(R.drawable.choice_true);
 		}
 	}
-
+	
+	private int getOrderState(ImageButton button){
+		Integer db = (Integer) button.getTag();
+		db = db == null ? 0 : db;
+		if(db == R.drawable.choice_true){
+			return 1;
+		}else{
+			return 0;
+		}
+	}
 	/**
 	 * 是否是同一天 liaoyun 2016-8-12
 	 * @param date1
 	 * @param date2
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
-	public boolean isEqualDate(Date date1,Date date2){
-		int year1 = date1.getYear();
-		int mont1 = date1.getMonth();
-		int day1  = date1.getDate();
-		int year2 = date2.getYear();
-		int mont2 = date2.getMonth();
-		int day2  = date2.getDate();
-		if(year1 == year2 && mont1==mont2 && day1==day2){
+	@SuppressLint("SimpleDateFormat")
+	public boolean isEqualDate(Date date1,String date2){
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		String s1 = df.format(date1);
+		if(s1.trim().equals(date2.trim())){
 			return true;
 		}
 		return false;
@@ -189,7 +219,7 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		if(orderLean==null){
 			JxtUtil.toastCenter(this, "没有连上网络，网络质量差 ",Toast.LENGTH_LONG);
 			return false;
-		}else if(orderLean.getLoginState() == 0){//没有登陆服务器
+		}else if(orderLean.getLoginState() == 0){                                        //没有登陆服务器
 			JxtUtil.toastCenter(this, "您还没有登陆 ",Toast.LENGTH_LONG);
 			return false;
 		}else if(orderLean.getSchoolPlace()==null || orderLean.getSchoolPlace().size()<1){//没有报名驾校
@@ -227,8 +257,8 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		orderContentList=new ArrayList<>();
 		orderPlaceList=new ArrayList<>();
 		
-		orderItemList.add("科目二");
-		orderItemList.add("科目三");
+		orderItemList.add(new Item("2", "科目二"));
+		orderItemList.add(new Item("3", "科目三"));
 		
 		orderContentList.add("直行");
 		orderContentList.add("打方向");
@@ -240,12 +270,12 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		
 		List<SchoolPlaceO> pList = orderLean.getSchoolPlace();
 		for (SchoolPlaceO sp : pList) {
-			orderPlaceList.add(sp.getPlaceName());
+			orderPlaceList.add(new Item(""+sp.getId(), sp.getPlaceName()));
 		}
 		
-		orderItemAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,orderItemList);
+		orderItemAdapter=new ArrayAdapter<Item>(this,android.R.layout.simple_spinner_item,orderItemList);
 		orderContentAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,orderContentList);
-		orderPlaceAdapter=new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,orderPlaceList);
+		orderPlaceAdapter=new ArrayAdapter<Item>(this,android.R.layout.simple_spinner_item,orderPlaceList);
 		
 		orderItemAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		orderContentAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -254,11 +284,9 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 		exerciceItemChoiceSp.setAdapter(orderItemAdapter);
 		exerciceContentChoiceSp.setAdapter(orderContentAdapter);
 		exercicePlaceChoiceSp.setAdapter(orderPlaceAdapter);
-
 	}
 
 	private void initEvent() {
-
 		todayMorningIB.setOnClickListener(this);
 		tomorrowMorningIB.setOnClickListener(this);
 		theDayAfterTomorrowMorningIB.setOnClickListener(this);
@@ -281,173 +309,176 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 			finish();
 			break;
 		case R.id.id_today_morning:
-			ImageButton ib0=(ImageButton)todayMorningIB;
-			assert(R.id.id_today_morning==todayMorningIB.getId());
-			Integer integer0 = (Integer) todayMorningIB.getTag();
-			   integer0 = integer0 == null ? 0 : integer0;
-			   switch(integer0) {
-			    case R.drawable.choice_true:
-			    	todayMorningIB.setImageResource(R.drawable.choice_false);
-			    	todayMorningIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	todayMorningIB.setImageResource(R.drawable.choice_true);
-			    	todayMorningIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(todayMorningIB);
 			break;
 		case R.id.id_today_afternoon:
-			ImageButton ib1=(ImageButton)todayAfternoonIB;
-			assert(R.id.id_today_morning==todayAfternoonIB.getId());
-			Integer integer1 = (Integer) todayAfternoonIB.getTag();
-			   integer1 = integer1 == null ? 0 : integer1;
-			   switch(integer1) {
-			    case R.drawable.choice_true:
-			    	todayAfternoonIB.setImageResource(R.drawable.choice_false);
-			    	todayAfternoonIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	todayAfternoonIB.setImageResource(R.drawable.choice_true);
-			    	todayAfternoonIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(todayAfternoonIB);
 			break;
 		case R.id.id_today_evening:
-			ImageButton ib2=(ImageButton)todayEveningIB;
-			assert(R.id.id_today_morning==todayEveningIB.getId());
-			Integer integer2 = (Integer) todayEveningIB.getTag();
-			   integer2 = integer2 == null ? 0 : integer2;
-			   switch(integer2) {
-			    case R.drawable.choice_true:
-			    	todayEveningIB.setImageResource(R.drawable.choice_false);
-			    	todayEveningIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	todayEveningIB.setImageResource(R.drawable.choice_true);
-			    	todayEveningIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(todayEveningIB);
 			break;
 		case R.id.id_tomorrow_morning:
-			ImageButton ib3=(ImageButton)tomorrowMorningIB;
-			assert(R.id.id_today_morning==tomorrowMorningIB.getId());
-			Integer integer3 = (Integer) tomorrowMorningIB.getTag();
-			   integer3 = integer3 == null ? 0 : integer3;
-			   switch(integer3) {
-			    case R.drawable.choice_true:
-			    	tomorrowMorningIB.setImageResource(R.drawable.choice_false);
-			    	tomorrowMorningIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	tomorrowMorningIB.setImageResource(R.drawable.choice_true);
-			    	tomorrowMorningIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(tomorrowMorningIB);
 			break;
 		case R.id.id_tomorrow_afternoon:
-			ImageButton ib4=(ImageButton)tomorrowAfternoonIB;
-			assert(R.id.id_today_morning==tomorrowAfternoonIB.getId());
-			Integer integer4 = (Integer) tomorrowAfternoonIB.getTag();
-			   integer4 = integer4 == null ? 0 : integer4;
-			   switch(integer4) {
-			    case R.drawable.choice_true:
-			    	tomorrowAfternoonIB.setImageResource(R.drawable.choice_false);
-			    	tomorrowAfternoonIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	tomorrowAfternoonIB.setImageResource(R.drawable.choice_true);
-			    	tomorrowAfternoonIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(tomorrowAfternoonIB);
 			break;
 		case R.id.id_tomorrow_evening:
-			ImageButton ib5=(ImageButton)tomorrowEveningIB;
-			assert(R.id.id_today_morning==tomorrowEveningIB.getId());
-			Integer integer5 = (Integer) tomorrowEveningIB.getTag();
-			   integer5 = integer5 == null ? 0 : integer5;
-			   switch(integer5) {
-			    case R.drawable.choice_true:
-			    	tomorrowEveningIB.setImageResource(R.drawable.choice_false);
-			    	tomorrowEveningIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	tomorrowEveningIB.setImageResource(R.drawable.choice_true);
-			    	tomorrowEveningIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(tomorrowEveningIB);
 			break;
 		case R.id.id_theDayAfterTomorrow_morning:
-			ImageButton ib6=(ImageButton)theDayAfterTomorrowMorningIB;
-			assert(R.id.id_today_morning==theDayAfterTomorrowMorningIB.getId());
-			Integer integer6 = (Integer) theDayAfterTomorrowMorningIB.getTag();
-			   integer6 = integer6 == null ? 0 : integer6;
-			   switch(integer6) {
-			    case R.drawable.choice_true:
-			    	theDayAfterTomorrowMorningIB.setImageResource(R.drawable.choice_false);
-			    	theDayAfterTomorrowMorningIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	theDayAfterTomorrowMorningIB.setImageResource(R.drawable.choice_true);
-			    	theDayAfterTomorrowMorningIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(theDayAfterTomorrowMorningIB);
 			break;
 		case R.id.id_theDayAfterTomorrow_afternoon:
-			ImageButton ib7=(ImageButton)theDayAfterTomorrowAfternoonIB;
-			assert(R.id.id_today_morning==theDayAfterTomorrowAfternoonIB.getId());
-			Integer integer7 = (Integer) theDayAfterTomorrowAfternoonIB.getTag();
-			   integer7 = integer7 == null ? 0 : integer7;
-			   switch(integer7) {
-			    case R.drawable.choice_true:
-			    	theDayAfterTomorrowAfternoonIB.setImageResource(R.drawable.choice_false);
-			    	theDayAfterTomorrowAfternoonIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	theDayAfterTomorrowAfternoonIB.setImageResource(R.drawable.choice_true);
-			    	theDayAfterTomorrowAfternoonIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(theDayAfterTomorrowAfternoonIB);
 			break;
 		case R.id.id_theDayAfterTomorrow_evening:
-			ImageButton ib8=(ImageButton)theDayAfterTomorrowEveningIB;
-			assert(R.id.id_today_morning==theDayAfterTomorrowEveningIB.getId());
-			Integer integer8 = (Integer) theDayAfterTomorrowEveningIB.getTag();
-			   integer8 = integer8 == null ? 0 : integer8;
-			   switch(integer8) {
-			    case R.drawable.choice_true:
-			    	theDayAfterTomorrowEveningIB.setImageResource(R.drawable.choice_false);
-			    	theDayAfterTomorrowEveningIB.setTag(R.drawable.choice_false);
-			     break;
-			    case R.drawable.choice_false:
-			    default:
-			    	theDayAfterTomorrowEveningIB.setImageResource(R.drawable.choice_true);
-			    	theDayAfterTomorrowEveningIB.setTag(R.drawable.choice_true);
-			     break;
-			}
+			changeState(theDayAfterTomorrowEveningIB);
 			break;
-		case R.id.id_order_sure_but:
-			Builder dialog = new AlertDialog.Builder(OrderLearn.this);  
-            dialog.setTitle("温馨提示!您好:");  
-            dialog.setMessage("请认真检查已经选择的时间，方便自己的同时，也方便别人！没问题就点确定吧！");  
-            dialog.setPositiveButton("确定", new DialogInterface.OnClickListener(){  
-                public void onClick(DialogInterface dialog, int which) {  
-                    //好了我成功把Button3的图标掠夺过来  
-                	orderSureButton.setImageDrawable(getResources().getDrawable(R.drawable.order_sure_but));  
-                }  
-            }).create();//创建按钮  
-            dialog.show();
+		case R.id.id_order_sure_but:                       //保存数据到服务器
+			saveOrNot();                                 
 			break;
 		default:
 			break;
 		}
 	}
-
+	
+	private void changeState(ImageButton button){
+		Integer state = (Integer) button.getTag();
+		state = state == null ? 0 : state;
+		switch(state) {
+		    case R.drawable.choice_true:
+		    	button.setImageResource(R.drawable.choice_false);
+		    	button.setTag(R.drawable.choice_false);
+		    break;
+		    case R.drawable.choice_false:
+		    default:
+		    	button.setImageResource(R.drawable.choice_true);
+		    	button.setTag(R.drawable.choice_true);
+		    break;
+		}
+	}
+	/**
+	 * 是否保存预约计划 liaoyun 2016-8-13
+	 */
+	private void saveOrNot(){
+		Builder dialog = new AlertDialog.Builder(OrderLearn.this);  
+		dialog.setTitle("温馨提示!您好:");  
+		dialog.setMessage("请认真检查已经选择的时间，方便自己的同时，也方便别人！没问题就点确定吧！");  
+		dialog.setPositiveButton("确定", new DialogInterface.OnClickListener(){  
+            public void onClick(DialogInterface dialog, int which) {  
+            	//orderSureButton.setImageDrawable(getResources().getDrawable(R.drawable.order_sure_but));  
+            	saveThreeDaysSchedule();
+            }  
+        });
+		dialog.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface arg0, int arg1) {
+				
+			}
+		});
+		dialog.create().show();
+	}
+	
+	/**
+	 * 保存三天的预约计划 liaoyun 201608013
+	 */
+	@SuppressLint("SimpleDateFormat")
+	private void saveThreeDaysSchedule(){
+		boolean bl = orderPrepare();
+		if(!bl){
+			return;
+		}
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		OrderLeanO myOrder = new OrderLeanO();
+		
+		ScheduleO todayOrder = new ScheduleO();                                     //今天的计划
+		ScheduleO tomorOrder = new ScheduleO();                                     //明天的计划
+		ScheduleO dafteOrder = new ScheduleO();                                     //后天的计划
+		
+		Date today = JxtUtil.getServerTime(orderLean.getServerTime());              //设置计划的日期
+		Date tomor = getDateAfter(today);
+		Date dafte = getDateAfter(tomor);
+		todayOrder.setOrderDate(df.format(today));
+		tomorOrder.setOrderDate(df.format(tomor));
+		dafteOrder.setOrderDate(df.format(dafte));
+		
+		todayOrder.setAm(getOrderState(todayMorningIB));                             //今天上午
+		todayOrder.setPm(getOrderState(todayAfternoonIB));                           //今天下午        
+		todayOrder.setEv(getOrderState(todayEveningIB));                             //今天晚上
+		tomorOrder.setAm(getOrderState(tomorrowMorningIB));                          //明天上午
+		tomorOrder.setPm(getOrderState(tomorrowAfternoonIB));                        //明天下午
+		tomorOrder.setEv(getOrderState(tomorrowEveningIB));                          //明天晚上
+		dafteOrder.setAm(getOrderState(theDayAfterTomorrowMorningIB));               //后天上午
+		dafteOrder.setPm(getOrderState(theDayAfterTomorrowAfternoonIB));             //后天下午
+		dafteOrder.setEv(getOrderState(theDayAfterTomorrowEveningIB));               //后天晚上
+		
+		Item subject = (Item) exerciceItemChoiceSp.getSelectedItem();                //设置训练项目
+		todayOrder.setSubj(subject.getCode());
+		tomorOrder.setSubj(subject.getCode());
+		dafteOrder.setSubj(subject.getCode());
+		
+		String schoolAccount = orderLean.getSchoolPlace().get(0).getSchoolAccount(); //驾校编号
+		todayOrder.setSchoolAccount(schoolAccount);
+		tomorOrder.setSchoolAccount(schoolAccount);
+		dafteOrder.setSchoolAccount(schoolAccount);
+		
+		Item placeId = (Item) exercicePlaceChoiceSp.getSelectedItem();               //场地id
+		todayOrder.setPlaceId(placeId.getCode());
+		tomorOrder.setPlaceId(placeId.getCode());
+		dafteOrder.setPlaceId(placeId.getCode());
+		
+		myOrder.getSchedule().add(todayOrder);
+		myOrder.getSchedule().add(tomorOrder);
+		myOrder.getSchedule().add(dafteOrder);
+		
+		new saveThreeDaysScheduleThread(myOrder).start();                            //将数据保存到服务器
+	}
+	
+	/**
+	 * 保存预约信息到服务器
+	 * @author liaoyun 2016-8-13
+	 */
+	private class saveThreeDaysScheduleThread extends Thread{
+		private OrderLeanO order;
+		public saveThreeDaysScheduleThread(OrderLeanO order){
+			super();
+			this.order = order;
+		}
+		@Override
+		public void run() {
+			Looper.prepare();
+			String jsonStr = JxtUtil.objectToJson(order);
+			String url = NetworkInfoUtil.baseUtl + "/queue/saveOrderLeanInfo.action";
+			OrderLeanO result = JxtUtil.postObjectFromServer(OrderLeanO.class, url, jsonStr);
+			if(result == null){//保存失败
+				JxtUtil.toastCenter(context, "保存失败!", Toast.LENGTH_LONG);
+			}else{             //保存成功
+				JxtUtil.toastCenter(context, "保存成功!", Toast.LENGTH_LONG);
+				orderLean = result;
+			}
+			Looper.loop();
+		}
+	}
+	
+	private class SpinnerChangeListener implements OnItemSelectedListener{
+		@Override
+		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
+				long arg3) {
+			Item sub = (Item) exerciceItemChoiceSp.getSelectedItem();
+			Item place = (Item) exercicePlaceChoiceSp.getSelectedItem();
+			String subjCode = sub.getCode();
+			String placeCode = place.getCode();
+			String subj = orderLean.getSchedule().get(0).getSubj();       //上次保存的训练项目编号
+			String placeId = orderLean.getSchedule().get(0).getPlaceId(); //上次保存的训练场地编号
+			if(subjCode.trim().equals(subj.trim()) && placeCode.trim().equals(placeId.trim())){
+				showThreeDaysOrder(orderLean.getSchedule());
+			}else{
+				showThreeDaysOrder(null);
+			}
+		}
+		@Override
+		public void onNothingSelected(AdapterView<?> arg0) {
+		}
+	} 
 }
