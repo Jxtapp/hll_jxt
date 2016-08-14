@@ -2,6 +2,8 @@ package com.hll.jxtapp;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.google.gson.Gson;
 import com.hll.entity.RecommendSchoolInfoO;
 import com.hll.entity.SchoolSelectBy;
 import com.hll.adapter.RecommondSchoolListAdapter;
@@ -10,6 +12,7 @@ import com.hll.basic.NetworkDownImage;
 import com.hll.common.MyLocationInfo;
 import com.hll.util.JxtUtil;
 import com.hll.util.NetworkInfoUtil;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -42,26 +45,27 @@ public class RecommendFragment extends Fragment {
 	
 	private Activity mainActivity;
 	private List<RecommendSchoolInfoO> driverSchoolInfoList = new ArrayList<RecommendSchoolInfoO>();
-	private View footer;                                             //listView 上拉加载条
+	private View footer;   //listView 上拉加载条
 	private ListView lview;
 	private TextView myaddress;
 	private RecommondSchoolListAdapter recommondSchoolListAdapter;
 	private LoadDataHandler loadDataHandler = new LoadDataHandler();
-	private LinearLayout recomdendAd;                                //特别推荐栏
-	private LoadAdHandler loadAdHandler = new LoadAdHandler();       //加载特别推荐的图片
-	private ImageView recommendAdImg;                                //特别推荐栏图片
-	private TextView recommendAdPrice;                               //特别推荐栏价格
-	private int firstVP = 0;                                         //list view first visible postion
+	private LinearLayout recomdendAd;   //特别推荐栏
+	private LoadAdHandler loadAdHandler = new LoadAdHandler(); //加载特别推荐的图片
+	private ImageView recommendAdImg;//特别推荐栏图片
+	private TextView recommendAdPrice;//特别推荐栏价格
+	private Gson gson = new Gson();
+	private int firstVP = 0;  //list view first visible postion
 	private int start_index = 0,end_index = 0,totalCount = 0;
 	private ScrollView scrollView;
 	private ImageView nextLeft,nextRight;
-	private int currentAd = 0;                                       //current advertisement nunber
-	private ImageView baiduMap;                                      //点击进入百度地图
+	private int currentAd = 0;//current advertisement nunber
+	private ImageView baiduMap;//点击进入百度地图
 	private float ontouchY1 = 0,ontouchY2 = 0;
 	private int[] touchPosition = new int[2];  
-	private Spinner areaSpinner,kindSpinner,distanceSpinner;         //条件选择框
-	private MyAddressHandler myAddressHandler = new MyAddressHandler();
-	private SchoolSelectBy schoolSelect = new SchoolSelectBy();      //当前查询条件
+	private Spinner areaSpinner,kindSpinner,distanceSpinner;//条件选择框
+	MyAddressHandler myAddressHandler = new MyAddressHandler();
+	private SchoolSelectBy schoolSelect = new SchoolSelectBy();//当前查询条件
 	private int isSpinnerClicked = 0;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,8 +82,8 @@ public class RecommendFragment extends Fragment {
 		myaddress = (TextView) mainActivity.findViewById(R.id.my_address);
 		baiduMap = (ImageView) mainActivity.findViewById(R.id.to_map);
 		scrollView = (ScrollView) mainActivity.findViewById(R.id.id_first_page_scrollview);
-		lview = (ListView) mainActivity.findViewById(R.id.driverschoollist);                //驾校详细信息栏
-		recomdendAd = (LinearLayout) mainActivity.findViewById(R.id.recommend_ad);          //特别推荐栏
+		lview = (ListView) mainActivity.findViewById(R.id.driverschoollist);//驾校详细信息栏
+		recomdendAd = (LinearLayout) mainActivity.findViewById(R.id.recommend_ad);//特别推荐栏
 		areaSpinner = (Spinner) mainActivity.findViewById(R.id.area_spinner);
 		kindSpinner = (Spinner) mainActivity.findViewById(R.id.kind_spinner);
 		distanceSpinner = (Spinner) mainActivity.findViewById(R.id.distance_spinner);
@@ -174,7 +178,7 @@ public class RecommendFragment extends Fragment {
 		@Override
 		public void run() {
 			//查询对象序列化
-			String selectJson = JxtUtil.objectToJson(schoolSelect);
+			String selectJson = gson.toJson(schoolSelect);
 			String url = NetworkInfoUtil.baseUtl+"/recommond/getSchoolList.action";
 			List<RecommendSchoolInfoO> list =  JxtUtil.postListObjectFromServer(RecommendSchoolInfoO.class,url, selectJson);
 			if(list!=null && list.size()>0){
@@ -411,6 +415,7 @@ public class RecommendFragment extends Fragment {
 			driverSchoolInfoList.clear();
 			//setSelection(schoolSelect);
 			recommondSchoolListAdapter.notifyDataSetChanged();
+			//setSelection(schoolSelect);
 			new LoadDataThread().start();
 		}
 		@Override
