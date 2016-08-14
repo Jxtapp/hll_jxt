@@ -23,8 +23,18 @@ public class SecPageAdapter extends BaseAdapter {
 	private Context context;
 	private List<SecPageItemBean> list;
 	private LayoutInflater inflater;
-	
-	
+
+
+	public List<SecPageItemBean> getList() {
+		return list;
+	}
+
+
+	public void setList(List<SecPageItemBean> list) {
+		this.list = list;
+	}
+
+
 	public SecPageAdapter(Context context,List<SecPageItemBean> listBean) {
 		this.context=context;
 		list = listBean;
@@ -61,26 +71,23 @@ public class SecPageAdapter extends BaseAdapter {
           holder.coachSelfImg = (ImageView) convertView.findViewById(R.id.id_img_coach_self);
           holder.coachPrice = (TextView) convertView.findViewById(R.id.id_tv_coach_price);
           holder.teachType = (TextView) convertView.findViewById(R.id.id_tv_coach_teach_type);
-          holder.orderTimes = (TextView) convertView.findViewById(R.id.id_tv_coach_order_times);
-          holder.moreInfo = (TextView) convertView.findViewById(R.id.id_coach_more_info);
+          holder.orderLevel = (TextView) convertView.findViewById(R.id.id_tv_coach_order_level);
           convertView.setTag(holder);
       } else {
           holder = (ViewHolder) convertView.getTag();
       }
       SecPageItemBean bean =list.get(position);
-      holder.coachSelfImg.setImageResource(bean.coachSelfImg);
+      holder.coachSelfImg.setTag(bean.coachSelfImg);
       holder.coachPrice.setText("预约价格：       "+String.valueOf(bean.coachPrice)); 
       holder.teachType.setText("学车类型：        "+bean.teachType);
-      holder.orderTimes.setText("预约次数：            "+String.valueOf(bean.orderTimes));
-      holder.moreInfo.setText(bean.moreInfo);
+      holder.orderLevel.setText("推荐等级：            "+String.valueOf(bean.orderLevel));
       return convertView;
 	}
 	 class ViewHolder{
 		 public ImageView coachSelfImg;
 		 public TextView  coachPrice;
 		 public TextView  teachType;
-		 public TextView  orderTimes;
-		 public TextView  moreInfo;
+		 public TextView  orderLevel;
 	    }
 
 }

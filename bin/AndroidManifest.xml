@@ -67,8 +67,8 @@
         <activity android:name="com.hll.jxtapp.OrderLearn">
            
         </activity>
-         <activity android:name="com.hll.jxtapp.QueueWait">
-           
+         <activity android:name="com.hll.jxtapp.QueueWait"
+             android:windowSoftInputMode="stateVisible|adjustResize">
         </activity>
         
         <activity android:name="com.hll.jxtapp.RecommendMapActivity"></activity>
