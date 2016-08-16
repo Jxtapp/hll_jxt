@@ -10,7 +10,7 @@ public class ScheduleO implements Serializable{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8553081487080779098L;
+	private static final long serialVersionUID = 3907588867019456638L;
 	private long id;
 	private String userAccount;   //学员账号
 	private String schoolAccount; //驾校账号
@@ -21,7 +21,7 @@ public class ScheduleO implements Serializable{
 	private String subj;          //训练科目
 	private String placeId;       //场地id
 	private String placeName;     //场地名称
-	private Date   orderDate;     //预约时间
+	private String orderDate;     //预约时间 yyyy-MM-dd
 	private String createdBy;     //创建时间，即创建记录时的服务器时间
 	private Date createdDate;
 	private String lastUpdatedBy;
@@ -113,10 +113,27 @@ public class ScheduleO implements Serializable{
 	public void setPlaceName(String placeName) {
 		this.placeName = placeName;
 	}
-	public Date getOrderDate() {
+	public String getOrderDate() {
 		return orderDate;
 	}
-	public void setOrderDate(Date orderDate) {
+	public void setOrderDate(String orderDate) {
 		this.orderDate = orderDate;
+	}
+	public void trim(){
+		setUserAccount(getValue(getUserAccount()));
+		setSchoolAccount(getValue(getSchoolAccount()));
+		setSchoolName(getValue(getSchoolName()));
+		setSubj(getValue(getSubj()));
+		setPlaceId(getValue(getPlaceId()));
+		setPlaceName(getValue(getPlaceName()));
+		setCreatedBy(getValue(getCreatedBy()));
+		setLastUpdatedBy(getValue(getLastUpdatedBy()));
+	}
+	private String getValue(String s){
+		if(s==null){
+			return null;
+		}else{
+			return s.trim();
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package com.hll.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,10 +14,10 @@ public class OrderLeanO implements Serializable{
 	 * 
 	 */
 	private static final long serialVersionUID = 5524622791149823557L;
-	private int loginState;                 //是否登陆  0---没有登陆，1---已经登陆
-	private String serverTime;              //服务器时间
-	private List<SchoolPlaceO> schoolPlace; //报名驾校的场地
-	private List<ScheduleO> schedule;       //我的计划
+	private int loginState;                                     //是否登陆  0---没有登陆，1---已经登陆
+	private String serverTime;                                  //服务器时间
+	private List<SchoolPlaceO> schoolPlace = new ArrayList<>(); //报名驾校的场地
+	private List<ScheduleO> schedule = new ArrayList<>();       //我的计划
 	public OrderLeanO() {
 		super();
 	}
