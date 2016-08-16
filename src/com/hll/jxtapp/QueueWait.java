@@ -5,11 +5,11 @@ import java.util.List;
 
 import com.hll.adapter.ItemOfChatContentAdapter;
 import com.hll.adapter.QueueGroupListAdapter;
-import com.hll.entity.Item;
 import com.hll.entity.ItemOfChatContentBean;
+import com.hll.entity.QueueListItemBean;
+import com.hll.entity.Item;
 import com.hll.entity.OrderLeanO;
 import com.hll.entity.Queue;
-import com.hll.entity.QueueListItemBean;
 import com.hll.entity.SchoolPlaceO;
 import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
@@ -58,6 +58,9 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	private int onTheCarNum;
 	private int youQueueNum;
 	private ScrollView secScrollView;
+	private QueueGroupListAdapter adapter;
+	private List<QueueListItemBean> list;
+	private ListView listView;
 	private QueueGroupListAdapter queueStateAdapter;                                     //排队状态listView 适配器
 	private List<QueueListItemBean> queueStateList = new ArrayList<QueueListItemBean>(); //排队状态数据list
 	private ListView queueStateListView;                                                 //排队状态listView              
@@ -93,6 +96,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		queueGroup=(TextView) findViewById(R.id.id_queue_group);
 		chatRoom=(TextView) findViewById(R.id.id_chat_room);
 		View footer=getLayoutInflater().inflate(R.layout.queue_or_no, null);
+
 		queueStateListView.addFooterView(footer);
 		queueBtn=(TextView) findViewById(R.id.id_queue_btn);
 		queueNoBtn=(TextView) findViewById(R.id.id_queue_no_btn);
@@ -154,7 +158,6 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	}
 	
 	private void initList() {
-
 		secScrollView.smoothScrollBy(0, 0);
 		initData();
 		queueStateAdapter = new QueueGroupListAdapter(this, queueStateList);
@@ -162,10 +165,17 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		setListViewHeightBasedOnChildren(queueStateListView);
 		chatAdapter=new ItemOfChatContentAdapter(this, chatList);
 		chatRoomShowListView.setAdapter(chatAdapter);
-		
 	}
 
 	private void initData() {
+		driverPlaces=new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, driverPlacesList);
+		
+		driverPlaces.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		driverPlaceSpinner.setAdapter(driverPlaces);
+	}
+
+	//初始化页面
+	private void initPage() {
 		
 		driverPlacesList.add(new Item("-1", "请选择场地"));
 		List<SchoolPlaceO> list = userQueueInfo.getSchoolPlace();

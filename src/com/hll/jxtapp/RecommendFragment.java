@@ -415,7 +415,6 @@ public class RecommendFragment extends Fragment {
 			driverSchoolInfoList.clear();
 			//setSelection(schoolSelect);
 			recommondSchoolListAdapter.notifyDataSetChanged();
-			//setSelection(schoolSelect);
 			new LoadDataThread().start();
 		}
 		@Override

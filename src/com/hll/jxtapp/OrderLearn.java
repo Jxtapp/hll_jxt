@@ -116,6 +116,9 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 	 * 显示三天预约的具体信息 liaoyun 2016-8-12
 	 */
 	private void showThreeDaysOrder(List<ScheduleO>  list) {
+		Date today = JxtUtil.getServerTime(orderLean.getServerTime());//服务器时间,即今天
+		Date tomrrow = getDateAfter(today);                           //明天
+		Date daftert = getDateAfter(tomrrow);                         //后天
 		if(list == null || list.size()<1){
 			fillSchedule(todayMorningIB,0);
 			fillSchedule(todayAfternoonIB,0);
@@ -128,9 +131,6 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 			fillSchedule(theDayAfterTomorrowEveningIB,0);
 			return;
 		}
-		Date today = JxtUtil.getServerTime(orderLean.getServerTime());//服务器时间,即今天
-		Date tomrrow = getDateAfter(today);                           //明天
-		Date daftert = getDateAfter(tomrrow);                         //后天
 		ScheduleO todaySchedule = new ScheduleO();                    //今天的计划
 		ScheduleO tomrrowSchedule = new ScheduleO();                  //明天的计划
 		ScheduleO daftertSchedule = new ScheduleO();                  //后天的计划
@@ -191,7 +191,7 @@ public class OrderLearn extends FragmentActivity implements OnClickListener{
 	 * @param date2
 	 * @return
 	 */
-	@SuppressLint("SimpleDateFormat")
+	@SuppressWarnings("deprecation")
 	public boolean isEqualDate(Date date1,String date2){
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		String s1 = df.format(date1);
