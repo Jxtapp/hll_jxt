@@ -1,20 +1,26 @@
 package com.hll.jxtapp;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hll.adapter.ItemOfChatContentAdapter;
 import com.hll.adapter.QueueGroupListAdapter;
-import com.hll.entity.ItemOfChatContentBean;
-import com.hll.entity.QueueListItemBean;
 import com.hll.entity.Item;
+import com.hll.entity.ItemOfChatContentBean;
+import com.hll.entity.MessageChat;
 import com.hll.entity.OrderLeanO;
 import com.hll.entity.Queue;
+import com.hll.entity.QueueListItemBean;
 import com.hll.entity.SchoolPlaceO;
 import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
 import com.hll.util.NetworkInfoUtil;
-
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
@@ -76,6 +82,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	private List<Item> driverPlacesList = new ArrayList<>();
 	private OrderLeanO userQueueInfo;         //用户的排队信息
 	private Context context;
+	private Gson gson;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
@@ -110,9 +117,9 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		super.onStart();
 		getPrepareData();      //用户排队数据初始化，查询是否登陆，是否报名了驾校，可选场地...
 		boolean bl = prepare();
-		if(bl==false){
-			return;
-		}
+//		if(bl==false){
+//			return;
+//		}
 		showUserInfoByPlace();        //显示用户基本信息，姓名、电话
 		initEvent();                  //按钮初始化事件
 		initList();
@@ -235,7 +242,6 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
 		listView.setLayoutParams(params);
 	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -243,6 +249,8 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			finish();
 			break;
 		case R.id.id_chat_room_send:
+			String msg=chatRoomIn.getText().toString();
+			new SendMessageThread(msg).start();
 			chatRoomIn.setText("");
 			break;
 		case R.id.id_queue_group:
@@ -268,6 +276,63 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			break;
 		default:
 			break;
+		}
+	}
+	
+	/**
+	 * 开启一个线程，用来发送消息到后台数据库中
+	 * @author heyi
+	 * 2016/8/17
+	 */
+	private class SendMessageThread extends Thread{
+		String msg;
+		public SendMessageThread(String msg) {
+			this.msg=msg;
+		}
+		Item item = (Item) driverPlaceSpinner.getSelectedItem();
+		MessageChat messageChat;
+		UserO userInfo = JxtUtil.getLastUserInfo();
+		@Override
+		public void run() {
+			super.run();
+			String placeName =item.getDesc();
+			String schoolAccount = userQueueInfo.getSchoolPlace().get(0).getSchoolAccount();
+			String userAccount=userInfo.getAccount();
+			messageChat.setSchollAccount(schoolAccount);
+			messageChat.setPlaceName(placeName);
+			messageChat.setUserAccount(userAccount);
+			messageChat.setMsg(msg);
+			Date date=new Date();
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String time=sdf.format(date);
+			messageChat.setSendTime(time);
+			String msgJson=gson.toJson(messageChat);
+			HttpURLConnection conn=JxtUtil.postHttpConn(NetworkInfoUtil.baseUtl+"/messageChat/addMessage.action", msgJson);
+			//接收数据
+			try {
+				InputStream is=conn.getInputStream();
+				String str=JxtUtil.streamToJsonString(is);
+				ItemOfChatContentBean chatContent=gson.fromJson(str, new TypeToken<ItemOfChatContentBean>(){}.getType());
+				//添加最新消息到聊天框
+				chatList.add(chatContent);
+				//更新ui聊天框
+				new ChatMsgHandler().sendEmptyMessage(0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 更新了chatlist，发给handler去更新ui
+	 * @author heyi
+	 * 2016/8/17
+	 */
+	private class ChatMsgHandler extends Handler{
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			chatAdapter.notifyDataSetChanged();
 		}
 	}
 	
