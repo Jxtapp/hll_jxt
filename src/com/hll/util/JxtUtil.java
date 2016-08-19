@@ -28,6 +28,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
+import com.hll.entity.SocketMsg;
 import com.hll.entity.UserO;
 
 import android.content.Context;
@@ -445,4 +446,32 @@ public class JxtUtil {
 			return null;
 		}
 	}
+	/**
+	 * 创建要发送的信息 liaoyun 2016-8-19
+	 * @param scene
+	 * @param type
+	 * @param users
+	 * @param message
+	 * @return
+	 */
+	public static String createSocketMsg(int scene,int type,List<String> users,String message){
+		String account = NetworkInfoUtil.accountId;
+		if(NetworkInfoUtil.socketId==null || account==null){                     //没有登陆
+			return null;
+		}
+		if(type == SocketMsg.TYPE_TRANSMIT && (users==null || users.size()==0)){ //当为普通转发时，转发对象不能为空
+			return null;
+		}
+		if(scene != 3 && (message == null || message.equals(""))){               //当不为websocket登陆时，转发信息不能为空
+			return null; 
+		}
+		SocketMsg msg = new SocketMsg();
+		msg.setAccount(account);
+		msg.setKey(NetworkInfoUtil.socketId);
+		msg.setScene(scene);
+		msg.setType(type);
+		msg.setUsers(users);
+		msg.setMessage(message);
+		return objectToJson(msg);
+	} 
 }

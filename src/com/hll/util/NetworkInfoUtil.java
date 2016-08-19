@@ -19,8 +19,10 @@ public class NetworkInfoUtil {
 	public static ConnectivityManager connectManager;
 	//sessionId
 	public static String sessionId=null;
-	//用户详细信息
-	public static UserO userinfo;
+	//socketId
+	public static Integer socketId = null;
+	//用户账号id
+	public static String accountId;
 	
 	/**
 	 * 当前的网络接入的类型  WIFI or MOBILE or NULL
