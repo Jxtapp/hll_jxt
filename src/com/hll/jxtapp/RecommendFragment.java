@@ -22,6 +22,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SearchViewCompat.OnCloseListenerCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -67,6 +68,7 @@ public class RecommendFragment extends Fragment {
 	MyAddressHandler myAddressHandler = new MyAddressHandler();
 	private SchoolSelectBy schoolSelect = new SchoolSelectBy();//当前查询条件
 	private int isSpinnerClicked = 0;
+	private ImageView policy;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -87,6 +89,9 @@ public class RecommendFragment extends Fragment {
 		areaSpinner = (Spinner) mainActivity.findViewById(R.id.area_spinner);
 		kindSpinner = (Spinner) mainActivity.findViewById(R.id.kind_spinner);
 		distanceSpinner = (Spinner) mainActivity.findViewById(R.id.distance_spinner);
+		
+		policy = (ImageView) mainActivity.findViewById(R.id.policy);
+		policy.setOnClickListener(new PolicyOnclickListener());
 		
 		myaddress();//定位
 		//设置listView 的高度，（当 scrollList 与 listView 混用时，高度只会显示 一行）
@@ -419,6 +424,15 @@ public class RecommendFragment extends Fragment {
 		}
 		@Override
 		public void onNothingSelected(AdapterView<?> view) {
+		}
+	}
+	
+	private class PolicyOnclickListener implements OnClickListener{
+
+		@Override
+		public void onClick(View arg0) {
+			Intent intent = new Intent(mainActivity, ChatTestActivity.class);
+			startActivity(intent);
 		}
 	}
 }

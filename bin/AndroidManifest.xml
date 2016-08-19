@@ -74,5 +74,6 @@
         <activity android:name="com.hll.jxtapp.RecommendMapActivity"></activity>
         <activity android:name="com.hll.jxtapp.userLoginActivity"></activity>
         <activity android:name="com.hll.jxtapp.RecommondSchoolDtailActivity"></activity>
+        <activity android:name="com.hll.jxtapp.ChatTestActivity"></activity>
     </application>
 </manifest>

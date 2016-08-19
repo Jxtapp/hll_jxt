@@ -75,7 +75,7 @@ public class userLoginActivity extends Activity{
 					HttpURLConnection conn = JxtUtil.postHttpConn(url, "");
 					try {
 						InputStream is =  conn.getInputStream();
-						if(is != null){                                          //登陆成功
+						if(is != null){                                                         //登陆成功
 							String s = JxtUtil.streamToJsonString(is);
 							Map<String,String> map = JxtUtil.jsonStringToMap(s);
 							UserO user = new UserO();
@@ -88,9 +88,11 @@ public class userLoginActivity extends Activity{
 							user.setLastLoadTime(map.get("lastLoadTime"));
 							user.setLastLoadIp(map.get("lastLoadIp"));
 							user.setLastLoadPort(map.get("lastLoadPort"));
-							JxtUtil.saveLastUserInfo(user);                       //保存用户信息
-							finish();                                             //返回上一个页面
-						}else{                                                    //登陆失败
+							JxtUtil.saveLastUserInfo(user);                                        //保存用户信息
+							NetworkInfoUtil.accountId = map.get("account");                        //用户的account
+							NetworkInfoUtil.socketId = Integer.valueOf(map.get("sessionKey"));     //保存websocket验证的key值
+							finish();                                                              //返回上一个页面
+						}else{                                                                     //登陆失败
 							Message message = Message.obtain();
 							message.obj="用户名或者密码错误";
 							tostHandle.sendMessage(message);
