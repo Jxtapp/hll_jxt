@@ -22,13 +22,13 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
+  
 /**
  * webSocket 测试 
  * @author liaoyun 2016-8-17
  */
 public class ChatTestActivity extends Activity implements OnClickListener{
-	private String serverSocketAddress = "ws://192.168.1.3:8080/hll/websocket/ly.action";   //服务器socket地址
+	private String serverSocketAddress = "ws://192.168.191.1:8080/hll/websocket/ly.action";   //服务器socket地址
 	private WebSocketClient client;                                 //连接客户端
 	private Draft_17 draft;                                         //连接协议
 	private EditText editText;

@@ -1,6 +1,7 @@
 package com.hll.entity;
 
 public class QueueListItemBean {
+	
 	public int queueListNum;
 	public String  queueListName;
 	public int  queueListSureOne;
