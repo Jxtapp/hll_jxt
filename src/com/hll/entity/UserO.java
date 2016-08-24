@@ -14,6 +14,9 @@ public class UserO extends BaseEntity{
 	private static final long serialVersionUID = 2734291319832271162L;
 	private long id;
 	private String account;       //账号  唯一编号
+	private String name;          //姓名
+	private int age;              //年龄
+	private String address;       //住址
 	private String tel;
 	private String email;
 	private String qq;
@@ -105,5 +108,23 @@ public class UserO extends BaseEntity{
 	}
 	public void setLastLoadPort(String lastLoadPort) {
 		this.lastLoadPort = lastLoadPort;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
 	}
 }

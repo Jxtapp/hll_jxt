@@ -53,7 +53,7 @@ public class ChatTestActivity extends Activity implements OnClickListener{
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				String loginMsg = JxtUtil.createSocketMsg(SocketMsg.SCENE_LOGIN, 0, null, null); 
+				String loginMsg = JxtUtil.createSocketMsgString(SocketMsg.SCENE_LOGIN, 0, null, null); 
 				client.send(loginMsg);
 			}
 		} catch (URISyntaxException e) {
@@ -117,7 +117,7 @@ public class ChatTestActivity extends Activity implements OnClickListener{
 			if(client != null){
 				List<String> users = new ArrayList<>();
 				users.add(NetworkInfoUtil.accountId);
-				String msg = JxtUtil.createSocketMsg(SocketMsg.SCENE_CHAT, SocketMsg.TYPE_BROADCAST, users, "hellow");
+				String msg = JxtUtil.createSocketMsgString(SocketMsg.SCENE_CHAT, SocketMsg.TYPE_BROADCAST, users, "hellow");
 				if(msg != null){
 					client.send(msg);
 				}

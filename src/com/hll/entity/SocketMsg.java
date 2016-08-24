@@ -34,6 +34,8 @@ public class SocketMsg implements Serializable{
 	public static final int  TYPE_BROADCAST = 2; 
 	
 	private String       account; //user account
+	private String       name;    //发信人name
+	private String       nickName;//发信人昵称
 	private Integer      key;     //websocket key
 	private Integer      scene;   //场景：         1--普通对话；2--排队信息 ; 3--websocket 登陆
 	private Integer      type;    //转发类型： 1--普通转发(发送对象的用户account放在users中)；2--广播，发给所有的人(list中不需要放信息)
@@ -84,5 +86,17 @@ public class SocketMsg implements Serializable{
 	}
 	public void setTime(String time) {
 		this.time = time;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getNickName() {
+		return nickName;
+	}
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
 	}
 }

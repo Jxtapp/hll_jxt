@@ -11,6 +11,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.hll.adapter.ItemOfChatContentAdapter;
 import com.hll.adapter.QueueGroupListAdapter;
+import com.hll.common.SocketDadaBaseHelper;
+import com.hll.common.SocketService;
+import com.hll.common.SocketService.SocketSendBinder;
+import com.hll.entity.QueueListItemBean;
 import com.hll.entity.Item;
 import com.hll.entity.ItemOfChatContentBean;
 import com.hll.entity.MessageChat;
@@ -18,21 +22,38 @@ import com.hll.entity.OrderLeanO;
 import com.hll.entity.Queue;
 import com.hll.entity.QueueListItemBean;
 import com.hll.entity.SchoolPlaceO;
+import com.hll.entity.SocketChatO;
+import com.hll.entity.SocketMsg;
 import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
+import com.hll.util.MyApplication;
 import com.hll.util.NetworkInfoUtil;
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
@@ -73,13 +94,21 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	private TextView queueGroup;
 	private TextView chatRoom;
 	private ItemOfChatContentAdapter chatAdapter;
-	private List<ItemOfChatContentBean> chatList = new ArrayList<>();
+	private List<SocketChatO> chatList = new ArrayList<>();                              //聊天框中的内容 list
 	private TextView queueBtn;                                                           //加入排队
 	private TextView queueNoBtn;                                                         //取消排队
 	private  LinearLayout msgSendIn;
 	private Spinner driverPlaceSpinner;
 	private ArrayAdapter<Item> driverPlaces;
 	private List<Item> driverPlacesList = new ArrayList<>();
+	private SocketBroadcastReceiver socketBroadcastReceivr;                             //socket广播接收器  
+	private SocketSendBinder socketSendBinder;                                          //绑定 socket service
+	private List<Queue> queueInfo;                                                      //排队的数据     
+	private LocalBroadcastManager localBroadcastManager;
+	private SQLiteDatabase SocketDatabase;
+	private int firstChatNum=0;
+	private boolean hasHistoryChat = true;
+	
 	private OrderLeanO userQueueInfo;         //用户的排队信息
 	private Context context;
 	private Gson gson;
@@ -110,21 +139,34 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		msgSendIn=(LinearLayout) findViewById(R.id.id_msg_in_and_send);
 		driverPlaceSpinner=(Spinner) findViewById(R.id.id_driver_place_queue_spinner);
 		context = this;
+		SQLiteOpenHelper socketDbHelper = new SocketDadaBaseHelper(context, "Socket.db", null, 3);
+		SocketDatabase = socketDbHelper.getWritableDatabase();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		getPrepareData();      //用户排队数据初始化，查询是否登陆，是否报名了驾校，可选场地...
+		SocketService.tranType = true;                       //改socket信息 通知为 广播
+		getPrepareData();                                    //用户排队数据初始化，查询是否登陆，是否报名了驾校，可选场地...
 		boolean bl = prepare();
-//		if(bl==false){
-//			return;
-//		}
-		showUserInfoByPlace();        //显示用户基本信息，姓名、电话
-		initEvent();                  //按钮初始化事件
+		if(bl==false){
+			return;
+		}
+		showUserInfoByPlace();                               //显示用户基本信息，姓名、电话
+		initEvent();                                         //按钮初始化事件
 		initList();
+		initPage();
+		registSocketReceiver();                              //注册广播接收器   
+		startSocketService();                                //启动socket服务
+		bindSocketService();                                 //绑定 socket 服务
 	}
-
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		SocketService.tranType = false;                       //改socket信息 广播为通知
+		unRegistSocketReceiver();                             //解除websocket广播接收器
+		unBindSocketService();                                //解除绑定 websocketService
+	}
 	/**
 	 * 用户排队数据初始化，查询是否登陆，是否报名了驾校，可选场地... liaoyun 2016-8-14
 	 * @return
@@ -172,6 +214,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		setListViewHeightBasedOnChildren(queueStateListView);
 		chatAdapter=new ItemOfChatContentAdapter(this, chatList);
 		chatRoomShowListView.setAdapter(chatAdapter);
+		chatRoomShowListView.setOnScrollListener(new ChatOnScrollListener());   //向下滑动加载历史数据
 	}
 
 	private void initData() {
@@ -246,9 +289,10 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.id_return:
-			finish();
+			finish();                                          //退出页面
 			break;
 		case R.id.id_chat_room_send:
+			sendChatMessage();                                 //群发消息
 			String msg=chatRoomIn.getText().toString();
 			new SendMessageThread(msg).start();
 			chatRoomIn.setText("");
@@ -261,7 +305,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			queueWaitUserMsg.setVisibility(View.VISIBLE);
 			//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 			break;
-		case R.id.id_chat_room:
+		case R.id.id_chat_room:                                //进入聊天页面
 			chatRoomShowListView.setVisibility(View.VISIBLE);
 			queueStateListView.setVisibility(View.GONE);
 			msgSendIn.setVisibility(View.VISIBLE);
@@ -280,7 +324,27 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	}
 	
 	/**
-	 * 开启一个线程，用来发送消息到后台数据库中
+	 * 群发消息
+	 */
+	private void sendChatMessage() {
+		List<Queue> list = queueInfo;
+		if(list == null || list.size()==0){
+			JxtUtil.toastCenter(context, "没有人排队了", Toast.LENGTH_LONG);
+			return;
+		}
+		String message = (String) chatRoomIn.getText().toString();
+		if(message == null || message.trim().equals("")){
+			return;
+		}
+		List<String> users = new ArrayList<>();
+		for (Queue q : list) {
+			users.add(q.getUserAccount().trim());
+		}
+		SocketMsg socketMsg = JxtUtil.createSocketMsg(SocketMsg.SCENE_CHAT, SocketMsg.TYPE_TRANSMIT, users, message);
+		socketSendBinder.sendMessage(socketMsg);
+	}
+
+	/* * 开启一个线程，用来发送消息到后台数据库中
 	 * @author heyi
 	 * 2016/8/17
 	 */
@@ -312,7 +376,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			try {
 				InputStream is=conn.getInputStream();
 				String str=JxtUtil.streamToJsonString(is);
-				ItemOfChatContentBean chatContent=gson.fromJson(str, new TypeToken<ItemOfChatContentBean>(){}.getType());
+				SocketChatO chatContent=gson.fromJson(str, new TypeToken<ItemOfChatContentBean>(){}.getType());
 				//添加最新消息到聊天框
 				chatList.add(chatContent);
 				//更新ui聊天框
@@ -376,14 +440,20 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		}.start();
 	}
 
+	/**
+	 * 场地下拉框 监听
+	 * @author LiaoYun 2016-8-23
+	 */
 	private class SpinnerOnItemClickListener implements OnItemSelectedListener{
 		@Override
 		public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 				long arg3) {
-			Item item = (Item) driverPlaceSpinner.getSelectedItem();
-			String code = item.getCode();
+			String code = getPlaceSpinnerCode();
 			if(!code.equals("-1")){
-				getQueueStateByPlaceId(code);      //按场地id加载排队信息
+				getQueueStateByPlaceId(code);                               //按场地id加载排队信息
+				List<SocketChatO> list = setOpenPageChat(SocketDatabase);   //刚 进入页面时，加载的聊天信息，取最近的10条
+				chatList.addAll(list);
+				chatAdapter.notifyDataSetChanged();                         //通知chatList显示更新
 			}
 		}
 		@Override
@@ -391,6 +461,15 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		}
 	}
 
+	/**
+	 * 获取 当前 场地 spinner中的场地 code
+	 * @return
+	 */
+	private String getPlaceSpinnerCode() {
+		Item item = (Item) driverPlaceSpinner.getSelectedItem();
+		String code = item.getCode();
+		return code;
+	}
 	/**
 	 * 按场地id加载排队信息 liaoyun 2016-8-15
 	 * @param code
@@ -417,6 +496,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			List<Queue> list = (List<Queue>) msg.obj;
+			queueInfo = list;
 			showQueueState(list);
 		}
 	}
@@ -437,4 +517,209 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			queueStateAdapter.notifyDataSetChanged();
 		}
 	}
+	
+	/**
+	 * 注册广播接收器
+	 */
+	@SuppressWarnings("static-access")
+	private void registSocketReceiver(){
+		Log.e("socket","regist Socket broadcast Receiver ");
+		localBroadcastManager = localBroadcastManager.getInstance(this);
+		IntentFilter intentFilter = new IntentFilter();
+		intentFilter.addAction("com.hll.socketBroadcast.SOCKET_BROADCAST");
+		socketBroadcastReceivr = new SocketBroadcastReceiver();
+		localBroadcastManager.registerReceiver(socketBroadcastReceivr, intentFilter);
+		//registerReceiver(socketBroadcastReceivr, intentFilter);
+	}
+	
+	/**
+	 * 销毁广播接收器
+	 */
+	private void unRegistSocketReceiver(){
+		try{
+			localBroadcastManager.unregisterReceiver(socketBroadcastReceivr);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		//unregisterReceiver(socketBroadcastReceivr);
+	}
+	
+	/**
+	 * 接收 websocket 推送的   广播接收器
+	 * @author liaoyun 2016-8-20
+	 */
+	private class SocketBroadcastReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context con, Intent intent) {
+			//JxtUtil.toastCenter(context, "收到信息", Toast.LENGTH_LONG);
+			//收到消息后的处理，两种情况，           1：聊天信息;        2:排队变化信息
+			SocketMsg smg = (SocketMsg) intent.getSerializableExtra("message");
+			if(smg.getScene()==SocketMsg.SCENE_CHAT){         //如果是聊天信息
+				//1、数据存入数据库
+				String placeId = getPlaceSpinnerCode();
+				SocketChatO socketChat = new SocketChatO(placeId,smg.getAccount(), smg.getName(), smg.getNickName(), smg.getMessage(), smg.getTime());
+				long newId = insertChat(SocketDatabase, socketChat);
+				//2、数据加入到聊天显示框尾部
+				socketChat.setId(newId);
+				chatList.add(socketChat);
+				chatAdapter.notifyDataSetChanged();
+				//显示 到最下面一行
+				chatRoomShowListView.setSelection(chatList.size()-1);
+				//清空输入框
+				chatRoomIn.setText("");
+			}else if(smg.getScene()==SocketMsg.SCENE_QUEUE){  //如果是排队变化信息
+				//更新队列信息
+				JxtUtil.toastCenter(context, smg.getMessage(), Toast.LENGTH_LONG);
+			}else if(smg.getScene()==SocketMsg.SCENE_LOGIN){  //websocekt 登陆成功
+				JxtUtil.toastCenter(context, smg.getMessage(), Toast.LENGTH_LONG);
+			}
+		}
+	}
+	/**
+	 * 向 表 chat_t 插入聊天信息,并返回 插入 的 id
+	 * @param db
+	 * @param socketChat
+	 */
+	private long insertChat(SQLiteDatabase db,SocketChatO socketChat){
+		String code = getPlaceSpinnerCode();
+		ContentValues values = new ContentValues();
+		values.put("placeid", code);
+		values.put("account", socketChat.getAccount());
+		values.put("name", socketChat.getName());
+		values.put("nickName", socketChat.getNickName());
+		values.put("content", socketChat.getContent());
+		values.put("sendTime", socketChat.getSendTime());
+		db.insert("chat_t", null, values);
+		//查询插入的当前记录的  id
+		long id = 0;
+		String sql = "select max(id) as id from chat_t where placeid = ?";
+		Cursor result = db.rawQuery(sql, new String[]{code});
+		if(result.moveToFirst()){
+			id = result.getLong(result.getColumnIndex("id"));
+		}
+		return id;
+	}
+	
+	/**
+	 * 从数据库 chat_t 中取出数据，查询历史记录。 LiaoYun 2016-8-23
+	 * @param db
+	 * @param start 开始位置（用 id指定即可）
+	 * @param num   条数
+	 * @return
+	 */
+	private List<SocketChatO> getChat(SQLiteDatabase db,long start,int num){
+		String sql="select t.* from (select id, account, name, nickName, content, sendTime from chat_t "
+				+ "where placeid = ? and id < ? order by id desc limit ? offset 0) t order by t.id";
+		String code = getPlaceSpinnerCode();
+		Cursor result = db.rawQuery(sql, new String[]{code,""+start, ""+num});
+		List<SocketChatO> list = new ArrayList<SocketChatO>();
+		if(result.moveToFirst()){
+			do{
+				long id = result.getInt(result.getColumnIndex("id"));
+				String account = result.getString(result.getColumnIndex("account"));
+				String name = result.getString(result.getColumnIndex("name"));
+				String nickName = result.getString(result.getColumnIndex("nickName"));
+				String content = result.getString(result.getColumnIndex("content"));
+				String sendTime = result.getString(result.getColumnIndex("sendTime"));
+				SocketChatO vo = new SocketChatO(id, code, account, name, nickName, content, sendTime);
+				list.add(vo);
+			}while(result.moveToNext());
+		}
+		return list;
+	}
+	
+	/**
+	 * 获取 刚 进入页面时，加载的聊天信息，取最近的10条, LiaoYun 2016-8-23
+	 * @param db
+	 * @return
+	 */
+	private List<SocketChatO> setOpenPageChat(SQLiteDatabase db){
+		String sql = "select t.* from (select id, account, name, nickName, content, sendTime from chat_t"
+				+ " where placeid = ? order by id desc limit 10 offset 0) t order by t.id";
+		String code = getPlaceSpinnerCode();
+		Cursor result = db.rawQuery(sql,new String[]{code});
+		List<SocketChatO> list = new ArrayList<SocketChatO>();
+		if(result.moveToFirst()){
+			do{
+				long id = result.getInt(result.getColumnIndex("id"));
+				String account = result.getString(result.getColumnIndex("account"));
+				String name = result.getString(result.getColumnIndex("name"));
+				String nickName = result.getString(result.getColumnIndex("nickName"));
+				String content = result.getString(result.getColumnIndex("content"));
+				String sendTime = result.getString(result.getColumnIndex("sendTime"));
+				SocketChatO vo = new SocketChatO(id, code, account, name, nickName, content, sendTime);
+				list.add(vo);
+			}while(result.moveToNext());
+		}
+		return list;
+	}
+	
+	/**
+	 * chat list 滑动监听，，，当滑动到最上面时，下拉加载历史数据
+	 * @author LiaoYun 2016-8-23
+	 */
+	private class ChatOnScrollListener implements OnScrollListener{
+
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			firstChatNum = firstVisibleItem;
+		}
+
+		@Override
+		public void onScrollStateChanged(AbsListView arg0, int scrollState) {
+			//当第一条显示为第0条数据 ，且滑动为静止，且有历史数据时，加载历时数据
+			if(firstChatNum==0 && scrollState==OnScrollListener.SCROLL_STATE_IDLE && hasHistoryChat){
+				long start = chatList.get(0).getId();
+				List<SocketChatO> list = getChat(SocketDatabase, start, 10);
+				if(list==null || list.size()==0){
+					hasHistoryChat = false;           //没有历史数据了
+					JxtUtil.toastCenter(context, "没有数据了", Toast.LENGTH_LONG);
+				}else{
+					chatList.addAll(0, list);
+					chatAdapter.notifyDataSetChanged();
+				}
+			}
+		}
+		
+	}
+	/**
+	 * 如果SocketService还没有启动，则启动SocketService
+	 */
+	private void startSocketService(){
+		boolean isRuning = SocketService.IS_STARTED;
+		if(!isRuning){
+			Log.e("socket","服务 还没有启动。。。。。。。。。。。。。。。。。。。。");
+			Intent intent = new Intent(MyApplication.getContext(), SocketService.class);
+			startService(intent);
+		}
+	}
+	/**
+	 * 绑定 socket 服务
+	 */
+	private void bindSocketService(){
+		Intent bindIntend = new Intent(context, SocketService.class);
+		bindService(bindIntend, connection, BIND_AUTO_CREATE);
+	}
+	
+	/**
+	 * 取消 绑定 socket 服务
+	 */
+	private void unBindSocketService(){
+		unbindService(connection);
+	}
+	
+	private ServiceConnection connection = new ServiceConnection() {
+		
+		@Override
+		public void onServiceDisconnected(ComponentName arg0) {
+			
+		}
+		
+		@Override
+		public void onServiceConnected(ComponentName name, IBinder iBinder) {
+			socketSendBinder = (SocketSendBinder) iBinder;
+		}
+	};
+	
 }

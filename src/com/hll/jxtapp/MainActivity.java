@@ -6,7 +6,9 @@ import java.util.List;
 import com.hll.basic.SlideMenu;
 import com.hll.basic.LeftMoveView;
 import com.hll.basic.RightMoveView;
+import com.hll.common.SocketService;
 import com.hll.jxtapp.R;
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -59,8 +61,7 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		
+		requestWindowFeature(Window.FEATURE_NO_TITLE);;
 		setContentView(R.layout.activity_main);
 
 		initView();
@@ -68,7 +69,14 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 
 		setSelect(1);
 	}
-
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Intent intent = new Intent(this, SocketService.class);
+		stopService(intent);
+	}
+	
 	private void initEvent() {
 		mTabRcommend.setOnClickListener(this);
 		mTabQueue.setOnClickListener(this);

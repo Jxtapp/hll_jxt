@@ -31,6 +31,8 @@ import com.google.gson.reflect.TypeToken;
 import com.hll.entity.SocketMsg;
 import com.hll.entity.UserO;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -447,14 +449,27 @@ public class JxtUtil {
 		}
 	}
 	/**
-	 * 创建要发送的信息 liaoyun 2016-8-19
+	 * 创建要发送的信息SocketMsg 的字符串 liaoyun 2016-8-19
 	 * @param scene
 	 * @param type
 	 * @param users
 	 * @param message
 	 * @return
 	 */
-	public static String createSocketMsg(int scene,int type,List<String> users,String message){
+	public static String createSocketMsgString(int scene,int type,List<String> users,String message){
+		SocketMsg msg = createSocketMsg(scene, type, users, message);
+		return objectToJson(msg);
+	} 
+	
+	/**
+	 * 创建要发送的信息SocketMsg  liaoyun 2016-8-20
+	 * @param scene
+	 * @param type
+	 * @param users
+	 * @param message
+	 * @return
+	 */
+	public static SocketMsg createSocketMsg(int scene,int type,List<String> users,String message){
 		String account = NetworkInfoUtil.accountId;
 		if(NetworkInfoUtil.socketId==null || account==null){                     //没有登陆
 			return null;
@@ -472,6 +487,44 @@ public class JxtUtil {
 		msg.setType(type);
 		msg.setUsers(users);
 		msg.setMessage(message);
-		return objectToJson(msg);
-	} 
+		msg.setName(NetworkInfoUtil.name);
+		msg.setNickName(NetworkInfoUtil.nickName);
+		return msg;
+	}
+	/**
+	 * json字符串转化为 objct 
+	 * @param jsonStr
+	 * @param clazz
+	 * @return
+	 */
+	public static <T> T jsonStrToObject(String jsonStr, Class<T> clazz){
+		try{
+			JsonElement je = new JsonParser().parse(jsonStr);
+			T t =  new Gson().fromJson(je, clazz);
+			return t;
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/**
+	 * 判断服务是否正在运行 liaoyun 2016-8-21
+	 * @param className  service class 的全路径
+	 * @return
+	 */
+	public static boolean isServiceRunning(String className){
+		ActivityManager activityManager = (ActivityManager) MyApplication.getContext().getSystemService(Context.ACTIVITY_SERVICE);
+		List<ActivityManager.RunningServiceInfo> serviceList = activityManager.getRunningServices(30);
+		if(serviceList==null || serviceList.size()<1){
+			return false;
+		}
+		for (int i=0; i<serviceList.size(); i++) {
+			Log.e("socket","service name =  "+serviceList.get(i).service.getClassName().toString());
+			if(serviceList.get(i).service.getClassName().toString().equals(className)){
+				return true;
+			}
+		}
+		return false;
+	}
 }
