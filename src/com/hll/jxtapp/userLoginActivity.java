@@ -80,6 +80,7 @@ public class userLoginActivity extends Activity{
 							Map<String,String> map = JxtUtil.jsonStringToMap(s);
 							UserO user = new UserO();
 							user.setType(Integer.valueOf(map.get("type")));
+							user.setName(map.get("name"));
 							user.setNickName(map.get("nickName"));
 							user.setAccount(accountStr);
 							user.setPassword(passwordStr);
@@ -91,6 +92,8 @@ public class userLoginActivity extends Activity{
 							JxtUtil.saveLastUserInfo(user);                                        //保存用户信息
 							NetworkInfoUtil.accountId = map.get("account");                        //用户的account
 							NetworkInfoUtil.socketId = Integer.valueOf(map.get("sessionKey"));     //保存websocket验证的key值
+							NetworkInfoUtil.name = map.get("name");                                //保存用户名字
+							NetworkInfoUtil.nickName = map.get("nickName");                        //保存用户昵称
 							finish();                                                              //返回上一个页面
 						}else{                                                                     //登陆失败
 							Message message = Message.obtain();
