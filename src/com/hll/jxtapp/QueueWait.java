@@ -1,8 +1,14 @@
 package com.hll.jxtapp;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.hll.adapter.ItemOfChatContentAdapter;
 import com.hll.adapter.QueueGroupListAdapter;
 import com.hll.common.SocketDadaBaseHelper;
@@ -10,8 +16,11 @@ import com.hll.common.SocketService;
 import com.hll.common.SocketService.SocketSendBinder;
 import com.hll.entity.QueueListItemBean;
 import com.hll.entity.Item;
+import com.hll.entity.ItemOfChatContentBean;
+import com.hll.entity.MessageChat;
 import com.hll.entity.OrderLeanO;
 import com.hll.entity.Queue;
+import com.hll.entity.QueueListItemBean;
 import com.hll.entity.SchoolPlaceO;
 import com.hll.entity.SocketChatO;
 import com.hll.entity.SocketMsg;
@@ -19,7 +28,6 @@ import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
 import com.hll.util.MyApplication;
 import com.hll.util.NetworkInfoUtil;
-
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -93,8 +101,6 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	private Spinner driverPlaceSpinner;
 	private ArrayAdapter<Item> driverPlaces;
 	private List<Item> driverPlacesList = new ArrayList<>();
-	private OrderLeanO userQueueInfo;                                                   //用户的排队信息
-	private Context context;                                                           
 	private SocketBroadcastReceiver socketBroadcastReceivr;                             //socket广播接收器  
 	private SocketSendBinder socketSendBinder;                                          //绑定 socket service
 	private List<Queue> queueInfo;                                                      //排队的数据     
@@ -103,6 +109,9 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	private int firstChatNum=0;
 	private boolean hasHistoryChat = true;
 	
+	private OrderLeanO userQueueInfo;         //用户的排队信息
+	private Context context;
+	private Gson gson;
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
@@ -276,7 +285,6 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
 		listView.setLayoutParams(params);
 	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -284,8 +292,10 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			finish();                                          //退出页面
 			break;
 		case R.id.id_chat_room_send:
-			//chatRoomIn.setText("");
 			sendChatMessage();                                 //群发消息
+			String msg=chatRoomIn.getText().toString();
+			new SendMessageThread(msg).start();
+			chatRoomIn.setText("");
 			break;
 		case R.id.id_queue_group:
 			chatRoomShowListView.setVisibility(View.GONE);
@@ -334,6 +344,62 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		socketSendBinder.sendMessage(socketMsg);
 	}
 
+	/* * 开启一个线程，用来发送消息到后台数据库中
+	 * @author heyi
+	 * 2016/8/17
+	 */
+	private class SendMessageThread extends Thread{
+		String msg;
+		public SendMessageThread(String msg) {
+			this.msg=msg;
+		}
+		Item item = (Item) driverPlaceSpinner.getSelectedItem();
+		MessageChat messageChat;
+		UserO userInfo = JxtUtil.getLastUserInfo();
+		@Override
+		public void run() {
+			super.run();
+			String placeName =item.getDesc();
+			String schoolAccount = userQueueInfo.getSchoolPlace().get(0).getSchoolAccount();
+			String userAccount=userInfo.getAccount();
+			messageChat.setSchollAccount(schoolAccount);
+			messageChat.setPlaceName(placeName);
+			messageChat.setUserAccount(userAccount);
+			messageChat.setMsg(msg);
+			Date date=new Date();
+			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String time=sdf.format(date);
+			messageChat.setSendTime(time);
+			String msgJson=gson.toJson(messageChat);
+			HttpURLConnection conn=JxtUtil.postHttpConn(NetworkInfoUtil.baseUtl+"/messageChat/addMessage.action", msgJson);
+			//接收数据
+			try {
+				InputStream is=conn.getInputStream();
+				String str=JxtUtil.streamToJsonString(is);
+				SocketChatO chatContent=gson.fromJson(str, new TypeToken<ItemOfChatContentBean>(){}.getType());
+				//添加最新消息到聊天框
+				chatList.add(chatContent);
+				//更新ui聊天框
+				new ChatMsgHandler().sendEmptyMessage(0);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	/**
+	 * 更新了chatlist，发给handler去更新ui
+	 * @author heyi
+	 * 2016/8/17
+	 */
+	private class ChatMsgHandler extends Handler{
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			chatAdapter.notifyDataSetChanged();
+		}
+	}
+	
 	/**
 	 * 取消排队 liaoyun 2016-8-15
 	 */
