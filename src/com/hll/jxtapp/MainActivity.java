@@ -4,13 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hll.basic.SlideMenu;
+import com.hll.basic.SystemBarTintManager;
 import com.hll.basic.LeftMoveView;
 import com.hll.basic.RightMoveView;
 import com.hll.common.SocketService;
 import com.hll.jxtapp.R;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +26,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -68,7 +72,26 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		initEvent();
 
 		setSelect(1);
+		 
 	}
+	
+	/**
+	 * 改变顶部背景
+	 * @author heyi
+	 */
+	@TargetApi(19)   
+    private void setTranslucentStatus(boolean on) {  
+        Window win = getWindow();  
+        WindowManager.LayoutParams winParams = win.getAttributes();  
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;  
+        if (on) {  
+            winParams.flags |= bits;  
+        } else {  
+            winParams.flags &= ~bits;  
+        }  
+        win.setAttributes(winParams);  
+    }
+
 	
 	@Override
 	protected void onDestroy() {
@@ -126,6 +149,17 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		mFragments.add(mTab04);
 		mFragments.add(mTab05);
 
+		/**
+		 * 改变顶部背景
+		 * @author heyi
+		 */
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {  
+            setTranslucentStatus(true);  
+            SystemBarTintManager tintManager = new SystemBarTintManager(this);  
+            tintManager.setStatusBarTintEnabled(true);  
+            tintManager.setStatusBarTintResource(R.drawable.top_blc);//通知栏所需颜色
+        } 
+		
 		mAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
 
 			@Override

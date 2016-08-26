@@ -18,4 +18,5 @@
     <color name="color_4">#a286c0</color>
 	<color name="transparent">#65000000</color>
 	<color name="chatblk">#FFFFCC</color>
+	<color name="top_bg_color">#0000FF</color>
 </resources>

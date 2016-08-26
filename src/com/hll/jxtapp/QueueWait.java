@@ -120,6 +120,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
 
 		titleSce = (TextView) findViewById(R.id.id_sec_title);
+		titleSce.setText("排队等候");
 		queueWaitMsg = (TextView) findViewById(R.id.id_queue_wait_queue_msg);
 		queueWaitUserMsg = (TextView) findViewById(R.id.id_queue_wait_user_msg);
 		returnPre = (ImageView) findViewById(R.id.id_return);
@@ -148,14 +149,14 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		super.onStart();
 		SocketService.tranType = true;                       //改socket信息 通知为 广播
 		getPrepareData();                                    //用户排队数据初始化，查询是否登陆，是否报名了驾校，可选场地...
-		boolean bl = prepare();
-		if(bl==false){
-			return;
-		}
 		showUserInfoByPlace();                               //显示用户基本信息，姓名、电话
 		initEvent();                                         //按钮初始化事件
 		initList();
 		initPage();
+		boolean bl = prepare();
+		if(bl==false){
+			return;
+		}
 		registSocketReceiver();                              //注册广播接收器   
 		startSocketService();                                //启动socket服务
 		bindSocketService();                                 //绑定 socket 服务
@@ -208,20 +209,12 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 	
 	private void initList() {
 		secScrollView.smoothScrollBy(0, 0);
-		initData();
 		queueStateAdapter = new QueueGroupListAdapter(this, queueStateList);
 		queueStateListView.setAdapter(queueStateAdapter);
 		setListViewHeightBasedOnChildren(queueStateListView);
 		chatAdapter=new ItemOfChatContentAdapter(this, chatList);
 		chatRoomShowListView.setAdapter(chatAdapter);
 		chatRoomShowListView.setOnScrollListener(new ChatOnScrollListener());   //向下滑动加载历史数据
-	}
-
-	private void initData() {
-		driverPlaces=new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, driverPlacesList);
-		
-		driverPlaces.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		driverPlaceSpinner.setAdapter(driverPlaces);
 	}
 
 	//初始化页面
@@ -294,7 +287,7 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		case R.id.id_chat_room_send:
 			sendChatMessage();                                 //群发消息
 			String msg=chatRoomIn.getText().toString();
-			new SendMessageThread(msg).start();
+			//new SendMessageThread(msg).start();
 			chatRoomIn.setText("");
 			break;
 		case R.id.id_queue_group:
