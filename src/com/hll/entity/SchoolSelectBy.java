@@ -5,14 +5,13 @@ package com.hll.entity;
  * 2016-6-11
  */
 public class SchoolSelectBy {
-	private String tranAreaSp;//练车区域
-	private String tranTypeSp;//练车类型
-	private String tranDistance;//距离(km)
-	private int startPage;     //第几列
+	private String tranAreaSp; //练车区域
+	private String orderType;  //排序方式
+	private int startIndex;    //第几列
 	private int pageSize;      //每页的记录条数
 	public SchoolSelectBy() {
 		super();
-		this.startPage=1;
+		this.startIndex=0;
 		this.pageSize=5;
 	}
 	public String getTranAreaSp() {
@@ -21,28 +20,22 @@ public class SchoolSelectBy {
 	public void setTranAreaSp(String tranAreaSp) {
 		this.tranAreaSp = tranAreaSp;
 	}
-	public String getTranTypeSp() {
-		return tranTypeSp;
-	}
-	public void setTranTypeSp(String tranTypeSp) {
-		this.tranTypeSp = tranTypeSp;
-	}
-	public int getStartPage() {
-		return startPage;
-	}
-	public void setStartPage(int startPage) {
-		this.startPage = startPage;
-	}
 	public int getPageSize() {
 		return pageSize;
 	}
 	public void setPageSize(int pageSize) {
 		this.pageSize = pageSize;
 	}
-	public String getTranDistance() {
-		return tranDistance;
+	public String getOrderType() {
+		return orderType;
 	}
-	public void setTranDistance(String tranDistance) {
-		this.tranDistance = tranDistance;
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
+	public int getStartIndex() {
+		return startIndex;
+	}
+	public void setStartIndex(int startIndex) {
+		this.startIndex = startIndex;
 	}
 }

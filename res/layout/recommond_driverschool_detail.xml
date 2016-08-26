@@ -1,16 +1,181 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
-    <TextView
-        android:id="@+id/count" 
+    android:layout_height="match_parent" >
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="count"/>
-    <TextView 
-        android:id="@+id/name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="name"/>
-</LinearLayout>
+        android:orientation="vertical" >
+
+        <!-- 图片 -->
+
+        <ImageView
+            android:id="@+id/top_pic"
+            android:layout_width="match_parent"
+            android:layout_height="180dip"
+            android:padding="10dip"
+            android:scaleType="centerCrop"
+            android:src="@drawable/driver_school_pic0" />
+        
+        <!-- 地址 -->
+		<RelativeLayout 
+		    android:layout_width="match_parent"
+		    android:layout_height="wrap_content"
+		    android:background="#DCDCDC">
+		    <TextView
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="5dip"
+            android:textStyle="bold"
+            android:text="地址: " />
+
+        <TextView
+            android:id="@+id/address_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/address"
+            android:paddingLeft="10dip"
+            android:paddingTop="5dip"
+            android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" />
+		    
+		</RelativeLayout>
+        
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#DCDCDC" >
+
+            <!-- 电话 -->
+
+            <TextView
+                android:id="@+id/tel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dip"
+                android:textStyle="bold"
+                android:text="电话:" />
+
+            <TextView
+                android:id="@+id/tel_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tel"
+                android:paddingTop="5dip"
+                android:text="13115785528" />
+
+            <!-- QQ -->
+
+            <TextView
+                android:id="@+id/qq"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/tel_num"
+                android:paddingLeft="10dip"
+                android:paddingTop="5dip"
+                android:textStyle="bold"
+                android:text=" Q Q :" />
+
+            <TextView
+                android:id="@+id/qq_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/qq"
+                android:paddingLeft="10dip"
+                android:paddingTop="5dip"
+                android:text="945505778" />
+
+            <!-- 微信 -->
+
+            <TextView
+                android:id="@+id/wechat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tel"
+                android:paddingTop="5dp"
+                android:textStyle="bold"
+                android:text="微信 :" />
+
+            <TextView
+                android:id="@+id/wechat_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tel"
+                android:layout_toRightOf="@+id/wechat"
+                android:paddingTop="5dip"
+                android:text="123455555" />
+
+            <!-- 价格 -->
+
+            <TextView
+                android:id="@+id/price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/wechat_num"
+                android:layout_below="@+id/tel"
+                android:paddingLeft="10dip"
+                android:paddingTop="5dip"
+                android:textStyle="bold"
+                android:text="价格:" />
+
+            <TextView
+                android:id="@+id/price_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tel"
+                android:layout_toRightOf="@+id/price"
+                android:paddingLeft="5dip"
+                android:paddingTop="5dip"
+                android:text="2344" />
+        </RelativeLayout>
+
+        <!-- 优惠活动 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dip"
+            android:textStyle="bold"
+            android:text="优惠活动"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/bugget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyxxxxxxxxxxxxxxxxxxxxxxxxyyyyyyyyyyyyyyy" />
+
+        <!-- 驾校详情 -->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="10dip"
+            android:textStyle="bold"
+            android:text="驾校详情"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="#000000" />
+
+        <TextView
+            android:id="@+id/school_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="22222222222222222mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuvvvvvvvvvvvvvvvvvvb" />
+
+        <!-- 荣誉 -->
+        <!-- 风采 -->
+    </LinearLayout>
+
+</ScrollView>

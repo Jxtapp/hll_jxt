@@ -14,6 +14,7 @@ public class RecommendSchoolInfoO implements Serializable {
 	private static final long serialVersionUID = -7424415106905403954L;
 	private String schoolAccount;
 	private String schoolname;
+	private String placeId;
 	private String itemImg;
 	private double itemPrice;
 	private String itemAddress;
@@ -22,13 +23,14 @@ public class RecommendSchoolInfoO implements Serializable {
 	public RecommendSchoolInfoO() {
 		super();
 	}
-	public RecommendSchoolInfoO(String itemImg, double itemPrice, String itemAddress, String itemNum,String schoolName) {
+	public RecommendSchoolInfoO(String itemImg, double itemPrice, String itemAddress, String itemNum,String schoolName, String placeId) {
 		super();
 		this.itemImg = itemImg;
 		this.itemPrice = itemPrice;
 		this.itemAddress = itemAddress;
 		this.itemNum = itemNum;
 		this.schoolname = schoolName;
+		this.placeId = placeId;
 	}
 	public String getItemImg() {
 		return itemImg;
@@ -65,5 +67,11 @@ public class RecommendSchoolInfoO implements Serializable {
 	}
 	public void setSchoolAccount(String schoolAccount) {
 		this.schoolAccount = schoolAccount;
+	}
+	public String getPlaceId() {
+		return placeId;
+	}
+	public void setPlaceId(String placeId) {
+		this.placeId = placeId;
 	}
 }

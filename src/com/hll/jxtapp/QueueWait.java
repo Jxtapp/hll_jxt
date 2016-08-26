@@ -120,7 +120,6 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 		getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.title);
 
 		titleSce = (TextView) findViewById(R.id.id_sec_title);
-		titleSce.setText("排队等候");
 		queueWaitMsg = (TextView) findViewById(R.id.id_queue_wait_queue_msg);
 		queueWaitUserMsg = (TextView) findViewById(R.id.id_queue_wait_user_msg);
 		returnPre = (ImageView) findViewById(R.id.id_return);
