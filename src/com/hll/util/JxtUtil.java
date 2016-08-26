@@ -32,12 +32,12 @@ import com.hll.entity.SocketMsg;
 import com.hll.entity.UserO;
 
 import android.app.ActivityManager;
-import android.app.ActivityManager.RunningServiceInfo;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.WindowManager;
 import android.widget.Toast;
 /**
  * 常用方法的工具类
@@ -527,4 +527,18 @@ public class JxtUtil {
 		}
 		return false;
 	}
+	/**
+	 * 获取屏幕的尺寸([0]： Screen Width, [1]: Screen Height) 
+	 * LiaoYun 2016-8-24
+	 * @return
+	 */
+	@SuppressWarnings("deprecation")
+	public static int[] getScreenSize(){
+		WindowManager wm = (WindowManager) MyApplication.getContext().getSystemService(Context.WINDOW_SERVICE);
+		int width  = wm.getDefaultDisplay().getWidth();
+		int height = wm.getDefaultDisplay().getHeight();
+		int[] size = {width,height};
+		return size;
+	}
+	
 }

@@ -2,16 +2,22 @@ package com.hll.jxtapp;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.hll.basic.SlideMenu;
 import com.hll.basic.LeftMoveView;
 import com.hll.basic.RightMoveView;
 import com.hll.common.SocketService;
+import com.hll.entity.UserO;
 import com.hll.jxtapp.R;
+import com.hll.util.JxtUtil;
+import com.hll.util.MyApplication;
+import com.hll.util.NetworkInfoUtil;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -68,6 +74,8 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 		initEvent();
 
 		setSelect(1);
+		
+		tryLogin();                  //尝试自动登陆
 	}
 	
 	@Override
@@ -306,5 +314,47 @@ public class MainActivity extends FragmentActivity implements OnClickListener {
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	/**
+	 * 尝试自动登陆
+	 */
+	private void tryLogin(){
+		UserO user = JxtUtil.getLastUserInfo();
+		if(user != null){
+			final String accountStr = user.getAccount();
+			final String passwordStr = user.getPassword();
+			final String url = NetworkInfoUtil.baseUtl+"/user/login/"+accountStr+"/"+passwordStr+"/email.action";
+			new Thread(){
+				public void run() {
+					Looper.prepare();
+					Map<String,String> map = JxtUtil.getMapFromServer(url);
+					if(map != null){
+						if(map.get("loginType") != null){
+							//JxtUtil.toastCenter(MyApplication.getContext(), "您已经登陆了", Toast.LENGTH_SHORT);
+							return;
+						}
+						UserO user = new UserO();
+						user.setType(Integer.valueOf(map.get("type")));
+						user.setName(map.get("name"));
+						user.setNickName(map.get("nickName"));
+						user.setAccount(accountStr);
+						user.setPassword(passwordStr);
+						user.setEmail(map.get("email"));
+						user.setTel(map.get("tel"));
+						user.setLastLoadTime(map.get("lastLoadTime"));
+						user.setLastLoadIp(map.get("lastLoadIp"));
+						user.setLastLoadPort(map.get("lastLoadPort"));
+						JxtUtil.saveLastUserInfo(user);                                        //保存用户信息
+						NetworkInfoUtil.accountId = map.get("account");                        //用户的account
+						NetworkInfoUtil.socketId = Integer.valueOf(map.get("sessionKey"));     //保存websocket验证的key值
+						NetworkInfoUtil.name = map.get("name");                                //保存用户名字
+						NetworkInfoUtil.nickName = map.get("nickName");                        //保存用户昵称
+					}else{
+						JxtUtil.toastCenter(MyApplication.getContext(), "登陆失败", Toast.LENGTH_SHORT);
+					}
+					Looper.loop();
+				};
+			}.start();
+		}
 	}
 }

@@ -67,8 +67,8 @@ public class RecommondSchoolListAdapter extends BaseAdapter{
 			viewHolder = (ViewHolder) converView.getTag();
 		}
 		RecommendSchoolInfoO vo=driverSchoolInfoList.get(position);
-		viewHolder.price.setText("价格： "+String.valueOf(vo.getItemPrice()));
-		viewHolder.address.setText("地点： "+vo.getItemAddress());
+		viewHolder.price.setText(String.valueOf(vo.getItemPrice()));
+		viewHolder.address.setText(vo.getItemAddress());
 		viewHolder.schoolName.setText(vo.getSchoolname());
 		viewHolder.imageView.setImageResource(R.drawable.on_loading1);
 		//添加标记，防止图片错位

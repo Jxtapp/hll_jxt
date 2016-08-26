@@ -7,6 +7,7 @@ import java.util.Map;
 
 import com.hll.entity.UserO;
 import com.hll.util.JxtUtil;
+import com.hll.util.MyApplication;
 import com.hll.util.NetworkInfoUtil;
 
 import android.annotation.SuppressLint;
@@ -14,7 +15,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -71,6 +74,7 @@ public class userLoginActivity extends Activity{
 			final String passwordStr = password.getText()!=null ? (String) password.getText().toString().trim() : "";
 			new Thread(){
 				public void run() {
+					Looper.prepare();
 					String url = NetworkInfoUtil.baseUtl+"/user/login/"+accountStr+"/"+passwordStr+"/email.action";
 					HttpURLConnection conn = JxtUtil.postHttpConn(url, "");
 					try {
@@ -78,22 +82,26 @@ public class userLoginActivity extends Activity{
 						if(is != null){                                                         //登陆成功
 							String s = JxtUtil.streamToJsonString(is);
 							Map<String,String> map = JxtUtil.jsonStringToMap(s);
-							UserO user = new UserO();
-							user.setType(Integer.valueOf(map.get("type")));
-							user.setName(map.get("name"));
-							user.setNickName(map.get("nickName"));
-							user.setAccount(accountStr);
-							user.setPassword(passwordStr);
-							user.setEmail(map.get("email"));
-							user.setTel(map.get("tel"));
-							user.setLastLoadTime(map.get("lastLoadTime"));
-							user.setLastLoadIp(map.get("lastLoadIp"));
-							user.setLastLoadPort(map.get("lastLoadPort"));
-							JxtUtil.saveLastUserInfo(user);                                        //保存用户信息
-							NetworkInfoUtil.accountId = map.get("account");                        //用户的account
-							NetworkInfoUtil.socketId = Integer.valueOf(map.get("sessionKey"));     //保存websocket验证的key值
-							NetworkInfoUtil.name = map.get("name");                                //保存用户名字
-							NetworkInfoUtil.nickName = map.get("nickName");                        //保存用户昵称
+							if(map.get("loginType") != null){
+								JxtUtil.toastCenter(MyApplication.getContext(), "您已经登陆了", Toast.LENGTH_SHORT);
+							}else{
+								UserO user = new UserO();
+								user.setType(Integer.valueOf(map.get("type")));
+								user.setName(map.get("name"));
+								user.setNickName(map.get("nickName"));
+								user.setAccount(accountStr);
+								user.setPassword(passwordStr);
+								user.setEmail(map.get("email"));
+								user.setTel(map.get("tel"));
+								user.setLastLoadTime(map.get("lastLoadTime"));
+								user.setLastLoadIp(map.get("lastLoadIp"));
+								user.setLastLoadPort(map.get("lastLoadPort"));
+								JxtUtil.saveLastUserInfo(user);                                        //保存用户信息
+								NetworkInfoUtil.accountId = map.get("account");                        //用户的account
+								NetworkInfoUtil.socketId = Integer.valueOf(map.get("sessionKey"));     //保存websocket验证的key值
+								NetworkInfoUtil.name = map.get("name");                                //保存用户名字
+								NetworkInfoUtil.nickName = map.get("nickName");                        //保存用户昵称
+							}
 							finish();                                                              //返回上一个页面
 						}else{                                                                     //登陆失败
 							Message message = Message.obtain();
@@ -101,8 +109,10 @@ public class userLoginActivity extends Activity{
 							tostHandle.sendMessage(message);
 						}
 					} catch (Exception e) {
+						Log.e("socket",e.getMessage());
 						e.printStackTrace();
 					}
+					Looper.loop();
 				};
 			}.start();
 		}

@@ -16,15 +16,9 @@
         <item >黄陂区</item>
         <item >新洲区</item>
     </string-array>
-    <string-array name="drive_kind_list">
-        <item >所有类型</item>
-        <item >C</item>
-        <item >B</item>
-        <item >A</item>
-    </string-array>
-    <string-array name="drive_distance_list">
-        <item>0km-10km</item>
-        <item>10km-20km</item>
-        <item>20km-30km</item>
+    <string-array name="order_type">
+        <item>综合排序</item>
+        <item>价格从低到高</item>
+        <item>价格从高到低</item>
     </string-array>
 </resources>

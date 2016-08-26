@@ -293,8 +293,6 @@ public class QueueWait extends FragmentActivity implements OnClickListener {
 			break;
 		case R.id.id_chat_room_send:
 			sendChatMessage();                                 //群发消息
-			String msg=chatRoomIn.getText().toString();
-			new SendMessageThread(msg).start();
 			chatRoomIn.setText("");
 			break;
 		case R.id.id_queue_group:
