@@ -4,7 +4,6 @@ import com.hll.jxtapp.R;
 import com.hll.util.JxtUtil;
 import com.hll.adapter.ImgTxtAdapter;
 import com.hll.basic.BaseView;
-import com.hll.basic.LeftMoveView;
 import com.hll.entity.ImgTxtBean;
 import com.hll.entity.UserO;
 
@@ -37,7 +36,6 @@ public class PersonInfoView extends BaseView {
 			
 			@Override
 			public void onClick(View v) {
-				leftMoveView.showHideLeftMenu();
 			}
 		});
 		
@@ -45,9 +43,6 @@ public class PersonInfoView extends BaseView {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!isScroll() || leftMoveView.getNowState() == LeftMoveView.LEFT){
-					return true;
-				}
 				return false;
 			}
 		});

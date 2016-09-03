@@ -3,11 +3,8 @@ package com.hll.left;
 import com.hll.jxtapp.R;
 import com.hll.adapter.ImgTxtAdapter;
 import com.hll.basic.BaseView;
-import com.hll.basic.LeftMoveView;
 import com.hll.entity.ImgTxtBean;
-
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,7 +33,6 @@ public class LoginView extends BaseView {
 			
 			@Override
 			public void onClick(View v) {
-				leftMoveView.showHideLeftMenu();
 			}
 		});
 		
@@ -44,10 +40,7 @@ public class LoginView extends BaseView {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!isScroll() || leftMoveView.getNowState() == LeftMoveView.LEFT){
-					return true;
-				}
-				return false;
+				return isScroll;
 			}
 		});
 		//显示用户信息，如果没有用户的信息，则显示未登陆

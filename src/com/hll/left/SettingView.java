@@ -3,7 +3,6 @@ package com.hll.left;
 import com.hll.jxtapp.R;
 import com.hll.adapter.ImgTxtAdapter;
 import com.hll.basic.BaseView;
-import com.hll.basic.LeftMoveView;
 import com.hll.entity.ImgTxtBean;
 
 import android.content.Context;
@@ -35,7 +34,6 @@ public class SettingView extends BaseView {
 			
 			@Override
 			public void onClick(View v) {
-				leftMoveView.showHideLeftMenu();
 			}
 		});
 		
@@ -43,9 +41,6 @@ public class SettingView extends BaseView {
 			
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				if(!isScroll() || leftMoveView.getNowState() == LeftMoveView.LEFT){
-					return true;
-				}
 				return false;
 			}
 		});

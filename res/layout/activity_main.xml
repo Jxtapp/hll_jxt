@@ -5,53 +5,15 @@
     android:orientation="vertical" 
     android:paddingTop="20dp">
  
-<!--     <com.hll.basic.SlideMenu
-        android:id="@+id/slide_menu"
-        android:layout_width="30dp"
-        android:layout_height="30dp" >
-
-        <include layout="@layout/leftmenu" /> 
-           </com.hll.basic.SlideMenu>
-    -->
         <include layout="@layout/top" />
 
     <android.support.v4.view.ViewPager
         android:id="@+id/id_viewpager"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dp"
         android:layout_weight="1" >
     </android.support.v4.view.ViewPager>
- <!-- 
-     <fragment android:name="com.hll.jxtapp.RecommendFragment"
-              android:id="@+id/id_recommend_fragment"
-              android:layout_weight="1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
 
-    <fragment android:name="com.hll.jxtapp.QueueFragment"
-              android:id="@+id/id_queue_fragment"
-              android:layout_weight="1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
-    
-     <fragment android:name="com.hll.jxtapp.SimulateFragment"
-              android:id="@+id/id_simulate_fragment"
-              android:layout_weight="1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
-     
-      <fragment android:name="com.hll.jxtapp.FriendFragment"
-              android:id="@+id/id_friend_fragment"
-              android:layout_weight="1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
-      
-       <fragment android:name="com.hll.jxtapp.MoreInfoFragment"
-              android:id="@+id/id_moreInfo_fragment"
-              android:layout_weight="1"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" />
-        -->
     <include layout="@layout/bottom" />
  
  </LinearLayout>

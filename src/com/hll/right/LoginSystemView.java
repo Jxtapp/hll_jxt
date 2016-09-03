@@ -3,7 +3,6 @@ package com.hll.right;
 import com.hll.jxtapp.R;
 import com.hll.adapter.ImgTxtAdapter;
 import com.hll.basic.BaseView;
-import com.hll.basic.LeftMoveView;
 import com.hll.entity.ImgTxtBean;
 
 import android.content.Context;

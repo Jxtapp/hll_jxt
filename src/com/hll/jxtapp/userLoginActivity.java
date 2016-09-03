@@ -13,6 +13,7 @@ import com.hll.util.NetworkInfoUtil;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -36,6 +37,7 @@ public class userLoginActivity extends Activity{
 	private TextView password;
 	private TextView veryfiyCode;
 	private Button loginButton;
+	private Button registerButton;
 	private Context context;
 	private TostHandle tostHandle;
 	
@@ -48,6 +50,7 @@ public class userLoginActivity extends Activity{
 		password = (TextView) findViewById(R.id.user_password);     //密码
 		veryfiyCode = (TextView) findViewById(R.id.user_veriryCode);//校验码
 		loginButton = (Button) findViewById(R.id.login_button);     //登陆按钮
+		registerButton=(Button) findViewById(R.id.id_register_user);
 		tostHandle = new TostHandle();
 		context = this;
 		
@@ -64,7 +67,16 @@ public class userLoginActivity extends Activity{
 		handle.sendMessage(message);
 		
 		loginButton.setOnClickListener(new loginOnclickListener());//登陆按钮监听器
+		registerButton.setOnClickListener(registerUser);
 	}
+	
+	private OnClickListener registerUser=new OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			Intent intent=new Intent(userLoginActivity.this,UserRegisterActivity.class);
+			startActivity(intent);
+		}
+	};
 	
 	//监听用户登陆
 	private class loginOnclickListener implements OnClickListener{

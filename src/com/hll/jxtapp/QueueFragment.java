@@ -52,14 +52,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 public class QueueFragment extends Fragment implements OnClickListener,OnItemClickListener,OnScrollListener{
-	private ImageView dropDownLocation;
 	private LinearLayout orderLearn;
 	private LinearLayout queueWait;
-	private LinearLayout appItroduce;
-	private LinearLayout functionInfo;
-	private LinearLayout guaranteeService;
-	private LinearLayout feedbackPass;
-	private LinearLayout aboutUsCall;
 	private ListView listView;
 	private List<SecPageItemBean> list;
 	private SecPageAdapter adapter;
@@ -97,14 +91,8 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		mainActivity = getActivity();
-		dropDownLocation = (ImageView) mainActivity.findViewById(R.id.id_down_queue);
 		orderLearn = (LinearLayout) mainActivity.findViewById(R.id.id_order_learn);
 		queueWait = (LinearLayout) mainActivity.findViewById(R.id.id_queue_wait);
-		appItroduce = (LinearLayout) mainActivity.findViewById(R.id.id_app_indroduce);
-		functionInfo = (LinearLayout) mainActivity.findViewById(R.id.id_function_info);
-		guaranteeService = (LinearLayout) mainActivity.findViewById(R.id.id_guarantee_service);
-		feedbackPass = (LinearLayout) mainActivity.findViewById(R.id.id_feedback_pass);
-		aboutUsCall = (LinearLayout) mainActivity.findViewById(R.id.id_about_us_call);
 		listView = (ListView) mainActivity.findViewById(R.id.id_coach_self_choice);
 		spinnerPlaceChoice = (Spinner) mainActivity.findViewById(R.id.id_sp_place_choice);
 		spinnerTeachType = (Spinner) mainActivity.findViewById(R.id.id_sp_teach_type);
@@ -136,8 +124,6 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 			listView.setSelection(firstVP);
 			firstVP = 0;
 		}
-		//list = new ArrayList<SecPageItemBean>();
-		// 教练列表
 		
 		// 自选教练
 		choiceCochSelf();
@@ -146,41 +132,11 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	// 初始化监听事件
 		private void initEvent() {
 
-			dropDownLocation.setOnClickListener(this);
 			orderLearn.setOnClickListener(this);
 			queueWait.setOnClickListener(this);
-			appItroduce.setOnClickListener(this);
-			functionInfo.setOnClickListener(this);
-			guaranteeService.setOnClickListener(this);
-			feedbackPass.setOnClickListener(this);
-			aboutUsCall.setOnClickListener(this);
 			listView.setOnScrollListener(this);
 			listView.setOnTouchListener(new listViewOntouchListener());
 		}
-
-
-	// 获取并设置ListView高度的方法
-//	public void setListViewHeightBasedOnChildren(ListView listView) {
-//		ListAdapter listAdapter = listView.getAdapter();
-//		if (listAdapter == null) {
-//			return;
-//		}
-//
-//		int totalHeight = 0;
-//		for (int i = 0; i < listAdapter.getCount(); i++) {
-//			View listItem = listAdapter.getView(i, null, listView);
-//			listItem.measure(0, 0);
-//			totalHeight += listItem.getMeasuredHeight();
-//		}
-//
-//		ViewGroup.LayoutParams params = listView.getLayoutParams();
-//		params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-//		((MarginLayoutParams) params).setMargins(10, 10, 10, 10);
-//		listView.setLayoutParams(params);
-//	}
-	
-	
-	
 
 	// 根据条件自选教练选项
 	private void choiceCochSelf() {
@@ -229,47 +185,18 @@ public class QueueFragment extends Fragment implements OnClickListener,OnItemCli
 	public void onClick(View v) {
 
 		switch (v.getId()) {
-		case R.id.id_down_queue:
-
-			Toast.makeText(mainActivity, "排队", Toast.LENGTH_SHORT).show();
-			break;
-		
 		case R.id.id_order_learn:
 
 			Intent intent1 = new Intent(mainActivity, OrderLearn.class);
 			startActivity(intent1);
-			// Toast.makeText(mainActivity, "学习次数", Toast.LENGTH_SHORT).show();
 			break;
 		case R.id.id_queue_wait:
 
 			Intent intent2 = new Intent(mainActivity, QueueWait.class);
 			startActivity(intent2);
-			//Toast.makeText(mainActivity, "排队等待", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.id_app_indroduce:
-
-			Toast.makeText(mainActivity, "软件介绍", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.id_function_info:
-
-			Toast.makeText(mainActivity, "功能介绍", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.id_guarantee_service:
-
-			Toast.makeText(mainActivity, "保障服务", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.id_feedback_pass:
-
-			Toast.makeText(mainActivity, "反馈通道", Toast.LENGTH_SHORT).show();
-			break;
-		case R.id.id_about_us_call:
-
-			Toast.makeText(mainActivity, "联系我们", Toast.LENGTH_SHORT).show();
 			break;
 		}
 	}
-
-	
 
 	/**
 	 * listView里的滚动方法
@@ -446,7 +373,6 @@ public void onScrollStateChanged(AbsListView view, int scrollState) {
 		new QueueLoadDataThread().start();
 	}
 	if(scrollState == OnScrollListener.SCROLL_STATE_IDLE){
-		//reminded: at the bottom of the listView,the last item is footer 
 		try {
 			if(endIndex==totalCount){
 				loadListImg(startIndex,endIndex-1);

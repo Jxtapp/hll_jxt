@@ -52,14 +52,8 @@
             </intent-filter>
         </activity>
         <activity android:name="com.hll.jxtapp.StudentInfoActivity" >
-            <action android:name="android.intent.action.onCreate" />
-
-            <category android:name="android.intent.category.DEFAULT" />
         </activity>
-        <activity android:name="com.hll.jxtapp.UserInfoActivity" >
-            <action android:name="android.intent.action.onCreate" />
-
-            <category android:name="android.intent.category.DEFAULT" />
+        <activity android:name="com.hll.jxtapp.LeftMenuView" >
         </activity>
         
         <activity android:name="com.hll.jxtapp.QueueFragment"></activity>
@@ -76,5 +70,6 @@
         <activity android:name="com.hll.jxtapp.RecommondSchoolDtailActivity"></activity>
         
         <service android:name="com.hll.common.SocketService"></service>
+        <activity android:name="com.hll.jxtapp.UserRegisterActivity"></activity>
     </application>
 </manifest>

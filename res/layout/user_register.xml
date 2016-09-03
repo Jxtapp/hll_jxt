@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="1"
+     >
+   
+    <TableRow >
+        <TextView 
+            android:layout_height="wrap_content"
+            android:text="账号:"
+            />
+        <EditText 
+            android:id="@+id/id_reg_account"
+            android:layout_height="wrap_content"
+            android:hint="请输入数字或字母注册" 
+            />
+    </TableRow>
+
+    <TableRow >
+        <TextView 
+            android:layout_height="wrap_content"
+            android:text="输入密码:"/>
+        <EditText 
+            android:id="@+id/id_reg_psw_first"
+            android:layout_height="wrap_content"
+            android:hint="第一次输入"
+            />
+    </TableRow>
+    <TableRow >
+        <TextView 
+            android:layout_height="wrap_content"
+            android:text="确认密码:"/>
+        <EditText 
+            android:id="@+id/id_reg_psw_second"
+            android:layout_height="wrap_content"
+            android:hint="第二次输入"
+            />
+    </TableRow>
+    
+    <TableRow >
+        <Button 
+            android:id="@+id/id_reg_sure_btn"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:text="确认注册"/>
+    </TableRow>
+</TableLayout>

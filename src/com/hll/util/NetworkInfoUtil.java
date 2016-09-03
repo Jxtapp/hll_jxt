@@ -9,7 +9,7 @@ import android.net.NetworkInfo;
  * 2016-6-2
  */
 public class NetworkInfoUtil {
-	public static String baseUtl="http://192.168.1.3:8080/hll";  //服务器 地址
+	public static String baseUtl="http://192.168.1.4:8080/hll";  //服务器 地址
 	public static String picUtl=baseUtl+"/file/pic/";            //图片接口
 	public static ConnectivityManager connectManager;            //网络状态
 	public static String sessionId=null;                         //会话 session 对应的 sessionId
